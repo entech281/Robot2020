@@ -32,7 +32,6 @@ public class CommandGroupFactory {
                 .getSequentialCommandGroup();
 
         startShooterCommandGroup = new EntechCommandGroup()
-                .addCommand(subsystemManager.getElevatorSubsystem().shiftBack())
                 .addCommand(subsystemManager.getShooterSubsystem().turnOnShooter())
                 .getSequentialCommandGroup();
 
@@ -51,25 +50,25 @@ public class CommandGroupFactory {
 
     public SequentialCommandGroup getStopIntakeCommandGroup(){
         return new EntechCommandGroup()
-                .addCommand(subsystemManager.getIntakeSubsystem().stop())
-                .addCommand(subsystemManager.getElevatorSubsystem().stop())
+                .addCommand(subsystemManager.getIntakeSubsystem().stopIntake())
+                .addCommand(subsystemManager.getIntakeSubsystem().stopElevator())
                 .getSequentialCommandGroup();
     }
 
     public SequentialCommandGroup getStopShooterCommandGroup(){
         return new EntechCommandGroup()
-                .addCommand(subsystemManager.getElevatorSubsystem().stop())
+                .addCommand(subsystemManager.getIntakeSubsystem().stopElevator())
                 .addCommand(subsystemManager.getShooterSubsystem().turnOffShooter())
                 .addCommand(getHoodHomingCommandGroup())
                 .getSequentialCommandGroup();
     }
     
-    public ParallelCommandGroup getStartIntakeCommandGroup(){
+    public SequentialCommandGroup getStartIntakeCommandGroup(){
         return new EntechCommandGroup()
-                .addCommand(subsystemManager.getIntakeSubsystem().start())
-                .addCommand(subsystemManager.getElevatorSubsystem().start())
+                .addCommand(subsystemManager.getIntakeSubsystem().startIntake())
+                .addCommand(subsystemManager.getIntakeSubsystem().startElevator())
                 .addCommand(subsystemManager.getShooterSubsystem().turnOffShooter())
-                .getParallelCommandGroup();
+                .getSequentialCommandGroup();
     }
     
     public SequentialCommandGroup getSnapToGoalAndStartShooter(){

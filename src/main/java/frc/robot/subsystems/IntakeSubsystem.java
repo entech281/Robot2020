@@ -22,15 +22,23 @@ public class IntakeSubsystem extends BaseSubsystem {
     private double FULL_SPEED_FWD = 1;
     private double FULL_SPEED_BWD = -1;
     private double STOP_SPEED = 0;
+    
+    
+    private final int maxCurrent = 20;
+    private final int maxSustainedCurrent = 15;
+    private final int maxCurrentTime = 200;
 
 
     private WPI_TalonSRX intakeMotor;
     private TalonSpeedController intakeMotorController;
     
+    private WPI_TalonSRX elevatorMotor;
+    private TalonSpeedController elevatorMotorController;
+    
     private Solenoid deployIntake1;
     private Solenoid deployIntake2;
 
-    public Command start() {
+    public Command startIntake() {
         return new SingleShotCommand(this) {
             @Override
             public void doCommand() {
@@ -39,8 +47,17 @@ public class IntakeSubsystem extends BaseSubsystem {
             }
         }.withTimeout(EntechCommandBase.DEFAULT_TIMEOUT_SECONDS);
     }
+    
+    public Command startElevator() {
+        return new SingleShotCommand(this) {
+            @Override
+            public void doCommand() {
+                setElevatorSpeed(0.7);
+            }
+        }.withTimeout(EntechCommandBase.DEFAULT_TIMEOUT_SECONDS);
+    }
 
-    public Command stop() {
+    public Command stopIntake() {
         return new SingleShotCommand(this) {
             @Override
             public void doCommand() {
@@ -50,6 +67,7 @@ public class IntakeSubsystem extends BaseSubsystem {
         }.withTimeout(EntechCommandBase.DEFAULT_TIMEOUT_SECONDS);
     }
 
+    
     public Command reverse() {
         return new SingleShotCommand(this) {
             @Override
@@ -59,6 +77,15 @@ public class IntakeSubsystem extends BaseSubsystem {
         }.withTimeout(EntechCommandBase.DEFAULT_TIMEOUT_SECONDS);
     }
 
+    
+    public Command stopElevator() {
+        return new SingleShotCommand(this) {
+            @Override
+            public void doCommand() {
+                setElevatorSpeed(0);
+            }
+        }.withTimeout(EntechCommandBase.DEFAULT_TIMEOUT_SECONDS);
+    }
     @Override
     public void initialize() {
         if (intake) {
@@ -76,6 +103,16 @@ public class IntakeSubsystem extends BaseSubsystem {
             
 //            deployIntake1.set(false);
 //            deployIntake2.set(false);
+        }
+        if (elevator) {
+            TalonSettings motorSettings = TalonSettingsBuilder.defaults()
+                    .withCurrentLimits(maxCurrent, maxSustainedCurrent, maxCurrentTime).brakeInNeutral()
+                    .withDirections(false, false).noMotorOutputLimits().noMotorStartupRamping().useSpeedControl().build();
+
+            elevatorMotor = new WPI_TalonSRX(RobotConstants.CAN.ELEVATOR_MOTOR);
+            elevatorMotorController = new TalonSpeedController(elevatorMotor, motorSettings);
+            elevatorMotorController.configure();
+            elevatorMotor.set(ControlMode.PercentOutput, 0);
         }
     }
 
@@ -100,6 +137,13 @@ public class IntakeSubsystem extends BaseSubsystem {
         if (intake) {
             this.CURRENT_INTAKE_SPEED = desiredSpeed;
             intakeMotorController.setDesiredSpeed(this.CURRENT_INTAKE_SPEED);
+        }
+    }
+    
+    public void setElevatorSpeed(double desiredSpeed) {
+        if (elevator) {
+            logger.log("Intake Motor speed", -desiredSpeed);
+            elevatorMotorController.setDesiredSpeed(-desiredSpeed);
         }
     }
 

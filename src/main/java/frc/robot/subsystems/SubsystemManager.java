@@ -25,10 +25,6 @@ public class SubsystemManager {
         return navXSubsystem;
     }
 
-    public ElevatorSubsystem getElevatorSubsystem() {
-        return elevatorSubsystem;
-    }
-
     public ClimbSubsystem getClimbSubsystem() {
         return climbSubsystem;
     }
@@ -50,7 +46,6 @@ public class SubsystemManager {
     private NavXSubsystem navXSubsystem;
     private ShooterSubsystem shootSubsystem;
     private ClimbSubsystem climbSubsystem;
-    private ElevatorSubsystem elevatorSubsystem;
     private ColorSubsystem colorSubsystem;
     private VisionSubsystem visionSubsystem;
 
@@ -65,11 +60,10 @@ public class SubsystemManager {
         navXSubsystem = new NavXSubsystem();
         shootSubsystem = new ShooterSubsystem();
         climbSubsystem = new ClimbSubsystem();
-        elevatorSubsystem = new ElevatorSubsystem();
         colorSubsystem = new ColorSubsystem();
         visionSubsystem = new VisionSubsystem();
 
-        Collections.addAll(allSubsystems, driveSubsystem, intakeSubsystem, navXSubsystem, visionSubsystem, shootSubsystem, elevatorSubsystem);
+        Collections.addAll(allSubsystems, driveSubsystem, intakeSubsystem, navXSubsystem, visionSubsystem, shootSubsystem);
 
         allSubsystems.forEach(subsystem -> subsystem.initialize());
 

@@ -14,7 +14,7 @@ import frc.robot.commands.SnapAndShootCommand;
 import frc.robot.commands.SnapToVisionTargetCommand;
 import frc.robot.commands.SnapToYawCommand;
 import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.subsystems.ElevatorSubsystem;
+import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.NavXSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.SubsystemManager;
@@ -52,12 +52,12 @@ public class AutoPathBuilder {
         return new SnapToVisionTargetCommand(drive);
     }
     
-    public static Command snapToTargetShoot(DriveSubsystem drive, ShooterSubsystem shooter, ElevatorSubsystem elevator){
-        return new SnapAndShootCommand(drive, elevator,shooter);
+    public static Command snapToTargetShoot(DriveSubsystem drive, ShooterSubsystem shooter){
+        return new SnapAndShootCommand(drive, shooter);
     }
     
-    public static Command fireBalls(ElevatorSubsystem elevator){
-        return elevator.start();
+    public static Command fireBalls(IntakeSubsystem intake){
+        return intake.startElevator();
     }
     
     public static Command delay(double seconds){
@@ -129,8 +129,8 @@ public static class Builder implements BasicMoves{
         private DriveSubsystem drive;
         private NavXSubsystem navXSubsystem;
         private VisionSubsystem visionSubsystem;
-        private ElevatorSubsystem elevator;
         private ShooterSubsystem shooter;
+        private IntakeSubsystem intake;
         private CommandGroupFactory commandFactory;
         private boolean invertedStart;
 
@@ -140,8 +140,8 @@ public static class Builder implements BasicMoves{
             this.drive = subsystemManager.getDriveSubsystem();
             this.navXSubsystem = subsystemManager.getNavXSubsystem();
             this.visionSubsystem = subsystemManager.getVisionSubsystem();
-            this.elevator = subsystemManager.getElevatorSubsystem();
             this.shooter = subsystemManager.getShooterSubsystem();
+            this.intake = subsystemManager.getIntakeSubsystem();
             this.commandFactory = commandFactory;
             invertedStart = inverted;
         }
@@ -201,7 +201,7 @@ public static class Builder implements BasicMoves{
 
         @Override
         public BasicMoves fire() {
-            parallelCommands.add(fireBalls(elevator).withTimeout(10));
+            parallelCommands.add(fireBalls(intake).withTimeout(10));
             return this;
         }
 
