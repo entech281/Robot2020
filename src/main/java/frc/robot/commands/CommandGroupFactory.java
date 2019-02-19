@@ -65,8 +65,7 @@ public class CommandGroupFactory {
     
     public SequentialCommandGroup getStartIntakeCommandGroup(){
         return new EntechCommandGroup()
-                .addCommand(subsystemManager.getIntakeSubsystem().startIntake())
-                .addCommand(subsystemManager.getIntakeSubsystem().startElevator())
+                .addCommand(new IntakeOnCommand(subsystemManager.getIntakeSubsystem()))
                 .addCommand(subsystemManager.getShooterSubsystem().turnOffShooter())
                 .getSequentialCommandGroup();
     }

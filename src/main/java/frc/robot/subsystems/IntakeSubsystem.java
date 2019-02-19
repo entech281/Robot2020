@@ -5,6 +5,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.RobotConstants;
 import frc.robot.commands.EntechCommandBase;
@@ -24,6 +25,10 @@ public class IntakeSubsystem extends BaseSubsystem {
     private double FULL_SPEED_FWD = 1;
     private double FULL_SPEED_BWD = -1;
     private double STOP_SPEED = 0;
+    private double ELEVATOR_INTAKE_SPEED = 0.3;
+    private double INTAKE_REVERSE = -0.2;
+    
+    
 
     private final int maxCurrent = 20;
     private final int maxSustainedCurrent = 15;
@@ -37,6 +42,11 @@ public class IntakeSubsystem extends BaseSubsystem {
 
     private Solenoid deployIntake1;
     private Solenoid deployIntake2;
+    
+    private boolean intakeOn = false;
+    
+    private Timer timer;
+    private boolean timerRunning = false;
 
     private DigitalInput beam;
 
@@ -44,8 +54,7 @@ public class IntakeSubsystem extends BaseSubsystem {
         return new SingleShotCommand(this) {
             @Override
             public void doCommand() {
-                deployIntakeArms();
-                setIntakeMotorSpeed(FULL_SPEED_FWD);
+                intakeOn = true;
             }
         }.withTimeout(EntechCommandBase.DEFAULT_TIMEOUT_SECONDS);
     }
@@ -63,8 +72,7 @@ public class IntakeSubsystem extends BaseSubsystem {
         return new SingleShotCommand(this) {
             @Override
             public void doCommand() {
-                raiseIntakeArms();
-                setIntakeMotorSpeed(STOP_SPEED);
+                intakeOn = false;
             }
         }.withTimeout(EntechCommandBase.DEFAULT_TIMEOUT_SECONDS);
     }
@@ -100,12 +108,16 @@ public class IntakeSubsystem extends BaseSubsystem {
             intakeMotorController.configure();
             intakeMotor.set(ControlMode.PercentOutput, 0);
             
-//            deployIntake1 = new Solenoid(RobotConstants.CAN.PCM_ID, RobotConstants.CAN.INTAKE_SOL_1);
-//            deployIntake2 = new Solenoid(RobotConstants.CAN.PCM_ID, RobotConstants.CAN.INTAKE_SOL_2);
-            
-//            deployIntake1.set(false);
-//            deployIntake2.set(false);
         }
+        
+        if(PNEUMATICS_MOUNTED){
+            deployIntake1 = new Solenoid(RobotConstants.CAN.PCM_ID, RobotConstants.CAN.INTAKE_SOL_1);
+            deployIntake2 = new Solenoid(RobotConstants.CAN.PCM_ID, RobotConstants.CAN.INTAKE_SOL_2);
+            
+            deployIntake1.set(false);
+            deployIntake2.set(false);
+        }
+        
         if (elevator) {
             TalonSettings motorSettings = TalonSettingsBuilder.defaults()
                     .withCurrentLimits(maxCurrent, maxSustainedCurrent, maxCurrentTime).brakeInNeutral()
@@ -116,27 +128,68 @@ public class IntakeSubsystem extends BaseSubsystem {
             elevatorMotorController.configure();
             elevatorMotor.set(ControlMode.PercentOutput, 0);
         }
+        timer = new Timer();
         if(BALL_SENSOR){
             beam = new DigitalInput(RobotConstants.DIGITIAL_INPUT.BALL_SENSOR);
         }
     }
 
     public void deployIntakeArms(){
-//        deployIntake1.set(true);
-//        deployIntake2.set(true);
+        if(PNEUMATICS_MOUNTED){
+            deployIntake1.set(true);
+            deployIntake2.set(true);
+        }
     }
 
     public void raiseIntakeArms(){
-//        deployIntake1.set(false);
-//        deployIntake2.set(false);
+        if(PNEUMATICS_MOUNTED){
+            deployIntake1.set(false);
+            deployIntake2.set(false);
+        }
+    }
+    
+    public boolean isIntakeOn(){
+        return intakeOn;
     }
     
     @Override
     public void customPeriodic(RobotPose rPose, FieldPose fPose) {
-                logger.log("Current command", getCurrentCommand());
+        logger.log("Current command", getCurrentCommand());
     }
     
+    public boolean hasBallEntedElevator(){
+        return false;
+    }
+    
+    public boolean isTimerRunning(){
+        if(timerRunning){
+            timerRunning = !timer.hasElapsed(0.5);
+            if(!timerRunning){
+                timer.stop();
+            }
+        }
+        return timerRunning;
+    }
+    
+    public void startTimer(){
+        if(timerRunning){
+            timer.stop();
+            timer.start();
+        } else {
+            timer.start();
+        }
+    }
+    
+    public void startElevatorIntakeAndStopIntake(){
+        setElevatorSpeed(ELEVATOR_INTAKE_SPEED);
+        setIntakeMotorSpeed(INTAKE_REVERSE);
+    }
 
+    public void stopElevatorAndStartIntake(){
+        setElevatorSpeed(STOP_SPEED);
+        setIntakeMotorSpeed(FULL_SPEED_FWD);
+    }    
+    
     public void setIntakeMotorSpeed(double desiredSpeed) {
         logger.log("Intake Motor speed", desiredSpeed);
         if (intake) {
