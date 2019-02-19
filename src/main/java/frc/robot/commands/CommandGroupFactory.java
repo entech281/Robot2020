@@ -60,7 +60,6 @@ public class CommandGroupFactory {
         return new EntechCommandGroup()
                 .addCommand(subsystemManager.getElevatorSubsystem().stop())
                 .addCommand(subsystemManager.getShooterSubsystem().turnOffShooter())
-                .addCommand(subsystemManager.getShooterSubsystem().disableAutoShooting())
                 .addCommand(getHoodHomingCommandGroup())
                 .getSequentialCommandGroup();
     }
@@ -83,7 +82,6 @@ public class CommandGroupFactory {
     
     public SequentialCommandGroup getStartShooterCommandGroup(){
         return new EntechCommandGroup()
-                .addCommand(subsystemManager.getElevatorSubsystem().shiftBack())
                 .addCommand(subsystemManager.getShooterSubsystem().turnOnShooter())
                 .getSequentialCommandGroup();
     }
