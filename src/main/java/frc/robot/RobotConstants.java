@@ -4,6 +4,10 @@ import frc.robot.pose.*;
 
 public class RobotConstants {
 
+    public interface DIGITIAL_INPUT{
+        public static final int BALL_SENSOR = 1;
+    }
+
     public interface CAN {
 
         public static final int FRONT_LEFT_MOTOR = 3;
