@@ -38,5 +38,6 @@ gradle-app.setting
 
 .*
 !/.gitignore
+!/.travis.yml
 
 # End of https://www.gitignore.io/api/java,gradle
