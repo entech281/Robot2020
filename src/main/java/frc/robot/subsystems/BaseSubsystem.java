@@ -9,21 +9,18 @@ package frc.robot.subsystems;
 
 import java.util.ArrayList;
 import java.util.List;
-import frc.robot.timer.*;
-import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * Add your docs here.
  */
-public abstract class BaseSubsystem extends Subsystem {
+public abstract class BaseSubsystem extends SubsystemBase {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
 
   // Creates a list of all the subsystems extending BaseSubsystem
   private static List <BaseSubsystem> initialize_these_list = new ArrayList <BaseSubsystem>();
-  
-  public static final TimeTracker periodicStopWatch = new TimeTracker();
 
 
   public BaseSubsystem() {
@@ -41,10 +38,4 @@ public abstract class BaseSubsystem extends Subsystem {
   }
 
   public abstract void initialize();
-
-  @Override
-  public void initDefaultCommand() {
-    // Set the default command for a subsystem here.
-    // setDefaultCommand(new MySpecialCommand());
-  }
 }
