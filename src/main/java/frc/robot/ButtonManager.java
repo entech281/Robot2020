@@ -1,8 +1,8 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.buttons.JoystickButton;
-import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.Command;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -10,7 +10,9 @@ import java.util.ArrayList;
 /**
  * @author Peter Labadorf
  * 
- * {@summary This class reduces boilerplate button managment code in the operator interface implementation by building and keeping references to all the buttons on the joystick.}
+ * {@summary This class reduces boilerplate button managment code in the 
+ * operator interface implementation by building and keeping references 
+ * to all the buttons on the joystick.}
  * 
  */
 class JoystickButtonManager {
@@ -34,32 +36,27 @@ class JoystickButtonManager {
     JoystickButtonManager newButton(int port) throws Exception {
         if(null != buttonBeingBuilt)
             buttonBeingBuilt = new JoystickButton(joystick, port);
-        else 
-            throw new Exception("You called newButton when you were already building a button!!1");
         return this;
     }
 
     JoystickButtonManager whenPressed(Command command) throws Exception {
 
-        if(null == buttonBeingBuilt)
-            throw new Exception("You called whenPressed when you were not already building a button!!1");
-        buttonBeingBuilt.whenPressed(command);
+        if(null != buttonBeingBuilt)
+            buttonBeingBuilt.whenPressed(command);
         return this;
     }
 
     JoystickButtonManager whenReleased(Command command) throws Exception {
 
-        if(null == buttonBeingBuilt)
-            throw new Exception("You called whenReleased when you were not already building a button!!1");
-        buttonBeingBuilt.whenReleased(command);
+        if(null != buttonBeingBuilt)
+            buttonBeingBuilt.whenReleased(command);
         return this;
     }   
     
     JoystickButtonManager whileHeld(Command command) throws Exception {
 
-        if(null == buttonBeingBuilt)
-            throw new Exception("You called whileHeld when you were not already building a button!!1");
-        buttonBeingBuilt.whileHeld(command);
+        if(null != buttonBeingBuilt)
+            buttonBeingBuilt.whileHeld(command);
         return this;
     } 
 
