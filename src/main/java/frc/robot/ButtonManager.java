@@ -33,27 +33,27 @@ class JoystickButtonManager {
         this.joystick = joystick;
     }
 
-    JoystickButtonManager newButton(int port) throws Exception {
+    JoystickButtonManager newButton(int port) {
         if(null != buttonBeingBuilt)
             buttonBeingBuilt = new JoystickButton(joystick, port);
         return this;
     }
 
-    JoystickButtonManager whenPressed(Command command) throws Exception {
+    JoystickButtonManager whenPressed(Command command) {
 
         if(null != buttonBeingBuilt)
             buttonBeingBuilt.whenPressed(command);
         return this;
     }
 
-    JoystickButtonManager whenReleased(Command command) throws Exception {
+    JoystickButtonManager whenReleased(Command command) {
 
         if(null != buttonBeingBuilt)
             buttonBeingBuilt.whenReleased(command);
         return this;
     }   
     
-    JoystickButtonManager whileHeld(Command command) throws Exception {
+    JoystickButtonManager whileHeld(Command command) {
 
         if(null != buttonBeingBuilt)
             buttonBeingBuilt.whileHeld(command);
