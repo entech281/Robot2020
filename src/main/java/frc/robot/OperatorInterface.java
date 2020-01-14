@@ -14,6 +14,15 @@ public class OperatorInterface {
         this.robot = robot;
         this.driveStick = new Joystick(RobotMap.GAMEPAD.driverStick);
         this.manager = new JoystickButtonManager(driveStick);
+        createButtons();
+        createCommands();
+
+    }
+  
+    protected void createButtons() {
+    }
+    
+    protected void createCommands() { 
     }
     
     public double getDriveInputX(){
