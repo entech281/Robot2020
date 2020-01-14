@@ -11,6 +11,7 @@ public class OperatorInterface {
 
     public OperatorInterface(Robot robot){
       this.robot = robot;
+      this.driveStick = new Joystick(0);
       createButtons();
       createCommands();
 
