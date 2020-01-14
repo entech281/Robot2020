@@ -47,7 +47,6 @@ public class DriveSubsystem extends BaseSubsystem{
     }
 
     public void drive(double x, double y){
-        SmartDashboard.putNumber("asdas", 1);
         m_robotDrive.arcadeDrive(y, x);
     }
 
