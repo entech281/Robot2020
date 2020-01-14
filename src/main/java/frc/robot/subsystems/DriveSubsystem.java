@@ -40,10 +40,10 @@ public class DriveSubsystem extends BaseSubsystem{
         m_right = new SpeedControllerGroup(m_frontRight, m_rearRight);
         
         m_robotDrive = new DifferentialDrive(m_left, m_right);
-        m_frontLeft.getEncoder();
-        m_frontRight.getEncoder();
-        m_rearLeft.getEncoder();
-        m_rearRight.getEncoder();
+        e_frontLeft = m_frontLeft.getEncoder();
+        e_frontRight = m_frontRight.getEncoder();
+        e_rearLeft = m_rearLeft.getEncoder();
+        e_rearRight = m_rearRight.getEncoder();
     }
 
     public void drive(double x, double y){
