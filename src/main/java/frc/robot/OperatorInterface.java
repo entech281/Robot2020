@@ -10,7 +10,6 @@ public class OperatorInterface {
     private Joystick driveStick;
     private JoystickButtonManager manager;
 
-
     public OperatorInterface(Robot robot){
         this.robot = robot;
         this.driveStick = new Joystick(RobotMap.GAMEPAD.driverStick);
