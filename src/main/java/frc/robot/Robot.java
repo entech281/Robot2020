@@ -8,9 +8,9 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
+import frc.robot.subsystems.BaseSubsystem;
+import frc.robot.subsystems.DriveSubsystem;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 /**
  * The VM is configured to automatically run this class, and to call the
  * functions corresponding to each mode, as described in the TimedRobot
@@ -19,9 +19,19 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * project.
  */
 public class Robot extends TimedRobot {
-  
-     public void teleopPeriodic(){
 
+     DriveSubsystem robotDrive;
+     OperatorInterface oi;
+
+     public void robotInit(){
+          oi = new OperatorInterface(this);
+          robotDrive = new DriveSubsystem();
+          BaseSubsystem.initializeList();
+
+     }
+     public void teleopPeriodic(){
+          CommandScheduler.getInstance().run();
+          robotDrive.drive(oi.getDriveInputX(), oi.getDriveInputY());
      }
   
 }
