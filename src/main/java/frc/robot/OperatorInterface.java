@@ -6,11 +6,11 @@ import frc.robot.Robot;
 import frc.robot.RobotMap;
 
 public class OperatorInterface {
-    private Robot robot;
-    private Joystick driveStick;
-    private JoystickButtonManager manager;
+    private final Robot robot;
+    private final Joystick driveStick;
+    private final JoystickButtonManager manager;
 
-    public OperatorInterface(Robot robot){
+    public OperatorInterface(final Robot robot){
         this.robot = robot;
         this.driveStick = new Joystick(RobotMap.GAMEPAD.driverStick);
         this.manager = new JoystickButtonManager(driveStick);
