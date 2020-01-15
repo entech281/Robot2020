@@ -5,7 +5,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Robot;
 import frc.robot.RobotMap;
 
-public class OperatorInterface {
+public class OperatorInterface implements DriveInstructionSource{
     private Robot robot;
     private Joystick driveStick;
     private JoystickButtonManager manager;
@@ -18,12 +18,26 @@ public class OperatorInterface {
     }
     
     public double getDriveInputX(){
-        SmartDashboard.putNumber("Joystick X", driveStick.getX());
+        
         return driveStick.getX();
     }
 
     public double getDriveInputY(){
         SmartDashboard.putNumber("Joystick Y", driveStick.getY());
         return -driveStick.getY();
+    }
+
+    @Override
+    public DriveInstruction getNextInstruction() {
+        double x;
+
+        if (driveStick.getTrigger()) {
+            x = -driveStick.getTwist();
+        } else {
+            x = -driveStick.getX();
+        }
+        double y = driveStick.getY();
+
+        return new DriveInstruction( x , y );
     }
 }
