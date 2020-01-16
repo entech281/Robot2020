@@ -1,58 +1,62 @@
 package frc.robot.pose;
 
-public class RobotPose{
+public class RobotPose implements SensorWriter, SensorReader, PositionWriter, PositionReader, PositionAccessor{
+    
     private double theta;
-    private double x; 
-    private double y;
+    private double lateral; 
+    private double horizontal;
     private boolean matchesRed;
     private boolean matchesBlue;
     private boolean matchesGreen;
-
-
+    
+    @Override
     public double getTheta() {
-        return theta;
+        return this.theta;
     }
-
+    @Override
     public void setTheta(double theta) {
         this.theta = theta;
     }
+    @Override
 
-    public double getX() {
-        return x;
+    public double getLateral() {
+        return this.lateral;
+    }
+    @Override
+    public void setLateral(double lateral) {
+        this.lateral = lateral;
+    }
+    @Override
+    public double getHorizontal() {
+        return this.horizontal;
     }
 
-    public void setX(double x) {
-        this.x = x;
+    @Override
+    public void setHorizontal(double horizontal) {
+        this.horizontal = horizontal;
     }
 
-    public double getY() {
-        return y;
-    }
-
-    public void setY(double y) {
-        this.y = y;
-    }
-
-    public boolean isMatchesRed() {
+    @Override
+    public boolean isRedMatch() {
         return matchesRed;
     }
-
+    @Override
     public void setMatchesRed(boolean matchesRed) {
         this.matchesRed = matchesRed;
     }
-
-    public boolean isMatchesBlue() {
+    @Override
+    public boolean isBlueMatch() {
         return matchesBlue;
     }
-
+    @Override
     public void setMatchesBlue(boolean matchesBlue) {
         this.matchesBlue = matchesBlue;
     }
-
-    public boolean isMatchesGreen() {
+    @Override   
+    public boolean isGreenMatch() {
         return matchesGreen;
     }
-
+    @Override
     public void setMatchesGreen(boolean matchesGreen) {
         this.matchesGreen = matchesGreen;
     }

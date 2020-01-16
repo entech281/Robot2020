@@ -50,7 +50,4 @@ public class DriveSubsystem extends BaseSubsystem{
     public void drive(double x, double y){
         m_robotDrive.arcadeDrive(y, x);
     }
-
-    public Pose2d Update
-        
 }
