@@ -12,8 +12,7 @@ public class OperatorInterface implements DriveInstructionSource{
     private JoystickButtonManager manager;
     private DataLogger logger;
 
-
-    public OperatorInterface(Robot robot){
+    public OperatorInterface(final Robot robot){
         this.robot = robot;
         
         logger = DataLoggerFactory.getLoggerFactory().createDataLogger("OperatorInterface");
