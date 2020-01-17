@@ -1,8 +1,9 @@
 package frc.robot.sensors;
 
-public enum ColorMatch{
+public enum DetectedColor{
     RED,
     BLUE,
     GREEN,
-    YELLOW
+    YELLOW,
+    UNKNOWN
 }
