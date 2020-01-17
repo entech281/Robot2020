@@ -1,31 +1,35 @@
 package frc.robot.pose;
 
-public class RobotPose implements SensorWriter, SensorReader, PositionWriter, PositionReader, PositionAccessor{
-    
+import edu.wpi.first.wpilibj.geometry.Pose2d;
+import edu.wpi.first.wpilibj.geometry.Rotation2d;
+
+public class RobotPose implements PositionWriter, PositionReader, PositionAccessor {
+
     private double theta;
-    private double lateral; 
+    private double lateral;
     private double horizontal;
-    private boolean matchesRed;
-    private boolean matchesBlue;
-    private boolean matchesGreen;
-    
+
     @Override
     public double getTheta() {
         return this.theta;
     }
+
     @Override
     public void setTheta(double theta) {
         this.theta = theta;
     }
+
     @Override
 
     public double getLateral() {
         return this.lateral;
     }
+
     @Override
     public void setLateral(double lateral) {
         this.lateral = lateral;
     }
+
     @Override
     public double getHorizontal() {
         return this.horizontal;
@@ -36,28 +40,7 @@ public class RobotPose implements SensorWriter, SensorReader, PositionWriter, Po
         this.horizontal = horizontal;
     }
 
-    @Override
-    public boolean isRedMatch() {
-        return matchesRed;
-    }
-    @Override
-    public void setMatchesRed(boolean matchesRed) {
-        this.matchesRed = matchesRed;
-    }
-    @Override
-    public boolean isBlueMatch() {
-        return matchesBlue;
-    }
-    @Override
-    public void setMatchesBlue(boolean matchesBlue) {
-        this.matchesBlue = matchesBlue;
-    }
-    @Override   
-    public boolean isGreenMatch() {
-        return matchesGreen;
-    }
-    @Override
-    public void setMatchesGreen(boolean matchesGreen) {
-        this.matchesGreen = matchesGreen;
+    public Pose2d getWPIRobotPose() {
+        return new Pose2d(lateral, horizontal, new Rotation2d(theta));
     }
 }
