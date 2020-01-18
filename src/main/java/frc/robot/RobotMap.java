@@ -2,6 +2,7 @@ package frc.robot;
 
 
 public class RobotMap{
+    public static final int NAVX_PORT = 0;
     public interface CAN{
         public static final int FRONT_LEFT_MOTOR = 3;
         public static final int FRONT_RIGHT_MOTOR = 1;
