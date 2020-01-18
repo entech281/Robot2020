@@ -89,5 +89,11 @@ public class TestPoseMathematics {
         assertEquals(pose2.getTheta(), pose1.getTheta(), 0.1);
         assertEquals(pose2.getLateral(), pose1.getLateral(), 0.1);
         assertEquals(pose2.getHorizontal(), pose1.getHorizontal(), 0.1);
+
+        pose1 = PoseMathematics.calculateRobotPositionChange(Math.PI, 0);
+        pose2 = new RobotPose(-1, 0, 180);
+        assertEquals(pose2.getTheta(), pose1.getTheta(), 0.1);
+        assertEquals(pose2.getLateral(), pose1.getLateral(), 0.1);
+        assertEquals(pose2.getHorizontal(), pose1.getHorizontal(), 0.1);
     }
 }
