@@ -27,4 +27,9 @@ public class RobotMap{
         public static final int shootButton = 1;
         public static final int emergencyStopIntakeButton = 10;
     }
+
+    public interface DIMENSIONS {
+        // Must be in inches
+        public static final double robotWidth = 3;
+    }
 }
