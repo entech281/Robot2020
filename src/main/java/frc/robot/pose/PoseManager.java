@@ -1,12 +1,14 @@
 package frc.robot.pose;
 
+
+//The kept pose is at the center of the robot.
 public class PoseManager implements PoseGenerator{
-    RobotPose pose;
-    RobotPose encoderPose;
+    PositionReader pose;
+    PositionReader encoderPose;
     PoseGenerator drivePoseGenerator;
     
     @Override
-    public RobotPose getPose(){
+    public PositionReader getPose(){
         encoderPose = drivePoseGenerator.getPose();
         pose = encoderPose;
         return pose;

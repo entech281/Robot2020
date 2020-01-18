@@ -30,6 +30,8 @@ public class RobotMap{
 
     public interface DIMENSIONS {
         // Must be in inches
-        public static final double robotWidth = 3;
+        //TODO put in real values
+        public static final double ROBOT_WIDTH = 3;
+        public static final double ROBOT_HEIGHT = 4;
     }
 }
