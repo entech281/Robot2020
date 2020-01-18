@@ -42,7 +42,7 @@ public class SparkMaxSettingsBuilder {
 
     public static SparkMaxSettings disabledCopy(SparkMaxSettings other){
         SparkMaxSettings s = other.copy();
-        s.ctrlType = ControlType.kDutyCycle;
+        s.setControlType(ControlType.kDutyCycle);
         return s;
     }
 
@@ -201,13 +201,13 @@ public class SparkMaxSettingsBuilder {
 
         @Override
         public GainSettings usePositionControl() {
-            settings.ctrlType = ControlType.kSmartMotion;
+            settings.setControlType(ControlType.kSmartMotion);
             return this;
         }
 
         @Override
         public SpeedControlSettings useSpeedControl() {
-            settings.ctrlType = ControlType.kVelocity;
+            settings.setControlType(ControlType.kVelocity);
             return this;
         }
 

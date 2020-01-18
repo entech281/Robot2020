@@ -1,10 +1,13 @@
 package frc.robot.subsystems;
 
 import java.io.Serializable;
+
+import com.revrobotics.CANEncoder;
 import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANPIDController.AccelStrategy;
 import com.revrobotics.ControlType;
+import com.revrobotics.SparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
@@ -28,7 +31,7 @@ public class SparkMaxSettings implements Serializable{
 	public MotorOutputLimits outputLimits = new MotorOutputLimits();
 	public IdleMode brakeMode = IdleMode.kBrake;
 	public MotionProfile profile = new MotionProfile();
-	public ControlType ctrlType = ControlType.kDutyCycle;
+	private ControlType ctrlType = ControlType.kDutyCycle;
 	public double demand = DEFAULT_DEMAND;
 	public boolean follow = false;
 
@@ -43,6 +46,8 @@ public class SparkMaxSettings implements Serializable{
 		//Current Limits
 		pidController = new CANPIDController(spark);
 
+
+		spark.setCANTimeout(TIMEOUT_MS);
 		spark.setSmartCurrentLimit(currentLimits.smartLimit);
 		spark.setClosedLoopRampRate(rampUp.rampUpSecondsClosedLoop);
 		spark.setOpenLoopRampRate(rampUp.rampUpSecondsOpenLoop);
@@ -79,6 +84,11 @@ public class SparkMaxSettings implements Serializable{
 		}
 	}
 
+	public void setControlType(ControlType ctrlType){
+		this.follow = false;
+		this.ctrlType = ctrlType;
+	}
+	
 	public void setMode(CANSparkMax spark) {
 		CANSparkMax leader;
 		if(this.follow){
