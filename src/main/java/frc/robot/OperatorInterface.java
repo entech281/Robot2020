@@ -12,20 +12,17 @@ public class OperatorInterface {
     private final Robot robot;
     private final Joystick driveStick;
     private final JoystickButtonManager manager;
-    private final IntakeSubsystem intake;
 
     public OperatorInterface(final Robot robot){
         this.robot = robot;
         this.driveStick = new Joystick(RobotMap.GAMEPAD.driverStick);
         this.manager = new JoystickButtonManager(driveStick);
-        
-        this.intake = new IntakeSubsystem();
 
         manager.addButton(RobotMap.BUTTONS.START_INTAKE_BUTTON)
-            .whenPressed(new StartIntakeCommand(intake))
+            .whenPressed(new StartIntakeCommand(robot.getIntakeSubsystem()))
             .add();
         manager.addButton(RobotMap.BUTTONS.STOP_INTAKE_BUTTON)
-            .whenPressed(new StopIntakeCommand(intake))
+            .whenPressed(new StopIntakeCommand(robot.getIntakeSubsystem()))
             .add();
     }
   
