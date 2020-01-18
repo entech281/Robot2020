@@ -8,7 +8,7 @@ import frc.robot.controllers.TalonSpeedController;
 
 
  public class IntakeSubsystem extends BaseSubsystem{
-    private final double INTAKE_SPEED = 1;
+    private final double INTAKE_SPEED = 0.2;
 
     private final WPI_TalonSRX intakeMotor = new WPI_TalonSRX(RobotMap.CAN.INTAKE_MOTOR);
     private TalonSpeedController intakeMotorController;
