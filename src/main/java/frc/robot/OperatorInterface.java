@@ -4,6 +4,9 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Robot;
 import frc.robot.RobotMap;
+import frc.robot.commands.StartIntakeCommand;
+import frc.robot.commands.StopIntakeCommand;
+import frc.robot.subsystems.IntakeSubsystem;
 
 public class OperatorInterface {
     private final Robot robot;
@@ -14,16 +17,13 @@ public class OperatorInterface {
         this.robot = robot;
         this.driveStick = new Joystick(RobotMap.GAMEPAD.driverStick);
         this.manager = new JoystickButtonManager(driveStick);
-        createButtons();
-        createCommands();
 
+        manager.addButton(RobotMap.BUTTONS.INTAKE_BUTTON)
+            .whenPressed(new StartIntakeCommand(robot.getIntakeSubsystem()))
+            .whenReleased(new StopIntakeCommand(robot.getIntakeSubsystem()))
+            .add();
     }
   
-    protected void createButtons() {
-    }
-    
-    protected void createCommands() { 
-    }
     
     public double getDriveInputX(){
         SmartDashboard.putNumber("Joystick X", driveStick.getX());
