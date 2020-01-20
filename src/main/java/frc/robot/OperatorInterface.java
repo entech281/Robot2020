@@ -18,11 +18,9 @@ public class OperatorInterface {
         this.driveStick = new Joystick(RobotMap.GAMEPAD.driverStick);
         this.manager = new JoystickButtonManager(driveStick);
 
-        manager.addButton(RobotMap.BUTTONS.START_INTAKE_BUTTON)
+        manager.addButton(RobotMap.BUTTONS.INTAKE_BUTTON)
             .whenPressed(new StartIntakeCommand(robot.getIntakeSubsystem()))
-            .add();
-        manager.addButton(RobotMap.BUTTONS.STOP_INTAKE_BUTTON)
-            .whenPressed(new StopIntakeCommand(robot.getIntakeSubsystem()))
+            .whenReleased(new StopIntakeCommand(robot.getIntakeSubsystem()))
             .add();
     }
   

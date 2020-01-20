@@ -2,13 +2,15 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.RobotMap;
 import frc.robot.controllers.TalonSpeedController;
 
 
 
  public class IntakeSubsystem extends BaseSubsystem{
-    private final double INTAKE_SPEED = 0.2;
+    private double INTAKE_SPEED = 1;
 
     private final WPI_TalonSRX intakeMotor = new WPI_TalonSRX(RobotMap.CAN.INTAKE_MOTOR);
     private TalonSpeedController intakeMotorController;
@@ -28,12 +30,10 @@ import frc.robot.controllers.TalonSpeedController;
         intakeMotor.set(ControlMode.PercentOutput,0);
     }
 
-    public void startIntakeMotor() {
-        intakeMotorController.setDesiredSpeed(INTAKE_SPEED);
+    public void setIntakeMotorSpeed(double desiredSpeed) {
+        this.INTAKE_SPEED = desiredSpeed;
     }
-
-    public void stopIntakeMotor(){
-        intakeMotorController.setDesiredSpeed(0);
+    public void updateIntakeMotor() {
+        intakeMotorController.setDesiredSpeed(this.INTAKE_SPEED);
     }
-
  } 

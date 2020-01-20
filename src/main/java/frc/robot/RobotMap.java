@@ -23,8 +23,6 @@ public class RobotMap{
     }
 
     public interface BUTTONS{
-        public static final int SHOOT_BUTTON = 1;
-        public static final int STOP_INTAKE_BUTTON = 10;
-        public static final int START_INTAKE_BUTTON = 9;
+        public static final int INTAKE_BUTTON = 1;
     }
 }
