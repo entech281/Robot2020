@@ -5,6 +5,8 @@ import frc.robot.Robot;
 import frc.robot.RobotMap;
 import frc.robot.logger.DataLogger;
 import frc.robot.logger.DataLoggerFactory;
+import frc.robot.commands.StartIntakeCommand;
+import frc.robot.commands.StopIntakeCommand;
 
 public class OperatorInterface implements DriveInstructionSource{
     private Robot robot;
@@ -14,11 +16,16 @@ public class OperatorInterface implements DriveInstructionSource{
 
     public OperatorInterface(final Robot robot){
         this.robot = robot;
-        
         logger = DataLoggerFactory.getLoggerFactory().createDataLogger("OperatorInterface");
-        driveStick = new Joystick(RobotMap.GAMEPAD.driverStick);
-        manager = new JoystickButtonManager(driveStick);
+        this.driveStick = new Joystick(RobotMap.GAMEPAD.driverStick);
+        this.manager = new JoystickButtonManager(driveStick);
+
+        manager.addButton(RobotMap.BUTTONS.INTAKE_BUTTON)
+            .whenPressed(new StartIntakeCommand(robot.getIntakeSubsystem()))
+            .whenReleased(new StopIntakeCommand(robot.getIntakeSubsystem()))
+            .add();
     }
+  
     
     public double getDriveInputX(){
         logger.log("drive X", driveStick.getX());

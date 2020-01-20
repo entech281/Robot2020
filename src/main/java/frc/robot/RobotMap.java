@@ -2,6 +2,7 @@ package frc.robot;
 
 
 public class RobotMap{
+    public static final int NAVX_PORT = 0;
     public interface CAN{
         public static final int FRONT_LEFT_MOTOR = 3;
         public static final int FRONT_RIGHT_MOTOR = 1;
@@ -20,7 +21,6 @@ public class RobotMap{
     }
 
     public interface BUTTONS{
-        public static final int shootButton = 1;
-        public static final int emergencyStopIntakeButton = 10;
+        public static final int INTAKE_BUTTON = 1;
     }
 }
