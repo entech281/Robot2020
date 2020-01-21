@@ -12,7 +12,6 @@ import java.util.List;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.logger.DataLogger;
 import frc.robot.logger.DataLoggerFactory;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * Add your docs here.
@@ -26,6 +25,7 @@ public abstract class BaseSubsystem extends SubsystemBase {
 
 
   public BaseSubsystem() {
+    DataLoggerFactory.configureForMatch();
     this.logger = DataLoggerFactory.getLoggerFactory().createDataLogger(this.getName());
     initialize_these_list.add(this);
   }
@@ -35,7 +35,6 @@ public abstract class BaseSubsystem extends SubsystemBase {
    
     for ( BaseSubsystem subsystem: initialize_these_list ) {
       subsystem.initialize();
-      SmartDashboard.putData(subsystem);
     }
   }
 
