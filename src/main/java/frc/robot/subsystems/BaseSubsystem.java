@@ -10,7 +10,8 @@ package frc.robot.subsystems;
 import java.util.ArrayList;
 import java.util.List;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.logger.DataLogger;
+import frc.robot.logger.DataLoggerFactory;
 
 /**
  * Add your docs here.
@@ -18,13 +19,14 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public abstract class BaseSubsystem extends SubsystemBase {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
-
+  protected DataLogger logger;
   // Creates a list of all the subsystems extending BaseSubsystem
   private static List <BaseSubsystem> initialize_these_list = new ArrayList <BaseSubsystem>();
 
 
   public BaseSubsystem() {
-    
+    DataLoggerFactory.configureForMatch();
+    this.logger = DataLoggerFactory.getLoggerFactory().createDataLogger(this.getName());
     initialize_these_list.add(this);
   }
 
@@ -33,7 +35,6 @@ public abstract class BaseSubsystem extends SubsystemBase {
    
     for ( BaseSubsystem subsystem: initialize_these_list ) {
       subsystem.initialize();
-      SmartDashboard.putData(subsystem);
     }
   }
 

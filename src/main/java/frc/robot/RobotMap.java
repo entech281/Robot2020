@@ -9,7 +9,6 @@ public class RobotMap{
         public static final int REAR_LEFT_MOTOR = 4;
         public static final int REAR_RIGHT_MOTOR = 2;
         public static final int SHOOTER_MOTOR = 7;
-        public static final int HOPPER_MOTOR = 6;
         public static final int INTAKE_MOTOR = 8;
         public static final int PCM_ID = 10;
     }
@@ -24,8 +23,7 @@ public class RobotMap{
     }
 
     public interface BUTTONS{
-        public static final int shootButton = 1;
-        public static final int emergencyStopIntakeButton = 10;
+        public static final int INTAKE_BUTTON = 1;
     }
 
     public interface DIMENSIONS {
