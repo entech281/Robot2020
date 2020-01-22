@@ -6,10 +6,11 @@ import frc.robot.pose.RobotPose;
 import frc.robot.subsystems.EncoderInchesConverter;
 
 public class EncoderPoseGenerator implements PoseGenerator{
-    RobotPose pose;
-    SparkPositionControllerGroup sparkControllers;
     //TODO: Fix conversion
     public final int ENCODER_CLICKS_PER_INCH = 9;
+    
+    SparkPositionControllerGroup sparkControllers;
+    RobotPose pose;
     double lastLeft;
     double lastRight;
 
