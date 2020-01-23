@@ -1,7 +1,8 @@
 package frc.robot;
 
+import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
 
-public class RobotMap{
+public class RobotMap {
     public static final int NAVX_PORT = 0;
     public interface CAN{
         public static final int FRONT_LEFT_MOTOR = 3;
@@ -26,6 +27,9 @@ public class RobotMap{
     
         // Example value only - as above, this must be tuned for your drive!
         public static final double kPDriveVel = 8.5;
+        public static final double kTrackwidthMeters = 0.69; //TODO get actual width between wheels
+        public static final DifferentialDriveKinematics kDriveKinematics =
+            new DifferentialDriveKinematics(kTrackwidthMeters);
     }
 
     public interface GAMEPAD{
