@@ -49,12 +49,16 @@ public class SparkPositionControllerGroup {
         rearRight.setDesiredPosition(rightPose*REAR_RIGHT_ADJUST);
     }
 
-    public Position getCurrePosition(EncoderInchesConverter converter){
+    public double getLeftCurrentPosition(EncoderInchesConverter converter){
         double left = converter.toInches(computeLeftEncoderCounts());
-        double right = converter.toInches(computeRightEncoderCounts());
-
-        return new Position(left, right);
+        return left;
     }
+
+    public double getRightCurrentPosition(EncoderInchesConverter converter){
+        double right = converter.toInches(computeRightEncoderCounts());
+        return right;
+    }
+
     public int computeLeftEncoderCounts() {
 		int total = 0;
 		int count = 0;

@@ -25,4 +25,11 @@ public class RobotMap{
     public interface BUTTONS{
         public static final int INTAKE_BUTTON = 1;
     }
+
+    public interface DIMENSIONS {
+        // Must be in inches
+        //TODO put in real values
+        public static final double ROBOT_WIDTH = 3;
+        public static final double ROBOT_HEIGHT = 4;
+    }
 }
