@@ -36,6 +36,14 @@ public class EncoderPoseGenerator implements PoseGenerator{
         return pose;
     }
 
+    @Override
+    public void updateFromOfficialPose(PositionReader pose) {
+        // TODO Auto-generated method stub
+        this.pose.setHorizontal(pose.getHorizontal());
+        this.pose.setLateral(pose.getLateral());
+        this.pose.setTheta(pose.getTheta());
+    }
+
 
 
 }
