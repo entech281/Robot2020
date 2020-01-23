@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.RobotMap;
+import frc.robot.subsystems.drive.FourSparkMaxWithSettings;
 
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
@@ -30,6 +31,9 @@ public class DriveSubsystem extends BaseSubsystem{
     CANEncoder e_rearLeft;
     CANEncoder e_rearRight;
 
+    private FourSparkMaxWithSettings speedModeSparks;
+    private FourSparkMaxWithSettings positiionModeSparks;
+
     @Override
     public void initialize() {
         m_frontLeft = new CANSparkMax(RobotMap.CAN.FRONT_LEFT_MOTOR, MotorType.kBrushless);
@@ -41,6 +45,89 @@ public class DriveSubsystem extends BaseSubsystem{
         m_right = new SpeedControllerGroup(m_frontRight, m_rearRight);
         
         m_robotDrive = new DifferentialDrive(m_left, m_right);
+
+        SparkMaxSettings frontLeftSpeedSettings = SparkMaxSettingsBuilder.defaults()
+                                                    .withCurrentLimits(35)
+                                                    .coastInNeutral()
+                                                    .withDirections(false, false)
+                                                    .limitMotorOutputs(1.0, -1.0)
+                                                    .noMotorStartupRamping()
+                                                    .useSpeedControl()
+                                                    .build();
+                                                
+        SparkMaxSettings frontRightSpeedSettings = SparkMaxSettingsBuilder.defaults()
+                                                    .withCurrentLimits(35)
+                                                    .coastInNeutral()
+                                                    .withDirections(false, false)
+                                                    .limitMotorOutputs(1.0, -1.0)
+                                                    .noMotorStartupRamping()
+                                                    .useSpeedControl()
+                                                    .build();
+
+
+
+        SparkMaxSettings rearLeftSpeedSettings = SparkMaxSettingsBuilder.defaults()
+                                                    .withCurrentLimits(35)
+                                                    .coastInNeutral()
+                                                    .withDirections(false, false)
+                                                    .limitMotorOutputs(1.0, -1.0)
+                                                    .noMotorStartupRamping()
+                                                    .useSpeedControl()
+                                                    .build();
+                                                
+        SparkMaxSettings rearRightSpeedSettings = SparkMaxSettingsBuilder.defaults()
+                                                    .withCurrentLimits(35)
+                                                    .coastInNeutral()
+                                                    .withDirections(false, false)
+                                                    .limitMotorOutputs(1.0, -1.0)
+                                                    .noMotorStartupRamping()
+                                                    .useSpeedControl()
+                                                    .build();
+
+        
+        speedModeSparks = new FourSparkMaxWithSettings(m_frontLeft, m_rearLeft, m_frontRight, m_rearRight, frontLeftSpeedSettings, rearLeftSpeedSettings, frontRightSpeedSettings, rearRightSpeedSettings);                                            
+
+        SparkMaxSettings frontLeftPositionSettings = SparkMaxSettingsBuilder.defaults()
+                                                    .withCurrentLimits(35)
+                                                    .coastInNeutral()
+                                                    .withDirections(false, false)
+                                                    .limitMotorOutputs(1.0, -1.0)
+                                                    .noMotorStartupRamping()
+                                                    .useSpeedControl()
+                                                    .build();
+                                                
+        SparkMaxSettings frontRightPositionSettings = SparkMaxSettingsBuilder.defaults()
+                                                    .withCurrentLimits(35)
+                                                    .coastInNeutral()
+                                                    .withDirections(false, false)
+                                                    .limitMotorOutputs(1.0, -1.0)
+                                                    .noMotorStartupRamping()
+                                                    .useSpeedControl()
+                                                    .build();
+
+
+
+        SparkMaxSettings rearLeftPositionSettings = SparkMaxSettingsBuilder.defaults()
+                                                    .withCurrentLimits(35)
+                                                    .coastInNeutral()
+                                                    .withDirections(false, false)
+                                                    .limitMotorOutputs(1.0, -1.0)
+                                                    .noMotorStartupRamping()
+                                                    .useSpeedControl()
+                                                    .build();
+                                                
+        SparkMaxSettings rearRightPositionSettings = SparkMaxSettingsBuilder.defaults()
+                                                    .withCurrentLimits(35)
+                                                    .coastInNeutral()
+                                                    .withDirections(false, false)
+                                                    .limitMotorOutputs(1.0, -1.0)
+                                                    .noMotorStartupRamping()
+                                                    .useSpeedControl()
+                                                    .build();
+
+        positiionModeSparks = new FourSparkMaxWithSettings(m_frontLeft, m_rearLeft, m_frontRight, m_rearRight, frontLeftPositionSettings, rearLeftPositionSettings, frontRightPositionSettings, rearRightPositionSettings);
+        
+
         e_frontLeft = m_frontLeft.getEncoder();
         e_frontRight = m_frontRight.getEncoder();
         e_rearLeft = m_rearLeft.getEncoder();
