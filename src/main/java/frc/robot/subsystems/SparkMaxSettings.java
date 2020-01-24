@@ -53,6 +53,7 @@ public class SparkMaxSettings implements Serializable{
 		spark.setOpenLoopRampRate(rampUp.rampUpSecondsOpenLoop);
 		spark.setInverted(motorDirections.inverted);
 		spark.setIdleMode(brakeMode);
+		spark.getEncoder().setPositionConversionFactor(spark.getEncoder().getCountsPerRevolution());
 
 		
 		pidController.setOutputRange(outputLimits.minMotorOutput, outputLimits.maxMotorOutput);
