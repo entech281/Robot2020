@@ -14,8 +14,6 @@ public class RobotMap{
     }
 
     public interface PNEUMATICS{
-        //public static final int solenoid1 = 0;
-        //public static final int solenoid2 = 1;
     }
 
     public interface GAMEPAD{

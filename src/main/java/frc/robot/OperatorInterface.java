@@ -1,20 +1,22 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Robot;
 import frc.robot.RobotMap;
+import frc.robot.logger.DataLogger;
+import frc.robot.logger.DataLoggerFactory;
 import frc.robot.commands.StartIntakeCommand;
 import frc.robot.commands.StopIntakeCommand;
-import frc.robot.subsystems.IntakeSubsystem;
 
-public class OperatorInterface {
-    private final Robot robot;
-    private final Joystick driveStick;
-    private final JoystickButtonManager manager;
+public class OperatorInterface implements DriveInstructionSource{
+    private Robot robot;
+    private Joystick driveStick;
+    private JoystickButtonManager manager;
+    private DataLogger logger;
 
     public OperatorInterface(final Robot robot){
         this.robot = robot;
+        logger = DataLoggerFactory.getLoggerFactory().createDataLogger("OperatorInterface");
         this.driveStick = new Joystick(RobotMap.GAMEPAD.driverStick);
         this.manager = new JoystickButtonManager(driveStick);
 
@@ -26,12 +28,26 @@ public class OperatorInterface {
   
     
     public double getDriveInputX(){
-        SmartDashboard.putNumber("Joystick X", driveStick.getX());
+        logger.log("drive X", driveStick.getX());
         return driveStick.getX();
     }
 
     public double getDriveInputY(){
-        SmartDashboard.putNumber("Joystick Y", driveStick.getY());
+        logger.log("drive Y", driveStick.getY());
         return -driveStick.getY();
+    }
+
+    @Override
+    public DriveInstruction getNextInstruction() {
+        double x;
+
+        if (driveStick.getTrigger()) {
+            x = -driveStick.getTwist();
+        } else {
+            x = -driveStick.getX();
+        }
+        double y = driveStick.getY();
+
+        return new DriveInstruction( x , y );
     }
 }
