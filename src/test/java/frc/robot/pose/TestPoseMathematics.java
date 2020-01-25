@@ -38,6 +38,22 @@ public class TestPoseMathematics {
         assertEquals(pose4.getLateral(), pose3.getLateral(), 0.1);
         assertEquals(pose4.getHorizontal(), pose3.getHorizontal(), 0.1);
 
+        pose1 = new RobotPose(0,0,0);
+        pose2 = new RobotPose(0,0,-90);
+        pose3 = PoseMathematics.addPoses(pose1, pose2);
+        pose4 = new RobotPose(0,0,270);
+        assertEquals(pose4.getTheta(), pose3.getTheta(), 0.1);
+        assertEquals(pose4.getLateral(), pose3.getLateral(), 0.1);
+        assertEquals(pose4.getHorizontal(), pose3.getHorizontal(), 0.1);
+
+        pose1 = new RobotPose(0,0,0);
+        pose2 = new RobotPose(0,0,-500);
+        pose3 = PoseMathematics.addPoses(pose1, pose2);
+        pose4 = new RobotPose(0,0,220);
+        assertEquals(pose4.getTheta(), pose3.getTheta(), 0.1);
+        assertEquals(pose4.getLateral(), pose3.getLateral(), 0.1);
+        assertEquals(pose4.getHorizontal(), pose3.getHorizontal(), 0.1);
+        
         pose1 = new RobotPose(10,0,90);
         pose2 = new RobotPose(10,0,90);
         pose3 = PoseMathematics.addPoses(pose1, pose2);

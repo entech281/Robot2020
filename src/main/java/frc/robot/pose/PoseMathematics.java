@@ -44,14 +44,14 @@ public class PoseMathematics{
     // pose1))
     public static RobotPose addPoses(PositionReader pose1, PositionReader pose2) {
         RobotPose pose = new RobotPose();
-        pose.setTheta((pose1.getTheta() + pose2.getTheta()) % 360);
+        pose.setTheta(pose1.getTheta() + pose2.getTheta());
         pose.setHorizontal(
             pose1.getHorizontal() + 
             Math.cos(pose1.getTheta() * DEGREES_TO_RADIANS) * pose2.getHorizontal() +
-            Math.cos(pose1.getTheta() * DEGREES_TO_RADIANS + Math.PI/2) * pose2.getLateral());
-        pose.setLateral(pose1.getLateral() + 
+            Math.cos(pose1.getTheta() * DEGREES_TO_RADIANS + Math.PI/2) * pose2.getForward());
+        pose.setForward(pose1.getForward() + 
             Math.sin(pose1.getTheta() * DEGREES_TO_RADIANS) * pose2.getHorizontal() +
-            Math.sin(pose1.getTheta() * DEGREES_TO_RADIANS + Math.PI/2) * pose2.getLateral());
+            Math.sin(pose1.getTheta() * DEGREES_TO_RADIANS + Math.PI/2) * pose2.getForward());
     
         return pose;
     }

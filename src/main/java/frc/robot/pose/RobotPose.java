@@ -9,14 +9,14 @@ public class RobotPose implements PositionReader{
 
     private double theta;
     private double horizontal;
-    private double lateral;
+    private double forward;
 
 
     public RobotPose(){}
-    public RobotPose(double horizontal, double lateral, double theta){
+    public RobotPose(double horizontal, double forward, double theta){
         this.horizontal = horizontal;
-        this.lateral = lateral;
-        this.theta = theta;
+        this.forward = forward;
+        this.theta = theta % 360;
     }
 
     
@@ -27,18 +27,21 @@ public class RobotPose implements PositionReader{
 
     
     public void setTheta(double theta) {
-        this.theta = theta;
+        if(theta < 0){
+            theta = 360 + theta;
+        }
+        this.theta = theta % 360;
     }
 
     
 
-    public double getLateral() {
-        return this.lateral;
+    public double getForward() {
+        return this.forward;
     }
 
     
-    public void setLateral(double lateral) {
-        this.lateral = lateral;
+    public void setForward(double forward) {
+        this.forward = forward;
     }
 
     
@@ -52,7 +55,7 @@ public class RobotPose implements PositionReader{
     }
 
     public Pose2d getWPIRobotPose() {
-        return new Pose2d(lateral, horizontal, new Rotation2d(theta));
+        return new Pose2d(forward, horizontal, new Rotation2d(theta));
     }
     
     @Override
@@ -63,12 +66,12 @@ public class RobotPose implements PositionReader{
             return false;
         }
         RobotPose robotPose = (RobotPose) o;
-        return theta == robotPose.theta && horizontal == robotPose.horizontal && lateral == robotPose.lateral;
+        return theta == robotPose.theta && horizontal == robotPose.horizontal && forward == robotPose.forward;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(theta, horizontal, lateral);
+        return Objects.hash(theta, horizontal, forward);
     }
     
     @Override
@@ -76,7 +79,7 @@ public class RobotPose implements PositionReader{
         return "{" +
             " theta='" + theta + "'" +
             ", horizontal='" + horizontal + "'" +
-            ", lateral='" + lateral + "'" +
+            ", forward='" + forward + "'" +
             "}";
     }
 }

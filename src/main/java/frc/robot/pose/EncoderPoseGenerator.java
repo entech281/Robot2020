@@ -11,7 +11,6 @@ import frc.robot.logger.*;
 
 
 public class EncoderPoseGenerator implements PoseGenerator{
-    //TODO: Fix conversion
     private DataLogger logger;
 
     public final double ENCODER_CLICKS_PER_INCH = RobotMap.DIMENSIONS.ENCODER_TICKS_PER_INCH;
@@ -51,7 +50,7 @@ public class EncoderPoseGenerator implements PoseGenerator{
     @Override
     public void updateFromOfficialPose(PositionReader pose) {
         this.pose.setHorizontal(pose.getHorizontal());
-        this.pose.setLateral(pose.getLateral());
+        this.pose.setForward(pose.getForward());
         this.pose.setTheta(pose.getTheta());
     }
 

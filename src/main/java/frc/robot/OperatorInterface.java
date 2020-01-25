@@ -5,6 +5,8 @@ import frc.robot.Robot;
 import frc.robot.RobotMap;
 import frc.robot.logger.DataLogger;
 import frc.robot.logger.DataLoggerFactory;
+import frc.robot.commands.OutakeIntakeCommand;
+import frc.robot.commands.ResetPositionCommand;
 import frc.robot.commands.StartIntakeCommand;
 import frc.robot.commands.StopIntakeCommand;
 
@@ -22,6 +24,11 @@ public class OperatorInterface implements DriveInstructionSource{
 
         manager.addButton(RobotMap.BUTTONS.INTAKE_BUTTON)
             .whenPressed(new StartIntakeCommand(robot.getIntakeSubsystem()))
+            .whenReleased(new StopIntakeCommand(robot.getIntakeSubsystem()))
+            .add();
+
+        manager.addButton(2)
+            .whenPressed(new OutakeIntakeCommand(robot.getIntakeSubsystem()))
             .whenReleased(new StopIntakeCommand(robot.getIntakeSubsystem()))
             .add();
     }

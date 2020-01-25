@@ -16,4 +16,6 @@ public class TestRobotPose {
         assertEquals(9, rp.getTheta(),0.03);
         assertEquals(rp.getWPIRobotPose(), new Pose2d(7, 5, new Rotation2d(9)));
     }
+
+    
 }

@@ -68,8 +68,12 @@ public class Robot extends TimedRobot {
           return intake;
      }
 
-     public NavXSubsystem navXSubsystem(){
+     public NavXSubsystem getNavXSubsystem(){
           return navX;
+     }
+
+     public DriveSubsystem getDriveSubsystem(){
+          return robotDrive;
      }
   
 }
