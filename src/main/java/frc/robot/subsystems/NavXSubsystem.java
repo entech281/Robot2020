@@ -17,11 +17,9 @@ import edu.wpi.first.wpilibj.SPI;
  * @author dcowden
  */
 public class NavXSubsystem extends BaseSubsystem{
-
-    private final AHRS navX = new AHRS(SPI.Port.kMXP);
-    
-    
+    private final AHRS navX;
     public NavXSubsystem() {
+        navX = new AHRS(SPI.Port.kMXP);
     }
 
     @Override
