@@ -41,7 +41,8 @@ public class Robot extends TimedRobot {
           navX = new NavXSubsystem();
           BaseSubsystem.initializeList();
           robotDrive.reset();          
-          officialPose = new PoseManager(robotDrive.getEncoderPoseGenerator());
+          officialPose = new PoseManager();
+          officialPose.addGenerator(robotDrive.getEncoderPoseGenerator());
           officialPose.configureRobotPose(0, 0, 90);
           oi = new OperatorInterface(this);
           

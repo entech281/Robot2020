@@ -17,14 +17,18 @@ public class EncoderPoseGenerator implements PoseGenerator{
     
     SparkPositionControllerGroup sparkControllers;
     RobotPose pose = RobotMap.DIMENSIONS.START_POSE;
+    double positionConfidence = 0.0;
+    double thetaConfidence = 0.0;
+
     double lastLeft;
     double lastRight;
 
     EncoderInchesConverter converter = new EncoderInchesConverter(ENCODER_CLICKS_PER_INCH);
     
-    public EncoderPoseGenerator(SparkPositionControllerGroup group){
+    public EncoderPoseGenerator(SparkPositionControllerGroup group, double positionConfidence, double thetaConfidence){
         this.sparkControllers = group;
-        
+        this.positionConfidence = positionConfidence;
+        this.thetaConfidence = thetaConfidence;
         this.logger = DataLoggerFactory.getLoggerFactory().createDataLogger("Encoder Pose Genorator");
 
     }
@@ -54,6 +58,19 @@ public class EncoderPoseGenerator implements PoseGenerator{
         this.pose.setTheta(pose.getTheta());
     }
 
+    @Override
+    public double getPositionConfidence(){
+        return positionConfidence;
+    }
 
+    @Override
+    public double getThetaConfidence(){
+        return thetaConfidence;
+    }
 
+    @Override
+    public void updateConfidences(double newPosConf, double newThetaConf){
+        this.positionConfidence = newPosConf;
+        this.thetaConfidence = newThetaConf;
+    }
 }

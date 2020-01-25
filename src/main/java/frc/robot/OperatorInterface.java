@@ -5,10 +5,7 @@ import frc.robot.Robot;
 import frc.robot.RobotMap;
 import frc.robot.logger.DataLogger;
 import frc.robot.logger.DataLoggerFactory;
-import frc.robot.commands.OutakeIntakeCommand;
-import frc.robot.commands.ResetPositionCommand;
-import frc.robot.commands.StartIntakeCommand;
-import frc.robot.commands.StopIntakeCommand;
+import frc.robot.commands.*;
 
 public class OperatorInterface implements DriveInstructionSource{
     private Robot robot;
