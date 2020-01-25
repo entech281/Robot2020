@@ -28,7 +28,7 @@ public class PoseMathematics{
                 w = inchesLeft / theta;
                 deltaX = (w + robotWidth / 2) * (1 - Math.cos(theta));
                 deltaY = (w + robotWidth / 2) * Math.sin(theta);
-                deltaTheta = theta;
+                deltaTheta = -theta;
             } else {
                 theta = (inchesLeft - inchesRight) / robotWidth;
                 w = inchesRight / theta;
