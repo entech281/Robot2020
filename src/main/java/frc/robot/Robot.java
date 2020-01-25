@@ -36,14 +36,23 @@ public class Robot extends TimedRobot {
           navX = new NavXSubsystem();
           BaseSubsystem.initializeList();
           oi = new OperatorInterface(this);
+
           officialPose.configureRobotPose(0, 0, 90);
-          officialPose.setDrivePoseGenerator(robotDrive.getEncoderPoseGenerator());          
+          officialPose.setDrivePoseGenerator(robotDrive.getEncoderPoseGenerator());  
+          
+     
      }
 
-
+     @Override
      public void teleopPeriodic(){
           CommandScheduler.getInstance().run();
-          robotDrive.drive(oi.getDriveInputX(), oi.getDriveInputY());
+          robotDrive.drive(oi.getNextInstruction());
+          robotDrive.updatePose(officialPose.getPose());
+     }
+
+     @Override
+     public void disabledPeriodic(){
+          CommandScheduler.getInstance().run();
      }
 
      public IntakeSubsystem getIntakeSubsystem(){

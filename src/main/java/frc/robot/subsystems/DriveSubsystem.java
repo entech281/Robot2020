@@ -8,6 +8,7 @@ import frc.robot.controllers.SparkPositionController;
 import frc.robot.controllers.SparkPositionControllerGroup;
 import frc.robot.pose.EncoderPoseGenerator;
 import frc.robot.subsystems.drive.FourSparkMaxWithSettings;
+import frc.robot.pose.PositionReader;
 
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
@@ -50,7 +51,7 @@ public class DriveSubsystem extends BaseSubsystem{
     @Override
     public void initialize() {
         m_frontLeft = new CANSparkMax(RobotMap.CAN.FRONT_LEFT_MOTOR, MotorType.kBrushless);
-        m_rearLeft = new CANSparkMax(RobotMap.CAN.FRONT_RIGHT_MOTOR, MotorType.kBrushless);
+        m_rearLeft = new CANSparkMax(RobotMap.CAN.REAR_LEFT_MOTOR, MotorType.kBrushless);
         m_left = new SpeedControllerGroup(m_frontLeft, m_rearLeft);
     
         m_frontRight = new CANSparkMax(RobotMap.CAN.FRONT_RIGHT_MOTOR, MotorType.kBrushless);
@@ -154,24 +155,18 @@ public class DriveSubsystem extends BaseSubsystem{
         e_rearRight = m_rearRight.getEncoder();
     }
 
-
-    @Override
+    @Override 
     public void periodic(){
+        
+    }
+
+    public void updatePose(PositionReader pose){
+        poseGen.updateFromOfficialPose(pose);
         poseGen.updatePose();
     }
-
-    public void setDriveInstructionSource(DriveInstructionSource source){
-        this.source = source;
-    }
-
-    public void drive(double x, double y){
-        m_robotDrive.arcadeDrive(y, x);
-    }
-
     public void drive(DriveInstruction di) {
-        m_robotDrive.arcadeDrive(di.getRotation(), di.getRotation());
+        m_robotDrive.arcadeDrive(di.getFoward(), di.getRotation());
     }
-
     public EncoderPoseGenerator getEncoderPoseGenerator(){
         return this.poseGen;
     }

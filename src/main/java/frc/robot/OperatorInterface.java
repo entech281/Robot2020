@@ -39,15 +39,6 @@ public class OperatorInterface implements DriveInstructionSource{
 
     @Override
     public DriveInstruction getNextInstruction() {
-        double x;
-
-        if (driveStick.getTrigger()) {
-            x = -driveStick.getTwist();
-        } else {
-            x = -driveStick.getX();
-        }
-        double z = driveStick.getZ();
-
-        return new DriveInstruction( x , z );
+        return new DriveInstruction( driveStick.getX() , driveStick.getY());
     }
 }

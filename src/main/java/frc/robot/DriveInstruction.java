@@ -12,7 +12,7 @@ public class DriveInstruction {
     public static final double LOWER_BOUND = -1.0;
     public static final double UPPER_BOUND = 1.0;
 
-    public double getLateral() {
+    public double getFoward() {
         return lateral;
     }
 
