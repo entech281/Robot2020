@@ -13,6 +13,7 @@ import frc.robot.logger.DataLoggerFactory;
 import frc.robot.subsystems.BaseSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.NavXSubsystem;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
 /**
@@ -27,10 +28,12 @@ public class Robot extends TimedRobot {
      DriveSubsystem robotDrive;
      IntakeSubsystem intake;
      OperatorInterface oi;
+     NavXSubsystem navX;
 
      public void robotInit(){
           intake = new IntakeSubsystem();
           robotDrive = new DriveSubsystem();
+          navX = new NavXSubsystem();
           BaseSubsystem.initializeList();
           oi = new OperatorInterface(this);
      }
@@ -43,6 +46,10 @@ public class Robot extends TimedRobot {
 
      public IntakeSubsystem getIntakeSubsystem(){
           return intake;
+     }
+
+     public NavXSubsystem navXSubsystem(){
+          return navX;
      }
   
 }
