@@ -46,8 +46,8 @@ public class OperatorInterface implements DriveInstructionSource{
         } else {
             x = -driveStick.getX();
         }
-        double y = driveStick.getY();
+        double z = driveStick.getZ();
 
-        return new DriveInstruction( x , y );
+        return new DriveInstruction( x , z );
     }
 }

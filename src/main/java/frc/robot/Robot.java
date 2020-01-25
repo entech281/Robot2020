@@ -8,8 +8,7 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
-import frc.robot.logger.DataLogger;
-import frc.robot.logger.DataLoggerFactory;
+import frc.robot.pose.PoseManager;
 import frc.robot.subsystems.BaseSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -27,12 +26,15 @@ public class Robot extends TimedRobot {
      DriveSubsystem robotDrive;
      IntakeSubsystem intake;
      OperatorInterface oi;
+     PoseManager officialPose = new PoseManager();
 
      public void robotInit(){
           intake = new IntakeSubsystem();
           robotDrive = new DriveSubsystem();
           BaseSubsystem.initializeList();
           oi = new OperatorInterface(this);
+
+          officialPose.setDrivePoseGenerator(robotDrive.getEncoderPoseGenerator());          
      }
 
 

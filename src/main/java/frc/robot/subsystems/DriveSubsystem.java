@@ -1,6 +1,8 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import frc.robot.DriveInstruction;
+import frc.robot.DriveInstructionSource;
 import frc.robot.RobotMap;
 import frc.robot.controllers.SparkPositionController;
 import frc.robot.controllers.SparkPositionControllerGroup;
@@ -16,6 +18,8 @@ import edu.wpi.first.wpilibj.SpeedControllerGroup;
 
 
 public class DriveSubsystem extends BaseSubsystem{
+
+    DriveInstructionSource source;
 
     CANSparkMax m_frontLeft;
     SparkPositionController pc_frontLeft;
@@ -156,8 +160,16 @@ public class DriveSubsystem extends BaseSubsystem{
         poseGen.updatePose();
     }
 
+    public void setDriveInstructionSource(DriveInstructionSource source){
+        this.source = source;
+    }
+
     public void drive(double x, double y){
         m_robotDrive.arcadeDrive(y, x);
+    }
+
+    public void drive(DriveInstruction di) {
+        m_robotDrive.arcadeDrive(di.getRotation(), di.getRotation());
     }
 
     public EncoderPoseGenerator getEncoderPoseGenerator(){
