@@ -31,6 +31,10 @@ public class OperatorInterface implements DriveInstructionSource{
             .whenPressed(new OutakeIntakeCommand(robot.getIntakeSubsystem()))
             .whenReleased(new StopIntakeCommand(robot.getIntakeSubsystem()))
             .add();
+
+        manager.addButton(10)
+            .whenPressed(new ResetPositionCommand(robot.getDriveSubsystem(), robot.getOfficialPose()))
+            .add();
     }
   
     

@@ -41,14 +41,9 @@ public class Robot extends TimedRobot {
           BaseSubsystem.initializeList();
           oi = new OperatorInterface(this);
           officialPose.setDrivePoseGenerator(robotDrive.getEncoderPoseGenerator());
+          officialPose.configureRobotPose(0, 0, 90);
           robotDrive.reset();          
           this.logger = DataLoggerFactory.getLoggerFactory().createDataLogger("Robot Main Loop");
-     }
-
-     @Override
-     public void teleopInit() {
-          robotDrive.reset();
-          officialPose.configureRobotPose(0, 0, 90);
      }
 
      @Override
@@ -64,6 +59,8 @@ public class Robot extends TimedRobot {
           CommandScheduler.getInstance().run();
      }
 
+
+
      public IntakeSubsystem getIntakeSubsystem(){
           return intake;
      }
@@ -74,6 +71,10 @@ public class Robot extends TimedRobot {
 
      public DriveSubsystem getDriveSubsystem(){
           return robotDrive;
+     }
+
+     public PoseManager getOfficialPose(){
+          return officialPose;
      }
   
 }

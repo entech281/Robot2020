@@ -16,6 +16,7 @@ public class PoseManager{
 
     public void configureRobotPose(double horizontal, double lateral, double theta){
         pose = new RobotPose(horizontal, lateral, theta);
+        drivePoseGenerator.updateFromOfficialPose(pose);
     }
 
     public void setDrivePoseGenerator(PoseGenerator pg){
