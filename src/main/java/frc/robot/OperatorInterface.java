@@ -39,6 +39,6 @@ public class OperatorInterface implements DriveInstructionSource{
 
     @Override
     public DriveInstruction getNextInstruction() {
-        return new DriveInstruction( driveStick.getX() , driveStick.getY());
+        return new DriveInstruction( -driveStick.getY() , driveStick.getX());
     }
 }

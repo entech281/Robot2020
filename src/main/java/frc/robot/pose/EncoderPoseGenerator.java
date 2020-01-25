@@ -1,16 +1,23 @@
 package frc.robot.pose;
 
+import frc.robot.RobotMap;
 import frc.robot.controllers.SparkPositionControllerGroup;
+import frc.robot.logger.DataLoggerFactory;
+import frc.robot.logger.DataLogger;
 import frc.robot.pose.PoseGenerator;
 import frc.robot.pose.RobotPose;
 import frc.robot.subsystems.EncoderInchesConverter;
+import frc.robot.logger.*;
+
 
 public class EncoderPoseGenerator implements PoseGenerator{
     //TODO: Fix conversion
-    public final int ENCODER_CLICKS_PER_INCH = 9;
+    private DataLogger logger;
+
+    public final double ENCODER_CLICKS_PER_INCH = RobotMap.DIMENSIONS.ENCODER_TICKS_PER_INCH;
     
     SparkPositionControllerGroup sparkControllers;
-    RobotPose pose = new RobotPose();
+    RobotPose pose = RobotMap.DIMENSIONS.START_POSE;
     double lastLeft;
     double lastRight;
 
@@ -18,11 +25,16 @@ public class EncoderPoseGenerator implements PoseGenerator{
     
     public EncoderPoseGenerator(SparkPositionControllerGroup group){
         this.sparkControllers = group;
+        
+        this.logger = DataLoggerFactory.getLoggerFactory().createDataLogger("Encoder Pose Genorator");
+
     }
 
     public void updatePose(){
         double currentLeft = sparkControllers.getLeftCurrentPosition(converter);
         double currentRight = sparkControllers.getRightCurrentPosition(converter);
+        logger.log("currentLeft", currentLeft);
+        logger.log("currentRight", currentRight);
         double deltaLeft = currentLeft - lastLeft;
         double deltaRight = currentRight - lastRight;
         lastLeft = currentLeft;

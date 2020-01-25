@@ -10,6 +10,7 @@ import frc.robot.pose.EncoderPoseGenerator;
 import frc.robot.subsystems.drive.FourSparkMaxWithSettings;
 import frc.robot.pose.PositionReader;
 
+import com.fasterxml.jackson.databind.introspect.TypeResolutionContext;
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
@@ -141,9 +142,13 @@ public class DriveSubsystem extends BaseSubsystem{
                                                     .build();
 
         pc_frontLeft = new SparkPositionController(m_frontLeft, frontLeftPositionSettings);
+        pc_frontLeft.configure();
         pc_frontRight = new SparkPositionController(m_frontRight, frontRightPositionSettings);
+        pc_frontRight.configure();
         pc_rearLeft = new SparkPositionController(m_rearLeft, rearLeftPositionSettings);
+        pc_rearLeft.configure();
         pc_rearRight = new SparkPositionController(m_rearRight, rearRightPositionSettings);
+        pc_rearRight.configure();
 
         posController = new SparkPositionControllerGroup(pc_frontLeft, pc_frontRight, pc_rearLeft, pc_rearRight);
         positiionModeSparks = new FourSparkMaxWithSettings(m_frontLeft, m_rearLeft, m_frontRight, m_rearRight, frontLeftPositionSettings, rearLeftPositionSettings, frontRightPositionSettings, rearRightPositionSettings);
@@ -153,12 +158,25 @@ public class DriveSubsystem extends BaseSubsystem{
         e_frontRight = m_frontRight.getEncoder();
         e_rearLeft = m_rearLeft.getEncoder();
         e_rearRight = m_rearRight.getEncoder();
+
     }
 
     @Override 
     public void periodic(){
-        
+        logger.log("Front Left Encoder Ticks", e_frontLeft.getPosition());
+        logger.log("Front Right Encoder Ticks", e_frontRight.getPosition());
+        logger.log("Rear Left Encoder Ticks", e_rearLeft.getPosition());
+        logger.log("Rear Right Encoder Ticks", e_rearRight.getPosition());
     }
+
+    public void reset(){
+        pc_frontLeft.resetPosition();
+        pc_frontRight.resetPosition();
+        pc_rearLeft.resetPosition();
+        pc_rearRight.resetPosition();
+        logger.log("Clicks per rotation", e_rearRight.getCountsPerRevolution());
+    }
+    
 
     public void updatePose(PositionReader pose){
         poseGen.updateFromOfficialPose(pose);

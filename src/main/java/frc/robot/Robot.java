@@ -8,6 +8,8 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
+import frc.robot.logger.DataLogger;
+import frc.robot.logger.DataLoggerFactory;
 import frc.robot.pose.PoseManager;
 import frc.robot.subsystems.BaseSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
@@ -24,6 +26,8 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
  */
 public class Robot extends TimedRobot {
 
+
+     private DataLogger logger;
      DriveSubsystem robotDrive;
      IntakeSubsystem intake;
      OperatorInterface oi;
@@ -36,11 +40,15 @@ public class Robot extends TimedRobot {
           navX = new NavXSubsystem();
           BaseSubsystem.initializeList();
           oi = new OperatorInterface(this);
+          officialPose.setDrivePoseGenerator(robotDrive.getEncoderPoseGenerator());
+          robotDrive.reset();          
+          this.logger = DataLoggerFactory.getLoggerFactory().createDataLogger("Robot Main Loop");
+     }
 
+     @Override
+     public void teleopInit() {
+          robotDrive.reset();
           officialPose.configureRobotPose(0, 0, 90);
-          officialPose.setDrivePoseGenerator(robotDrive.getEncoderPoseGenerator());  
-          
-     
      }
 
      @Override
@@ -48,6 +56,7 @@ public class Robot extends TimedRobot {
           CommandScheduler.getInstance().run();
           robotDrive.drive(oi.getNextInstruction());
           robotDrive.updatePose(officialPose.getPose());
+          logger.log("Current Pose",officialPose.getPose());
      }
 
      @Override

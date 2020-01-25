@@ -1,5 +1,6 @@
 package frc.robot;
 
+import frc.robot.pose.RobotPose;
 
 public class RobotMap{
     public static final int NAVX_PORT = 0;
@@ -26,8 +27,15 @@ public class RobotMap{
 
     public interface DIMENSIONS {
         // Must be in inches
-        //TODO put in real values
-        public static final double ROBOT_WIDTH = 3;
-        public static final double ROBOT_HEIGHT = 4;
+
+        public static final double ROBOT_WIDTH = 27.5;
+        public static final double ROBOT_LENGTH = 32.5;
+        public static final RobotPose START_POSE = new RobotPose(0,0,90);
+        public static final double DRIVE_GEAR_RATIO = 10.7;
+        public static final double ENCODER_TICKS_PER_MOTOR_REVOLUTION = 4096;
+        public static final double WHEEL_DIAMETER_INCHES = 6;
+        public static final double ENCODER_TICKS_PER_INCH = ENCODER_TICKS_PER_MOTOR_REVOLUTION
+            * DRIVE_GEAR_RATIO
+            / ( Math.PI * WHEEL_DIAMETER_INCHES);
     }
 }
