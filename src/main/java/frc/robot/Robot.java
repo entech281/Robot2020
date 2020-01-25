@@ -35,14 +35,14 @@ public class Robot extends TimedRobot {
      NavXSubsystem navX;
 
      public void robotInit(){
-          officialPose = new PoseManager(robotDrive.getEncoderPoseGenerator());
-          officialPose.configureRobotPose(0, 0, 90);
           
           intake = new IntakeSubsystem();
           robotDrive = new DriveSubsystem();
           navX = new NavXSubsystem();
           BaseSubsystem.initializeList();
           robotDrive.reset();          
+          officialPose = new PoseManager(robotDrive.getEncoderPoseGenerator());
+          officialPose.configureRobotPose(0, 0, 90);
           oi = new OperatorInterface(this);
           
           this.logger = DataLoggerFactory.getLoggerFactory().createDataLogger("Robot Main Loop");
