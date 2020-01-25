@@ -1,6 +1,10 @@
 package frc.robot;
 
+<<<<<<< HEAD
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
+=======
+import frc.robot.pose.RobotPose;
+>>>>>>> master
 
 public class RobotMap {
     public static final int NAVX_PORT = 0;
@@ -15,8 +19,6 @@ public class RobotMap {
     }
 
     public interface PNEUMATICS{
-        //public static final int solenoid1 = 0;
-        //public static final int solenoid2 = 1;
     }
 
     public interface AUTO_DRIVE_CONSTANTS {
@@ -38,5 +40,19 @@ public class RobotMap {
 
     public interface BUTTONS{
         public static final int INTAKE_BUTTON = 1;
+    }
+
+    public interface DIMENSIONS {
+        // Must be in inches
+
+        public static final double ROBOT_WIDTH = 27.5;
+        public static final double ROBOT_LENGTH = 32.5;
+        public static final RobotPose START_POSE = new RobotPose(0,0,90);
+        public static final double DRIVE_GEAR_RATIO = 10.7;
+        public static final double ENCODER_TICKS_PER_MOTOR_REVOLUTION = 4096;
+        public static final double WHEEL_DIAMETER_INCHES = 6;
+        public static final double ENCODER_TICKS_PER_INCH = ENCODER_TICKS_PER_MOTOR_REVOLUTION
+            * DRIVE_GEAR_RATIO
+            / ( Math.PI * WHEEL_DIAMETER_INCHES);
     }
 }

@@ -10,9 +10,11 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import frc.robot.logger.DataLogger;
 import frc.robot.logger.DataLoggerFactory;
+import frc.robot.pose.PoseManager;
 import frc.robot.subsystems.BaseSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.NavXSubsystem;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
 /**
@@ -24,25 +26,57 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
  */
 public class Robot extends TimedRobot {
 
+
+     private DataLogger logger;
      DriveSubsystem robotDrive;
      IntakeSubsystem intake;
      OperatorInterface oi;
+     PoseManager officialPose;
+     NavXSubsystem navX;
 
      public void robotInit(){
+          
           intake = new IntakeSubsystem();
           robotDrive = new DriveSubsystem();
+          navX = new NavXSubsystem();
           BaseSubsystem.initializeList();
+          robotDrive.reset();          
+          officialPose = new PoseManager(robotDrive.getEncoderPoseGenerator());
+          officialPose.configureRobotPose(0, 0, 90);
           oi = new OperatorInterface(this);
+          
+          this.logger = DataLoggerFactory.getLoggerFactory().createDataLogger("Robot Main Loop");
      }
 
-
+     @Override
      public void teleopPeriodic(){
           CommandScheduler.getInstance().run();
-          robotDrive.drive(oi.getDriveInputX(), oi.getDriveInputY());
+          robotDrive.drive(oi.getNextInstruction());
+          robotDrive.updatePose(officialPose.getPose());
+          logger.log("Current Pose",officialPose.getPose());
      }
+
+     @Override
+     public void disabledPeriodic(){
+          CommandScheduler.getInstance().run();
+     }
+
+
 
      public IntakeSubsystem getIntakeSubsystem(){
           return intake;
+     }
+
+     public NavXSubsystem getNavXSubsystem(){
+          return navX;
+     }
+
+     public DriveSubsystem getDriveSubsystem(){
+          return robotDrive;
+     }
+
+     public PoseManager getOfficialPose(){
+          return officialPose;
      }
   
 }
