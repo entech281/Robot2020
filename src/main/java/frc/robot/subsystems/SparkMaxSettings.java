@@ -17,6 +17,10 @@ import org.apache.commons.lang3.SerializationUtils;
 
 public class SparkMaxSettings implements Serializable{
 	
+	/**
+	 *
+	 */
+	private static final long serialVersionUID = 3221269797870162872L;
 	public static final int TIMEOUT_MS = 10;
 	public static final int PID_SLOT = 0;
 	public static final int PROFILE_SLOT = 0;
@@ -53,6 +57,7 @@ public class SparkMaxSettings implements Serializable{
 		spark.setOpenLoopRampRate(rampUp.rampUpSecondsOpenLoop);
 		spark.setInverted(motorDirections.inverted);
 		spark.setIdleMode(brakeMode);
+		spark.getEncoder().setPositionConversionFactor(spark.getEncoder().getCountsPerRevolution());
 
 		
 		pidController.setOutputRange(outputLimits.minMotorOutput, outputLimits.maxMotorOutput);
