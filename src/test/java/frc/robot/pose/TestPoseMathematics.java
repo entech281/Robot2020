@@ -1,10 +1,7 @@
-package frc.robot;
+package frc.robot.pose;
 
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
-
-import frc.robot.pose.PoseMathematics;
-import frc.robot.pose.RobotPose;
 
 public class TestPoseMathematics {
     @Test

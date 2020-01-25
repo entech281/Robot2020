@@ -12,6 +12,7 @@ import frc.robot.pose.PoseManager;
 import frc.robot.subsystems.BaseSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.NavXSubsystem;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
 /**
@@ -27,10 +28,12 @@ public class Robot extends TimedRobot {
      IntakeSubsystem intake;
      OperatorInterface oi;
      PoseManager officialPose = new PoseManager();
+     NavXSubsystem navX;
 
      public void robotInit(){
           intake = new IntakeSubsystem();
           robotDrive = new DriveSubsystem();
+          navX = new NavXSubsystem();
           BaseSubsystem.initializeList();
           oi = new OperatorInterface(this);
           officialPose.configureRobotPose(0, 0, 90);
@@ -45,6 +48,10 @@ public class Robot extends TimedRobot {
 
      public IntakeSubsystem getIntakeSubsystem(){
           return intake;
+     }
+
+     public NavXSubsystem navXSubsystem(){
+          return navX;
      }
   
 }

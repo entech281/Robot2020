@@ -1,4 +1,4 @@
-package frc.robot;
+package frc.robot.pose;
 
 
 import static org.junit.Assert.assertEquals;
@@ -6,7 +6,7 @@ import org.junit.Test;
 
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
-import frc.robot.pose.*;
+
 public class TestRobotPose {
     @Test
     public void testThatThisRuns(){

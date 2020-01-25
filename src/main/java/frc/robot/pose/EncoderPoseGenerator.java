@@ -10,7 +10,7 @@ public class EncoderPoseGenerator implements PoseGenerator{
     public final int ENCODER_CLICKS_PER_INCH = 9;
     
     SparkPositionControllerGroup sparkControllers;
-    RobotPose pose;
+    RobotPose pose = new RobotPose();
     double lastLeft;
     double lastRight;
 
