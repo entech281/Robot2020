@@ -1,10 +1,7 @@
 package frc.robot;
 
-<<<<<<< HEAD
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
-=======
 import frc.robot.pose.RobotPose;
->>>>>>> master
 
 public class RobotMap {
     public static final int NAVX_PORT = 0;
