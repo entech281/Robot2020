@@ -7,4 +7,5 @@ public interface PositionReader {
     public double getLateral();
     public double getHorizontal();
     public Pose2d getWPIRobotPose();
+    
 }

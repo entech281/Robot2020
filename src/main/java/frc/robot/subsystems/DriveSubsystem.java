@@ -15,39 +15,39 @@ import edu.wpi.first.wpilibj.SpeedControllerGroup;
 
 public class DriveSubsystem extends BaseSubsystem{
 
-    CANSparkMax m_frontLeft;
-    CANSparkMax m_rearLeft;
-	SpeedControllerGroup m_left;
+    CANSparkMax  frontLeft;
+    CANSparkMax  rearLeft;
+	SpeedControllerGroup  left;
 
-    CANSparkMax m_frontRight;
-    CANSparkMax m_rearRight;
-    SpeedControllerGroup m_right;
+    CANSparkMax  frontRight;
+    CANSparkMax  rearRight;
+    SpeedControllerGroup  right;
     
-    DifferentialDrive m_robotDrive;
+    DifferentialDrive  robotDrive;
     
-    CANEncoder e_frontLeft;
-    CANEncoder e_frontRight;
-    CANEncoder e_rearLeft;
-    CANEncoder e_rearRight;
+    CANEncoder  frontLeftEncoder;
+    CANEncoder  frontRightEncoder;
+    CANEncoder  rearLeftEncoder;
+    CANEncoder  rearRightEncoder;
 
     @Override
     public void initialize() {
-        m_frontLeft = new CANSparkMax(RobotMap.CAN.FRONT_LEFT_MOTOR, MotorType.kBrushless);
-        m_rearLeft = new CANSparkMax(RobotMap.CAN.FRONT_RIGHT_MOTOR, MotorType.kBrushless);
-        m_left = new SpeedControllerGroup(m_frontLeft, m_rearLeft);
+         frontLeft = new CANSparkMax(RobotMap.CAN.FRONT_LEFT_MOTOR, MotorType.kBrushless);
+         rearLeft = new CANSparkMax(RobotMap.CAN.FRONT_RIGHT_MOTOR, MotorType.kBrushless);
+         left = new SpeedControllerGroup( frontLeft,  rearLeft);
     
-        m_frontRight = new CANSparkMax(RobotMap.CAN.FRONT_RIGHT_MOTOR, MotorType.kBrushless);
-        m_rearRight = new CANSparkMax(RobotMap.CAN.REAR_RIGHT_MOTOR, MotorType.kBrushless);
-        m_right = new SpeedControllerGroup(m_frontRight, m_rearRight);
+         frontRight = new CANSparkMax(RobotMap.CAN.FRONT_RIGHT_MOTOR, MotorType.kBrushless);
+         rearRight = new CANSparkMax(RobotMap.CAN.REAR_RIGHT_MOTOR, MotorType.kBrushless);
+         right = new SpeedControllerGroup( frontRight,  rearRight);
         
-        m_robotDrive = new DifferentialDrive(m_left, m_right);
-        e_frontLeft = m_frontLeft.getEncoder();
-        e_frontRight = m_frontRight.getEncoder();
-        e_rearLeft = m_rearLeft.getEncoder();
-        e_rearRight = m_rearRight.getEncoder();
+         robotDrive = new DifferentialDrive( left,  right);
+         frontLeftEncoder =  frontLeft.getEncoder();
+         frontRightEncoder =  frontRight.getEncoder();
+         rearLeftEncoder =  rearLeft.getEncoder();
+         rearRightEncoder =  rearRight.getEncoder();
     }
 
     public void drive(double x, double y){
-        m_robotDrive.arcadeDrive(y, x);
+         robotDrive.arcadeDrive(y, x);
     }
 }
