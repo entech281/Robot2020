@@ -3,24 +3,29 @@ package frc.robot.pose;
 
 //The kept pose is at the center of the robot.
 public class PoseManager{
+
     PositionReader pose;
     PositionReader encoderPose;
-    PoseGenerator drivePoseGenerator;
+    PoseGenerator encoderPoseGenerator;
+    
+    public PoseManager(PoseGenerator encodeGenerator){
+        encoderPoseGenerator = encodeGenerator; 
+    }
     
     public PositionReader getPose(){
-        encoderPose = drivePoseGenerator.getPose();
+        encoderPose = encoderPoseGenerator.getPose();
         pose = encoderPose;
-        drivePoseGenerator.updateFromOfficialPose(pose);
+        encoderPoseGenerator.updateFromOfficialPose(pose);
         return pose;
     }
 
     public void configureRobotPose(double horizontal, double lateral, double theta){
         pose = new RobotPose(horizontal, lateral, theta);
-        drivePoseGenerator.updateFromOfficialPose(pose);
+        encoderPoseGenerator.updateFromOfficialPose(pose);
     }
 
-    public void setDrivePoseGenerator(PoseGenerator pg){
-        drivePoseGenerator = pg;
+    public void setEncoderPoseGenerator(PoseGenerator pg){
+        encoderPoseGenerator = pg;
     }
 
 
