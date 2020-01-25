@@ -92,19 +92,19 @@ public class TestPoseMathematics {
         PoseMathematics.setRobotWidthForTesting(1);
 
         RobotPose pose1 = PoseMathematics.calculateRobotPositionChange(10, 10);
-        RobotPose pose2 = new RobotPose(0, 10, 0);
+        RobotPose pose2 = new RobotPose(10, 0, 0);
         assertEquals(pose1.getTheta(), pose2.getTheta(), 0.1);
         assertEquals(pose1.getForward(), pose2.getForward(), 0.1);
         assertEquals(pose1.getHorizontal(), pose2.getHorizontal(), 0.1);
 
         pose1 = PoseMathematics.calculateRobotPositionChange(0, Math.PI);
-        pose2 = new RobotPose(1, 0, 180);
+        pose2 = new RobotPose(0, 1, 180);
         assertEquals(pose2.getTheta(), pose1.getTheta(), 0.1);
         assertEquals(pose2.getForward(), pose1.getForward(), 0.1);
         assertEquals(pose2.getHorizontal(), pose1.getHorizontal(), 0.1);
 
         pose1 = PoseMathematics.calculateRobotPositionChange(Math.PI, 0);
-        pose2 = new RobotPose(-1, 0, 180);
+        pose2 = new RobotPose(0, -1, 180);
         assertEquals(pose2.getTheta(), pose1.getTheta(), 0.1);
         assertEquals(pose2.getForward(), pose1.getForward(), 0.1);
         assertEquals(pose2.getHorizontal(), pose1.getHorizontal(), 0.1);
