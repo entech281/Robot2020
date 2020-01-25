@@ -33,7 +33,7 @@ public class Robot extends TimedRobot {
           robotDrive = new DriveSubsystem();
           BaseSubsystem.initializeList();
           oi = new OperatorInterface(this);
-
+          officialPose.configureRobotPose(0, 0, 90);
           officialPose.setDrivePoseGenerator(robotDrive.getEncoderPoseGenerator());          
      }
 
