@@ -1,5 +1,6 @@
 package frc.robot.pose;
 
+import edu.wpi.first.wpilibj.geometry.Pose2d;
 
 //The kept pose is at the center of the robot.
 public class PoseManager{
@@ -17,6 +18,10 @@ public class PoseManager{
         pose = encoderPose;
         encoderPoseGenerator.updateFromOfficialPose(pose);
         return pose;
+    }
+
+    public Pose2d getWPIPose(){
+        return pose.getWPIRobotPose();
     }
 
     public void configureRobotPose(double horizontal, double lateral, double theta){

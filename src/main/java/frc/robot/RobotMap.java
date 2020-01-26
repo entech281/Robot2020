@@ -29,6 +29,9 @@ public class RobotMap {
         public static final double kTrackwidthMeters = 0.69; //TODO get actual width between wheels
         public static final DifferentialDriveKinematics kDriveKinematics =
             new DifferentialDriveKinematics(kTrackwidthMeters);
+		public static final double kMaxAccelerationMetersPerSecondSquared = 0;
+		public static final double kRamseteB = 0;
+		public static final double kMaxSpeedMetersPerSecond = 0;
     }
 
     public interface GAMEPAD{
