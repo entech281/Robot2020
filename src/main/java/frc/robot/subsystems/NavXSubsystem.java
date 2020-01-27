@@ -20,6 +20,7 @@ public class NavXSubsystem extends BaseSubsystem{
 
     private final AHRS navX = new AHRS(SPI.Port.kMXP);
     
+    private static final double METERS_TO_INCHES = 39.3700787; 
     
     public NavXSubsystem() {
     }
@@ -31,5 +32,18 @@ public class NavXSubsystem extends BaseSubsystem{
             ;
         }
         navX.zeroYaw();
-        logger.log("NavX Initialize Finish", false);    }
+        logger.log("NavX Initialize Finish", false);    
+    }
+
+    public double getAngle(){
+        return navX.getAngle();
+    }
+
+    public double getDisplacementY(){
+        return navX.getDisplacementY() * METERS_TO_INCHES;
+    }
+
+    public double getDisplacementX(){
+        return navX.getDisplacementX() * METERS_TO_INCHES;
+    }
 }
