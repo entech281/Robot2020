@@ -1,6 +1,8 @@
 package frc.robot.commands;
 
 import java.util.List;
+import java.util.function.BiConsumer;
+import java.util.function.Supplier;
 
 //import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.command.Command;
@@ -10,6 +12,7 @@ import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
+import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
@@ -54,7 +57,10 @@ class AutoCommandFactory {
             config
         );
 
-        RamseteCommand ramseteCommand = new RamseteCommand(
+
+        Supplier<DifferentialDriveWheelSpeeds> l;
+		BiConsumer<Double, Double> k;
+		RamseteCommand ramseteCommand = new RamseteCommand(
             exampleTrajectory,
             poseManager::getWPIPose,
             new RamseteController(RobotMap.AUTO_DRIVE_CONSTANTS.kRamseteB, RobotMap.AUTO_DRIVE_CONSTANTS.kRamseteZeta),
@@ -62,11 +68,11 @@ class AutoCommandFactory {
                                             RobotMap.AUTO_DRIVE_CONSTANTS.kvVoltSecondsPerMeter,
                                 RobotMap.AUTO_DRIVE_CONSTANTS.kaVoltSecondsSquaredPerMeter),
             RobotMap.AUTO_DRIVE_CONSTANTS.kDriveKinematics,
-            robotDrive::getWheelSpeeds,
+            l,
             new PIDController(RobotMap.AUTO_DRIVE_CONSTANTS.kPDriveVel, 0, 0),
             new PIDController(RobotMap.AUTO_DRIVE_CONSTANTS.kPDriveVel, 0, 0),
             // RamseteCommand passes volts to the callback
-            robotDrive::tankDriveVolts,
+            k,
             robotDrive
         );
 
