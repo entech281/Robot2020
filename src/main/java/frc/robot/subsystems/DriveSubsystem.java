@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
 import frc.robot.DriveInstruction;
 import frc.robot.DriveInstructionSource;
 import frc.robot.RobotMap;
@@ -187,5 +188,8 @@ public class DriveSubsystem extends BaseSubsystem{
     }
     public EncoderPoseGenerator getEncoderPoseGenerator(){
         return this.poseGen;
+    }
+    public DifferentialDriveWheelSpeeds getWheelSpeeds(){
+        return poseGen.getWheelSpeeds();
     }
 }

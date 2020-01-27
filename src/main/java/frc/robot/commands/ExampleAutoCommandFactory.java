@@ -18,12 +18,13 @@ import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveVoltageConstraint;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.RobotMap;
 import frc.robot.pose.PoseManager;
 import frc.robot.subsystems.DriveSubsystem;
 
 class AutoCommandFactory {
-    public Command getExampleCommand(DriveSubsystem robotDrive, PoseManager poseManager){
+    public SequentialCommandGroup getExampleCommand(DriveSubsystem robotDrive, PoseManager poseManager) {
         // Create a voltage constraint to ensure we don't accelerate too fast
         var autoVoltageConstraint =
         new DifferentialDriveVoltageConstraint(
@@ -57,18 +58,17 @@ class AutoCommandFactory {
             config
         );
 
-
-        Supplier<DifferentialDriveWheelSpeeds> l;
-		BiConsumer<Double, Double> k;
+        BiConsumer<Double, Double> k;
+        
 		RamseteCommand ramseteCommand = new RamseteCommand(
             exampleTrajectory,
             poseManager::getWPIPose,
             new RamseteController(RobotMap.AUTO_DRIVE_CONSTANTS.kRamseteB, RobotMap.AUTO_DRIVE_CONSTANTS.kRamseteZeta),
             new SimpleMotorFeedforward(RobotMap.AUTO_DRIVE_CONSTANTS.ksVolts,
-                                            RobotMap.AUTO_DRIVE_CONSTANTS.kvVoltSecondsPerMeter,
+                                RobotMap.AUTO_DRIVE_CONSTANTS.kvVoltSecondsPerMeter,
                                 RobotMap.AUTO_DRIVE_CONSTANTS.kaVoltSecondsSquaredPerMeter),
             RobotMap.AUTO_DRIVE_CONSTANTS.kDriveKinematics,
-            l,
+            robotDrive::getWheelSpeeds,
             new PIDController(RobotMap.AUTO_DRIVE_CONSTANTS.kPDriveVel, 0, 0),
             new PIDController(RobotMap.AUTO_DRIVE_CONSTANTS.kPDriveVel, 0, 0),
             // RamseteCommand passes volts to the callback
@@ -77,6 +77,6 @@ class AutoCommandFactory {
         );
 
         // Run path following command, then stop at the end.
-        return ramseteCommand.andThen(() -> robotDrive.tankDriveVolts(0, 0));
+        return ramseteCommand.andThen(()->{});
     }
 }
