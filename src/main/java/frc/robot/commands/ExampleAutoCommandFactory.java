@@ -58,8 +58,6 @@ class AutoCommandFactory {
             config
         );
 
-        BiConsumer<Double, Double> k;
-        
 		RamseteCommand ramseteCommand = new RamseteCommand(
             exampleTrajectory,
             poseManager::getWPIPose,
@@ -72,7 +70,7 @@ class AutoCommandFactory {
             new PIDController(RobotMap.AUTO_DRIVE_CONSTANTS.kPDriveVel, 0, 0),
             new PIDController(RobotMap.AUTO_DRIVE_CONSTANTS.kPDriveVel, 0, 0),
             // RamseteCommand passes volts to the callback
-            k,
+            robotDrive::tankDriveVolts,
             robotDrive
         );
 

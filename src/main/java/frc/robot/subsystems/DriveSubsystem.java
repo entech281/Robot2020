@@ -183,9 +183,17 @@ public class DriveSubsystem extends BaseSubsystem{
         poseGen.updateFromOfficialPose(pose);
         poseGen.updatePose();
     }
+
     public void drive(DriveInstruction di) {
         m_robotDrive.arcadeDrive(di.getFoward(), di.getRotation());
     }
+
+    public void tankDriveVolts(double leftVolts, double rightVolts) {
+        m_left.setVoltage(leftVolts);
+        m_right.setVoltage(-rightVolts);
+        m_robotDrive.feed();
+      }
+
     public EncoderPoseGenerator getEncoderPoseGenerator(){
         return this.poseGen;
     }

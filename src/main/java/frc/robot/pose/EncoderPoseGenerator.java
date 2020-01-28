@@ -18,8 +18,8 @@ public class EncoderPoseGenerator implements PoseGenerator{
     private DataLogger logger;
     private double lastUpdated;
 
-    private final double ENCODER_CLICKS_PER_INCH = RobotMap.DIMENSIONS.ENCODER_TICKS_PER_INCH;
-    private final double METERS_PER_INCH = RobotMap.DIMENSIONS.INCHES_TO_METERS;
+    private final double ENCODER_CLICKS_PER_INCH = RobotMap.CONVERSIONS.ENCODER_TICKS_PER_INCH;
+    private final double METERS_PER_INCH = RobotMap.CONVERSIONS.INCHES_TO_METERS;
     
     SparkPositionControllerGroup sparkControllers;
     RobotPose pose = RobotMap.DIMENSIONS.START_POSE;

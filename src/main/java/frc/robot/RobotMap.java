@@ -26,7 +26,7 @@ public class RobotMap {
     
         // Example value only - as above, this must be tuned for your drive!
         public static final double kPDriveVel = 8.5;
-        public static final double kTrackwidthMeters = DIMENSIONS.ROBOT_WIDTH * DIMENSIONS.INCHES_TO_METERS;
+        public static final double kTrackwidthMeters = DIMENSIONS.ROBOT_WIDTH * CONVERSIONS.INCHES_TO_METERS;
         public static final DifferentialDriveKinematics kDriveKinematics =
             new DifferentialDriveKinematics(kTrackwidthMeters);
 		public static final double kMaxAccelerationMetersPerSecondSquared = 0;
@@ -50,12 +50,17 @@ public class RobotMap {
         public static final double ROBOT_LENGTH = 32.5;
         public static final RobotPose START_POSE = new RobotPose(0,0,90);
         public static final double DRIVE_GEAR_RATIO = 10.7;
-        public static final double ENCODER_TICKS_PER_MOTOR_REVOLUTION = 4096;
+
         public static final double WHEEL_DIAMETER_INCHES = 6;
+    }
+
+    public interface CONVERSIONS {
+        public static final double ENCODER_TICKS_PER_MOTOR_REVOLUTION = 4096;
         public static final double ENCODER_TICKS_PER_INCH = ENCODER_TICKS_PER_MOTOR_REVOLUTION
-            * DRIVE_GEAR_RATIO
-            / ( Math.PI * WHEEL_DIAMETER_INCHES);
+            * DIMENSIONS.DRIVE_GEAR_RATIO
+            / ( Math.PI * DIMENSIONS.WHEEL_DIAMETER_INCHES);
         public static final double METERS_TO_INCHES = 39.3700787;
-        public static final double INCHES_TO_METERS = 1/METERS_TO_INCHES;  
+        public static final double INCHES_TO_METERS = 1/METERS_TO_INCHES;
+        
     }
 }

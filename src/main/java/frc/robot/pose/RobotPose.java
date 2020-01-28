@@ -4,6 +4,7 @@ import java.util.Objects;
 
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
+import frc.robot.RobotMap;
 
 public class RobotPose implements PositionReader{
 
@@ -55,7 +56,7 @@ public class RobotPose implements PositionReader{
     }
 
     public Pose2d getWPIRobotPose() {
-        return new Pose2d(forward, horizontal, new Rotation2d(theta));
+        return new Pose2d(forward * RobotMap.CONVERSIONS.INCHES_TO_METERS, horizontal* RobotMap.CONVERSIONS.INCHES_TO_METERS, new Rotation2d(theta));
     }
     
     @Override
