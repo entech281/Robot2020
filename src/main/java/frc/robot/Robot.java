@@ -43,7 +43,8 @@ public class Robot extends TimedRobot {
           robotDrive.reset();          
           officialPose = new PoseManager();
           officialPose.addGenerator(robotDrive.getEncoderPoseGenerator());
-          officialPose.configureRobotPose(0, 0, 90);
+          officialPose.addGenerator(navX.getNavXPoseGenerator());
+          officialPose.configureRobotPose(RobotMap.DIMENSIONS.START_POSE.getHorizontal(), RobotMap.DIMENSIONS.START_POSE.getForward(), RobotMap.DIMENSIONS.START_POSE.getTheta());
           oi = new OperatorInterface(this);
           
           this.logger = DataLoggerFactory.getLoggerFactory().createDataLogger("Robot Main Loop");
