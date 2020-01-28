@@ -12,31 +12,19 @@ public class DriveInstruction {
     public static final double LOWER_BOUND = -1.0;
     public static final double UPPER_BOUND = 1.0;
 
-    public double getLateral() {
+    public double getFoward() {
         return lateral;
     }
 
-    public double getForward() {
-        return forward;
+    public double getRotation() {
+        return rotation;
     }
 
     private double lateral = 0.0;
-    private double forward = 0.0;
+    private double rotation = 0.0;
 
-    public DriveInstruction(double forward, double lateral) {
+    public DriveInstruction( double lateral, double rotation) {
         this.lateral = lateral;
-        this.forward = forward;
-        checkLimits();
-    }
-
-    protected void checkLimits() {
-        checkLimit("lateral", this.lateral, UPPER_BOUND, LOWER_BOUND);
-        checkLimit("forward", this.forward, UPPER_BOUND, LOWER_BOUND);
-    }
-
-    protected void checkLimit(String name, double value, double upper, double lower) {
-        if (value > upper || value < lower) {
-            throw new RuntimeException(name + ": must be between " + lower + " and " + upper + ": got" + value);
-        }
+        this.rotation = rotation;
     }
 }

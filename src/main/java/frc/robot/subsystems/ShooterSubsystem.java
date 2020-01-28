@@ -38,7 +38,7 @@ import frc.robot.logger.DataLoggerFactory;
         this.SHOOTER_SPEED = desiredSpeed;
         updateShooterMotor();
     }
-    public void updateShooterMotor() {
+    private void updateShooterMotor() {
         shooterMotorController.setDesiredSpeed(this.SHOOTER_SPEED);
     }
  } 
