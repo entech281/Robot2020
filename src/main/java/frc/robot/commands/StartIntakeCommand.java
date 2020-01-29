@@ -6,7 +6,7 @@ import frc.robot.subsystems.IntakeSubsystem;
 
 public class StartIntakeCommand extends CommandBase {
     private IntakeSubsystem intake;
-    private double intake_speed = 1;
+    private double intake_speed = 0.6;
 
     public StartIntakeCommand(IntakeSubsystem intake) {
         this.intake=intake;
