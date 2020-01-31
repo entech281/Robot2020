@@ -31,5 +31,6 @@ public class NavXSubsystem extends BaseSubsystem{
             ;
         }
         navX.zeroYaw();
-        logger.log("NavX Initialize Finish", false);    }
+        logger.log("NavX Initialize Finish", false);
+    }
 }
