@@ -23,15 +23,15 @@ public class DriveSubsystem extends BaseSubsystem{
     DriveInstructionSource source;
 
     CANSparkMax m_frontLeft;
-    SparkPositionController pc_frontLeft;
+    //SparkPositionController pc_frontLeft;
     CANSparkMax m_rearLeft;
-    SparkPositionController pc_rearLeft;
+    //SparkPositionController pc_rearLeft;
 	SpeedControllerGroup m_left;
 
     CANSparkMax m_frontRight;
-    SparkPositionController pc_frontRight;
+    //SparkPositionController pc_frontRight;
     CANSparkMax m_rearRight;
-    SparkPositionController pc_rearRight;
+    //SparkPositionController pc_rearRight;
     SpeedControllerGroup m_right;
     
     DifferentialDrive m_robotDrive;
@@ -57,16 +57,19 @@ public class DriveSubsystem extends BaseSubsystem{
         m_left = new SpeedControllerGroup(m_frontLeft, m_rearLeft);
     
         m_frontRight = new CANSparkMax(RobotMap.CAN.FRONT_RIGHT_MOTOR, MotorType.kBrushless);
+        
         m_rearRight = new CANSparkMax(RobotMap.CAN.REAR_RIGHT_MOTOR, MotorType.kBrushless);
+
+        
         m_right = new SpeedControllerGroup(m_frontRight, m_rearRight);
         
 
         m_robotDrive = new DifferentialDrive(m_left, m_right);
-    
+        /*
         SparkMaxSettings frontLeftPositionSettings = SparkMaxSettingsBuilder.defaults()
                                                     .withCurrentLimits(35)
                                                     .coastInNeutral()
-                                                    .withDirections(false, false)
+                                                    .withDirections( RobotMap.INVERSIONS.FRONT_LEFT_ENCODER,RobotMap.INVERSIONS.FRONT_LEFT_MOTOR)
                                                     .limitMotorOutputs(1.0, -1.0)
                                                     .noMotorStartupRamping()
                                                     .useSpeedControl()
@@ -75,7 +78,7 @@ public class DriveSubsystem extends BaseSubsystem{
         SparkMaxSettings frontRightPositionSettings = SparkMaxSettingsBuilder.defaults()
                                                     .withCurrentLimits(35)
                                                     .coastInNeutral()
-                                                    .withDirections(false, false)
+                                                    .withDirections(RobotMap.INVERSIONS.FRONT_RIGHT_ENCODER, RobotMap.INVERSIONS.FRONT_RIGHT_MOTOR)
                                                     .limitMotorOutputs(1.0, -1.0)
                                                     .noMotorStartupRamping()
                                                     .useSpeedControl()
@@ -86,7 +89,7 @@ public class DriveSubsystem extends BaseSubsystem{
         SparkMaxSettings rearLeftPositionSettings = SparkMaxSettingsBuilder.defaults()
                                                     .withCurrentLimits(35)
                                                     .coastInNeutral()
-                                                    .withDirections(false, false)
+                                                    .withDirections(RobotMap.INVERSIONS.BACK_LEFT_ENCODER, RobotMap.INVERSIONS.BACK_LEFT_MOTOR)
                                                     .limitMotorOutputs(1.0, -1.0)
                                                     .noMotorStartupRamping()
                                                     .useSpeedControl()
@@ -95,7 +98,7 @@ public class DriveSubsystem extends BaseSubsystem{
         SparkMaxSettings rearRightPositionSettings = SparkMaxSettingsBuilder.defaults()
                                                     .withCurrentLimits(35)
                                                     .coastInNeutral()
-                                                    .withDirections(false, false)
+                                                    .withDirections(RobotMap.INVERSIONS.BACK_RIGHT_ENCODER, RobotMap.INVERSIONS.BACK_RIGHT_MOTOR)
                                                     .limitMotorOutputs(1.0, -1.0)
                                                     .noMotorStartupRamping()
                                                     .useSpeedControl()
@@ -110,11 +113,12 @@ public class DriveSubsystem extends BaseSubsystem{
         pc_rearRight = new SparkPositionController(m_rearRight, rearRightPositionSettings);
         pc_rearRight.configure();
 
-        posController = new SparkPositionControllerGroup(pc_frontLeft, pc_frontRight, pc_rearLeft, pc_rearRight);
-        positiionModeSparks = new FourSparkMaxWithSettings(m_frontLeft, m_rearLeft, m_frontRight, m_rearRight, frontLeftPositionSettings, rearLeftPositionSettings, frontRightPositionSettings, rearRightPositionSettings);
+        */
+        //posController = new SparkPositionControllerGroup(pc_frontLeft, pc_frontRight, pc_rearLeft, pc_rearRight);
+        //positiionModeSparks = new FourSparkMaxWithSettings(m_frontLeft, m_rearLeft, m_frontRight, m_rearRight, frontLeftPositionSettings, rearLeftPositionSettings, frontRightPositionSettings, rearRightPositionSettings);
 
 
-        poseGen = new EncoderPoseGenerator(posController, positionConfidence, yawConfidence);
+        //poseGen = new EncoderPoseGenerator(posController, positionConfidence, yawConfidence);
         e_frontLeft = m_frontLeft.getEncoder();
         e_frontRight = m_frontRight.getEncoder();
         e_rearLeft = m_rearLeft.getEncoder();
@@ -131,10 +135,10 @@ public class DriveSubsystem extends BaseSubsystem{
     }
 
     public void reset(){
-        pc_frontLeft.resetPosition();
+        /*pc_frontLeft.resetPosition();
         pc_frontRight.resetPosition();
         pc_rearLeft.resetPosition();
-        pc_rearRight.resetPosition();
+        pc_rearRight.resetPosition();*/
         logger.log("Clicks per rotation", e_rearRight.getCountsPerRevolution());
     }
     
@@ -149,13 +153,13 @@ public class DriveSubsystem extends BaseSubsystem{
     }
 
     public void tankDriveVolts(double leftVolts, double rightVolts) {
-        m_left.setVoltage(-leftVolts);
-        m_right.setVoltage(rightVolts);
+        m_left.setVoltage(leftVolts);
+        m_right.setVoltage(-rightVolts);
         logger.log("leftVolts", leftVolts);
         logger.log("rightVolts", rightVolts);
 
         m_robotDrive.feed();
-      }
+    }
 
     public EncoderPoseGenerator getEncoderPoseGenerator(){
         return this.poseGen;

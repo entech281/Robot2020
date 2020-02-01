@@ -11,6 +11,7 @@ public abstract class BaseSparkController {
 
 	private CANSparkMax spark = null;
 	private SparkMaxSettings settings = null;
+	private boolean inverted = false;
 
 	public BaseSparkController(CANSparkMax spark, SparkMaxSettings settings) {
 		this.spark = spark;
@@ -25,6 +26,10 @@ public abstract class BaseSparkController {
 		this.getSpark().getEncoder().setPosition(0);
 	}
 
+	public void setInverted( boolean inverted){
+		this.inverted = true;
+	}
+
 	/**
 	 * A little tricky-- this is an Integer so that we can return Null if this talon
 	 * is a follower. That's because a follower is configured because its encoder is
@@ -36,7 +41,7 @@ public abstract class BaseSparkController {
 		if (this.settings.follow) {
 			return null;
 		} else {
-			return (int)this.getSpark().getEncoder().getPosition();
+			return (int)this.getSpark().getEncoder().getPosition() * (inverted ? -1 : 1 );
 		}
 
 	}

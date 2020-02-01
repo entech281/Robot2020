@@ -98,7 +98,7 @@ public class SparkPositionControllerGroup {
             return 0;
         }
         else{
-            return -total / count;
+            return total / count;
         }
 	}
 }

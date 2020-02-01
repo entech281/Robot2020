@@ -43,7 +43,7 @@ public class Robot extends TimedRobot {
           BaseSubsystem.initializeList();
           robotDrive.reset();          
           officialPose = new PoseManager();
-          officialPose.addGenerator(robotDrive.getEncoderPoseGenerator());
+          //officialPose.addGenerator(robotDrive.getEncoderPoseGenerator());
           officialPose.addGenerator(navX.getNavXPoseGenerator());
           officialPose.configureRobotPose(RobotMap.DIMENSIONS.START_POSE.getHorizontal(), RobotMap.DIMENSIONS.START_POSE.getForward(), RobotMap.DIMENSIONS.START_POSE.getTheta());
           oi = new OperatorInterface(this);
@@ -53,18 +53,19 @@ public class Robot extends TimedRobot {
 
      @Override
      public void teleopPeriodic(){
-          allPeriodic();
+          //allPeriodic();
           robotDrive.drive(oi.getNextInstruction());
+          CommandScheduler.getInstance().run();
      }
 
      public void allPeriodic(){
-          CommandScheduler.getInstance().run();
           robotDrive.updatePose(officialPose.getPose());
           logger.log("Current Pose",officialPose.getPose());
      }
 
      @Override
      public void disabledPeriodic(){
+          robotDrive.drive(new DriveInstruction(0.0, 0.0));
           CommandScheduler.getInstance().run();
      }
 

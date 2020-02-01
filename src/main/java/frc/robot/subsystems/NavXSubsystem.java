@@ -23,8 +23,8 @@ public class NavXSubsystem extends BaseSubsystem{
     
     private static final double METERS_TO_INCHES = 39.3700787; 
     private NavxPoseGenerator navPosGen;
-    private static final double navXPositionConfidence = 0.01;
-    private static final double navXYawConfidence = 100.0;
+    private static final double navXPositionConfidence = 0;
+    private static final double navXYawConfidence = 0;
 
     public NavXSubsystem() {
     }

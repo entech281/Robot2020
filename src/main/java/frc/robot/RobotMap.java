@@ -10,8 +10,20 @@ public class RobotMap {
         public static final int REAR_LEFT_MOTOR = 4;
         public static final int REAR_RIGHT_MOTOR = 2;
         public static final int SHOOTER_MOTOR = 7;
-        public static final int INTAKE_MOTOR = 8;
+        public static final int INTAKE_MOTOR = 6;
         public static final int PCM_ID = 10;
+    }
+
+    public interface INVERSIONS {
+        public static final boolean FRONT_LEFT_MOTOR = false;
+        public static final boolean FRONT_RIGHT_MOTOR = false;
+        public static final boolean BACK_LEFT_MOTOR = false;
+        public static final boolean BACK_RIGHT_MOTOR = false;
+
+        public static final boolean FRONT_LEFT_ENCODER = false;
+        public static final boolean FRONT_RIGHT_ENCODER = false;
+        public static final boolean BACK_LEFT_ENCODER = false;
+        public static final boolean BACK_RIGHT_ENCODER = false;
     }
 
     public interface PNEUMATICS{

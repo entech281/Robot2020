@@ -36,7 +36,7 @@ public class EncoderPoseGenerator implements PoseGenerator{
         this.sparkControllers = group;
         this.positionConfidence = positionConfidence;
         this.thetaConfidence = thetaConfidence;
-        this.logger = DataLoggerFactory.getLoggerFactory().createDataLogger("Encoder Pose Genorator");
+        this.logger = DataLoggerFactory.getLoggerFactory().createDataLogger("Encoder Pose Generator");
 
     }
 
@@ -68,7 +68,6 @@ public class EncoderPoseGenerator implements PoseGenerator{
 
     public DifferentialDriveWheelSpeeds getWheelSpeeds(){
         double deltaT = Timer.getFPGATimestamp() - lastUpdated;
-        lastUpdated = Timer.getFPGATimestamp();
 
         if(deltaT > 0){
             return new DifferentialDriveWheelSpeeds(deltaLeft / deltaT,
