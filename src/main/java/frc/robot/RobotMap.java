@@ -18,19 +18,17 @@ public class RobotMap {
     }
 
     public interface AUTO_DRIVE_CONSTANTS {
-        //TODO DO NOT RUN WITH THESE CONSTANTS!!! find real constants using charecterization.
-        public static final double ksVolts = 0.22;
-        public static final double kvVoltSecondsPerMeter = 1.98;
-        public static final double kaVoltSecondsSquaredPerMeter = 0.2;
+        public static final double ksVolts = 0.147;
+        public static final double kvVoltSecondsPerMeter = 0.0707;
+        public static final double kaVoltSecondsSquaredPerMeter = 0.00971;
     
-        // Example value only - as above, this must be tuned for your drive!
-        public static final double kPDriveVel = 8.5;
+        public static final double kPDriveVel = 0.451;
         public static final double kTrackwidthMeters = DIMENSIONS.ROBOT_WIDTH * CONVERSIONS.INCHES_TO_METERS;
         public static final DifferentialDriveKinematics kDriveKinematics =
             new DifferentialDriveKinematics(kTrackwidthMeters);
-		public static final double kMaxAccelerationMetersPerSecondSquared = 0;
+		public static final double kMaxAccelerationMetersPerSecondSquared = 1;
 		public static final double kRamseteB = 0;
-		public static final double kMaxSpeedMetersPerSecond = 0;
+		public static final double kMaxSpeedMetersPerSecond =   1;
 		public static final double kRamseteZeta = 0;
     }
 
@@ -47,7 +45,7 @@ public class RobotMap {
 
         public static final double ROBOT_WIDTH = 27.5;
         public static final double ROBOT_LENGTH = 32.5;
-        public static final RobotPose START_POSE = new RobotPose(0,0,90);
+        public static final RobotPose START_POSE = new RobotPose(0,0,0);
         public static final double DRIVE_GEAR_RATIO = 10.7;
 
         public static final double WHEEL_DIAMETER_INCHES = 6;

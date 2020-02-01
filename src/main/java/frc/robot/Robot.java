@@ -8,6 +8,7 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
+import frc.robot.commands.AutoCommandFactory;
 import frc.robot.logger.DataLogger;
 import frc.robot.logger.DataLoggerFactory;
 import frc.robot.pose.PoseManager;
@@ -61,7 +62,18 @@ public class Robot extends TimedRobot {
           CommandScheduler.getInstance().run();
      }
 
+     @Override
+     public void autonomousInit(){
+          new AutoCommandFactory().getExampleCommand(robotDrive, officialPose).schedule();
+     }
 
+     @Override
+     public void autonomousPeriodic() {
+
+          logger.log("Current Pose",officialPose.getPose());
+
+          CommandScheduler.getInstance().run();
+     }
 
      public IntakeSubsystem getIntakeSubsystem(){
           return intake;

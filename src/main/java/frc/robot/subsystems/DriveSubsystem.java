@@ -10,8 +10,6 @@ import frc.robot.controllers.SparkPositionControllerGroup;
 import frc.robot.pose.EncoderPoseGenerator;
 import frc.robot.subsystems.drive.FourSparkMaxWithSettings;
 import frc.robot.pose.PositionReader;
-
-import com.fasterxml.jackson.databind.introspect.TypeResolutionContext;
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
@@ -189,8 +187,11 @@ public class DriveSubsystem extends BaseSubsystem{
     }
 
     public void tankDriveVolts(double leftVolts, double rightVolts) {
-        m_left.setVoltage(leftVolts);
-        m_right.setVoltage(-rightVolts);
+        m_left.setVoltage(-leftVolts);
+        m_right.setVoltage(rightVolts);
+        logger.log("leftVolts", leftVolts);
+        logger.log("rightVolts", rightVolts);
+
         m_robotDrive.feed();
       }
 
