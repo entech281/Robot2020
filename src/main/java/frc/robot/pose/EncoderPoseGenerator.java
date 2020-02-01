@@ -18,10 +18,12 @@ public class EncoderPoseGenerator implements PoseGenerator{
     private double lastUpdated;
 
     private final double ENCODER_CLICKS_PER_INCH = RobotMap.CONVERSIONS.ENCODER_TICKS_PER_INCH;
-    private final double METERS_PER_INCH = RobotMap.CONVERSIONS.INCHES_TO_METERS;
     
     SparkPositionControllerGroup sparkControllers;
     RobotPose pose = RobotMap.DIMENSIONS.START_POSE;
+    double positionConfidence = 0.0;
+    double thetaConfidence = 0.0;
+
     double lastLeft;
     double lastRight;
 
@@ -30,9 +32,10 @@ public class EncoderPoseGenerator implements PoseGenerator{
 
     EncoderInchesConverter converter = new EncoderInchesConverter(ENCODER_CLICKS_PER_INCH);
     
-    public EncoderPoseGenerator(SparkPositionControllerGroup group){
+    public EncoderPoseGenerator(SparkPositionControllerGroup group, double positionConfidence, double thetaConfidence){
         this.sparkControllers = group;
-        
+        this.positionConfidence = positionConfidence;
+        this.thetaConfidence = thetaConfidence;
         this.logger = DataLoggerFactory.getLoggerFactory().createDataLogger("Encoder Pose Genorator");
 
     }
@@ -65,12 +68,29 @@ public class EncoderPoseGenerator implements PoseGenerator{
 
     public DifferentialDriveWheelSpeeds getWheelSpeeds(){
         double deltaT = Timer.getFPGATimestamp() - lastUpdated;
+        lastUpdated = Timer.getFPGATimestamp();
+
         if(deltaT > 0){
-            return new DifferentialDriveWheelSpeeds(deltaLeft * METERS_PER_INCH / deltaT,
-                deltaRight * METERS_PER_INCH / deltaT);
+            return new DifferentialDriveWheelSpeeds(deltaLeft / deltaT,
+                deltaRight / deltaT);
         } else{
             return new DifferentialDriveWheelSpeeds(0,0);
         }
     }
 
+    @Override
+    public double getPositionConfidence(){
+        return positionConfidence;
+    }
+
+    @Override
+    public double getThetaConfidence(){
+        return thetaConfidence;
+    }
+
+    @Override
+    public void updateConfidences(double newPosConf, double newThetaConf){
+        this.positionConfidence = newPosConf;
+        this.thetaConfidence = newThetaConf;
+    }
 }

@@ -41,12 +41,14 @@ public class DriveSubsystem extends BaseSubsystem{
     CANEncoder e_rearLeft;
     CANEncoder e_rearRight;
 
-    private FourSparkMaxWithSettings speedModeSparks;
     private FourSparkMaxWithSettings positiionModeSparks;
 
     private SparkPositionControllerGroup posController;
 
     private EncoderPoseGenerator poseGen;
+
+    private double positionConfidence = 1.0;
+    private double yawConfidence = 1.0;
 
     @Override
     public void initialize() {
@@ -60,47 +62,6 @@ public class DriveSubsystem extends BaseSubsystem{
         
 
         m_robotDrive = new DifferentialDrive(m_left, m_right);
-
-        SparkMaxSettings frontLeftSpeedSettings = SparkMaxSettingsBuilder.defaults()
-                                                    .withCurrentLimits(35)
-                                                    .coastInNeutral()
-                                                    .withDirections(false, false)
-                                                    .limitMotorOutputs(1.0, -1.0)
-                                                    .noMotorStartupRamping()
-                                                    .useSpeedControl()
-                                                    .build();
-                                                
-        SparkMaxSettings frontRightSpeedSettings = SparkMaxSettingsBuilder.defaults()
-                                                    .withCurrentLimits(35)
-                                                    .coastInNeutral()
-                                                    .withDirections(false, false)
-                                                    .limitMotorOutputs(1.0, -1.0)
-                                                    .noMotorStartupRamping()
-                                                    .useSpeedControl()
-                                                    .build();
-
-
-
-        SparkMaxSettings rearLeftSpeedSettings = SparkMaxSettingsBuilder.defaults()
-                                                    .withCurrentLimits(35)
-                                                    .coastInNeutral()
-                                                    .withDirections(false, false)
-                                                    .limitMotorOutputs(1.0, -1.0)
-                                                    .noMotorStartupRamping()
-                                                    .useSpeedControl()
-                                                    .build();
-                                                
-        SparkMaxSettings rearRightSpeedSettings = SparkMaxSettingsBuilder.defaults()
-                                                    .withCurrentLimits(35)
-                                                    .coastInNeutral()
-                                                    .withDirections(false, false)
-                                                    .limitMotorOutputs(1.0, -1.0)
-                                                    .noMotorStartupRamping()
-                                                    .useSpeedControl()
-                                                    .build();
-
-        
-        speedModeSparks = new FourSparkMaxWithSettings(m_frontLeft, m_rearLeft, m_frontRight, m_rearRight, frontLeftSpeedSettings, rearLeftSpeedSettings, frontRightSpeedSettings, rearRightSpeedSettings);                                            
     
         SparkMaxSettings frontLeftPositionSettings = SparkMaxSettingsBuilder.defaults()
                                                     .withCurrentLimits(35)
@@ -152,7 +113,8 @@ public class DriveSubsystem extends BaseSubsystem{
         posController = new SparkPositionControllerGroup(pc_frontLeft, pc_frontRight, pc_rearLeft, pc_rearRight);
         positiionModeSparks = new FourSparkMaxWithSettings(m_frontLeft, m_rearLeft, m_frontRight, m_rearRight, frontLeftPositionSettings, rearLeftPositionSettings, frontRightPositionSettings, rearRightPositionSettings);
 
-        poseGen = new EncoderPoseGenerator(posController);
+
+        poseGen = new EncoderPoseGenerator(posController, positionConfidence, yawConfidence);
         e_frontLeft = m_frontLeft.getEncoder();
         e_frontRight = m_frontRight.getEncoder();
         e_rearLeft = m_rearLeft.getEncoder();

@@ -17,6 +17,7 @@ public class RobotPose implements PositionReader{
     public RobotPose(double horizontal, double forward, double theta){
         this.horizontal = horizontal;
         this.forward = forward;
+        this.theta = theta;
         setTheta(theta);
     }
 
@@ -28,11 +29,19 @@ public class RobotPose implements PositionReader{
 
     
     public void setTheta(double theta) {
-        if(theta < 0){
-            theta = 360 + theta;
+        this.theta = theta;
+        while(!(this.theta >= -180 && this.theta <= 180)){
+            if(theta< -180){
+                this.theta = 180 - Math.abs(-180 - this.theta);
+            } else {
+                this.theta = -180 + Math.abs(180 - this.theta);
+            }
         }
-        this.theta = theta % 360;
+        if(this.theta == -180){
+            this.theta = 180;
+        }
     }
+
 
     
 

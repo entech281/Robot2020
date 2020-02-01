@@ -42,8 +42,10 @@ public class Robot extends TimedRobot {
           navX = new NavXSubsystem();
           BaseSubsystem.initializeList();
           robotDrive.reset();          
-          officialPose = new PoseManager(robotDrive.getEncoderPoseGenerator());
-          officialPose.configureRobotPose(0, 0, 90);
+          officialPose = new PoseManager();
+          officialPose.addGenerator(robotDrive.getEncoderPoseGenerator());
+          officialPose.addGenerator(navX.getNavXPoseGenerator());
+          officialPose.configureRobotPose(RobotMap.DIMENSIONS.START_POSE.getHorizontal(), RobotMap.DIMENSIONS.START_POSE.getForward(), RobotMap.DIMENSIONS.START_POSE.getTheta());
           oi = new OperatorInterface(this);
           
           this.logger = DataLoggerFactory.getLoggerFactory().createDataLogger("Robot Main Loop");
@@ -51,8 +53,12 @@ public class Robot extends TimedRobot {
 
      @Override
      public void teleopPeriodic(){
-          CommandScheduler.getInstance().run();
+          allPeriodic();
           robotDrive.drive(oi.getNextInstruction());
+     }
+
+     public void allPeriodic(){
+          CommandScheduler.getInstance().run();
           robotDrive.updatePose(officialPose.getPose());
           logger.log("Current Pose",officialPose.getPose());
      }
@@ -69,10 +75,7 @@ public class Robot extends TimedRobot {
 
      @Override
      public void autonomousPeriodic() {
-
-          logger.log("Current Pose",officialPose.getPose());
-
-          CommandScheduler.getInstance().run();
+          allPeriodic();
      }
 
      public IntakeSubsystem getIntakeSubsystem(){

@@ -10,6 +10,7 @@ package frc.robot.subsystems;
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.SPI;
+import frc.robot.pose.NavxPoseGenerator;
 
 
 /**
@@ -20,7 +21,11 @@ public class NavXSubsystem extends BaseSubsystem{
 
     private final AHRS navX = new AHRS(SPI.Port.kMXP);
     
-    
+    private static final double METERS_TO_INCHES = 39.3700787; 
+    private NavxPoseGenerator navPosGen;
+    private static final double navXPositionConfidence = 0.01;
+    private static final double navXYawConfidence = 100.0;
+
     public NavXSubsystem() {
     }
 
@@ -31,6 +36,23 @@ public class NavXSubsystem extends BaseSubsystem{
             ;
         }
         navX.zeroYaw();
-        logger.log("NavX Initialize Finish", false);
+        navPosGen = new NavxPoseGenerator(this, navXPositionConfidence, navXYawConfidence);
+        logger.log("NavX Initialize Finish", false);    
+    }
+
+    public double getAngle(){
+        return navX.getAngle();
+    }
+
+    public double getDisplacementY(){
+        return navX.getDisplacementY() * METERS_TO_INCHES;
+    }
+
+    public double getDisplacementX(){
+        return navX.getDisplacementX() * METERS_TO_INCHES;
+    }
+
+    public NavxPoseGenerator getNavXPoseGenerator(){
+        return this.navPosGen;
     }
 }

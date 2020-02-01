@@ -41,7 +41,7 @@ public class TestPoseMathematics {
         pose1 = new RobotPose(0,0,0);
         pose2 = new RobotPose(0,0,-90);
         pose3 = PoseMathematics.addPoses(pose1, pose2);
-        pose4 = new RobotPose(0,0,270);
+        pose4 = new RobotPose(0,0,-90);
         assertEquals(pose4.getTheta(), pose3.getTheta(), 0.1);
         assertEquals(pose4.getForward(), pose3.getForward(), 0.1);
         assertEquals(pose4.getHorizontal(), pose3.getHorizontal(), 0.1);
@@ -49,7 +49,7 @@ public class TestPoseMathematics {
         pose1 = new RobotPose(0,0,0);
         pose2 = new RobotPose(0,0,-500);
         pose3 = PoseMathematics.addPoses(pose1, pose2);
-        pose4 = new RobotPose(0,0,220);
+        pose4 = new RobotPose(0,0,-140);
         assertEquals(pose4.getTheta(), pose3.getTheta(), 0.1);
         assertEquals(pose4.getForward(), pose3.getForward(), 0.1);
         assertEquals(pose4.getHorizontal(), pose3.getHorizontal(), 0.1);
@@ -85,6 +85,14 @@ public class TestPoseMathematics {
         assertEquals(pose4.getTheta(), pose3.getTheta(), 0.1);
         assertEquals(pose4.getForward(), pose3.getForward(), 0.1);
         assertEquals(pose4.getHorizontal(), pose3.getHorizontal(), 0.1);
+
+        pose1 = new RobotPose(0,0,0);
+        pose2 = new RobotPose(0,0,300);
+        pose3 = PoseMathematics.addPoses(pose1, pose2);
+        pose4 = new RobotPose(0,0,-60);
+        assertEquals(pose4.getTheta(), pose3.getTheta(), 0.1);
+        assertEquals(pose4.getForward(), pose3.getForward(), 0.1);
+        assertEquals(pose4.getHorizontal(), pose3.getHorizontal(), 0.1);
     }
 
     @Test
@@ -108,5 +116,7 @@ public class TestPoseMathematics {
         assertEquals(pose2.getTheta(), pose1.getTheta(), 0.1);
         assertEquals(pose2.getForward(), pose1.getForward(), 0.1);
         assertEquals(pose2.getHorizontal(), pose1.getHorizontal(), 0.1);
+
+
     }
 }
