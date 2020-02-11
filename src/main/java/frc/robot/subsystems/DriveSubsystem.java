@@ -4,13 +4,13 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import frc.robot.DriveInstruction;
 import frc.robot.DriveInstructionSource;
 import frc.robot.RobotMap;
+import frc.robot.controllers.PositionDriveController;
 import frc.robot.controllers.SparkPositionController;
 import frc.robot.controllers.SparkPositionControllerGroup;
+import frc.robot.path.PositionBuffer;
 import frc.robot.pose.EncoderPoseGenerator;
 import frc.robot.subsystems.drive.FourSparkMaxWithSettings;
 import frc.robot.pose.PositionReader;
-
-import com.fasterxml.jackson.databind.introspect.TypeResolutionContext;
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
@@ -22,6 +22,7 @@ import edu.wpi.first.wpilibj.SpeedControllerGroup;
 public class DriveSubsystem extends BaseSubsystem{
 
     DriveInstructionSource source;
+    private boolean inAuto;
 
     CANSparkMax m_frontLeft;
     SparkPositionController pc_frontLeft;
@@ -43,14 +44,19 @@ public class DriveSubsystem extends BaseSubsystem{
     CANEncoder e_rearRight;
 
     private FourSparkMaxWithSettings speedModeSparks;
-    private FourSparkMaxWithSettings positiionModeSparks;
+    private FourSparkMaxWithSettings positionModeSparks;
+
+    private PositionDriveController autoController;
 
     private SparkPositionControllerGroup posController;
 
     private EncoderPoseGenerator poseGen;
+    private PositionBuffer positionBuffer = new PositionBuffer();
 
     @Override
     public void initialize() {
+
+
         m_frontLeft = new CANSparkMax(RobotMap.CAN.FRONT_LEFT_MOTOR, MotorType.kBrushless);
         m_rearLeft = new CANSparkMax(RobotMap.CAN.REAR_LEFT_MOTOR, MotorType.kBrushless);
         m_left = new SpeedControllerGroup(m_frontLeft, m_rearLeft);
@@ -151,7 +157,9 @@ public class DriveSubsystem extends BaseSubsystem{
         pc_rearRight.configure();
 
         posController = new SparkPositionControllerGroup(pc_frontLeft, pc_frontRight, pc_rearLeft, pc_rearRight);
-        positiionModeSparks = new FourSparkMaxWithSettings(m_frontLeft, m_rearLeft, m_frontRight, m_rearRight, frontLeftPositionSettings, rearLeftPositionSettings, frontRightPositionSettings, rearRightPositionSettings);
+        positionModeSparks = new FourSparkMaxWithSettings(m_frontLeft, m_rearLeft, m_frontRight, m_rearRight, frontLeftPositionSettings, rearLeftPositionSettings, frontRightPositionSettings, rearRightPositionSettings);
+        positionBuffer = new PositionBuffer();
+        autoController = new PositionDriveController(positionModeSparks, positionBuffer, new EncoderInchesConverter(RobotMap.DIMENSIONS.ENCODER_TICKS_PER_INCH));
 
         poseGen = new EncoderPoseGenerator(posController);
         e_frontLeft = m_frontLeft.getEncoder();
@@ -163,10 +171,22 @@ public class DriveSubsystem extends BaseSubsystem{
 
     @Override 
     public void periodic(){
+        if (inAuto){
+            autoController.periodic();
+        }
         logger.log("Front Left Encoder Ticks", e_frontLeft.getPosition());
         logger.log("Front Right Encoder Ticks", e_frontRight.getPosition());
         logger.log("Rear Left Encoder Ticks", e_rearLeft.getPosition());
         logger.log("Rear Right Encoder Ticks", e_rearRight.getPosition());
+    }
+
+
+    public void startAutonomous(){
+        inAuto = true;
+    }
+
+    public void endAutonomous(){
+        inAuto = false;
     }
 
     public void reset(){
@@ -188,4 +208,8 @@ public class DriveSubsystem extends BaseSubsystem{
     public EncoderPoseGenerator getEncoderPoseGenerator(){
         return this.poseGen;
     }
+
+	public PositionBuffer getPositionBuffer() {
+		return positionBuffer;
+	}
 }

@@ -10,21 +10,21 @@ import frc.robot.subsystems.drive.FourSparkMaxWithSettings;
  * 
  *
  */
-public class EncoderCheck {
+public class EncoderChecker {
 
 	private int leftRearCounts = 0;
 	private int rightRearCounts = 0;
 	private int leftFrontCounts = 0;
 	private int rightFrontCounts = 0;
 
-	public EncoderCheck(int leftRearCounts, int leftFrontCounts, int rightFrontCounts, int rightRearCounts) {
+	public EncoderChecker(int leftRearCounts, int leftFrontCounts, int rightFrontCounts, int rightRearCounts) {
 		this.leftFrontCounts = leftFrontCounts;
 		this.rightFrontCounts = rightFrontCounts;
 		this.rightRearCounts = rightRearCounts;
 		this.leftRearCounts = leftRearCounts;
 	}
 	
-	public EncoderCheck( FourSparkMaxWithSettings sparks ) {
+	public EncoderChecker( FourSparkMaxWithSettings sparks ) {
 		this(   (int)sparks.getRearLeft().getEncoder().getPosition(),
 				(int)sparks.getFrontLeft().getEncoder().getPosition(),
 				(int)sparks.getFrontRight().getEncoder().getPosition(),
@@ -118,6 +118,12 @@ public class EncoderCheck {
 
 	public boolean allOk() {
 		return isLeftRearOk() && isLeftFrontOk() && isRightRearOk() && isRightFrontOk();
+	}
 
+	public String status(){
+		return ". Rear Left: " + isLeftRearOk()
+			+ ". Rear Right: " + isRightRearOk()
+			+ ". Front Left: " + isLeftFrontOk()
+			+ ". Front Right: " + isRightFrontOk();
 	}
 }

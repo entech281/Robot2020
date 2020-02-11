@@ -1,6 +1,6 @@
 package frc.robot.controllers;
 
-import frc.robot.subsystems.Position;
+import frc.robot.path.Position;
 import frc.robot.subsystems.EncoderInchesConverter;
 
 public class SparkPositionControllerGroup {
@@ -100,5 +100,9 @@ public class SparkPositionControllerGroup {
         else{
             return -total / count;
         }
+	}
+
+	public Position getCurrentPosition(EncoderInchesConverter encoderConverter) {
+		return new Position(getLeftCurrentPosition(encoderConverter), getRightCurrentPosition(encoderConverter));
 	}
 }
