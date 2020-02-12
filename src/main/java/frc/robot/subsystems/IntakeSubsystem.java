@@ -27,6 +27,7 @@ import frc.robot.logger.DataLoggerFactory;
             .noMotorStartupRamping()
             .useSpeedControl()
             .build();
+            
         intakeMotorController = new TalonSpeedController(intakeMotor, motorSettings);
         intakeMotorController.configure();
         intakeMotor.set(ControlMode.PercentOutput,0);
