@@ -7,6 +7,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.Timer;
 import frc.robot.controllers.SparkSpeedController;
 import frc.robot.controllers.TalonPositionController;
 
@@ -27,12 +28,13 @@ import frc.robot.controllers.TalonPositionController;
     private int ALLOWABLE_ERROR = 5;
 
     private boolean homingLimitSwitchHit = false;
+    private Timer scheduler = new Timer();
 
     @Override
     public void initialize() {
 
         SparkMaxSettings shooterSettings = SparkMaxSettingsBuilder.defaults()
-                                    .withPrettySafeCurrentLimits()
+                                    .withCurrentLimits(35)
                                     .coastInNeutral()
                                     .withDirections(false, true)
                                     .noMotorOutputLimits()
@@ -77,14 +79,23 @@ import frc.robot.controllers.TalonPositionController;
     }
 
     public void goToUpperLimit(){
+        hoodMotorController.resetPosition();
+        hoodMotorController.setDesiredPosition(hoodMotorController.getActualPosition());
         while(!isUpperLimitHit()){
             hoodMotor.set(ControlMode.PercentOutput, 0.3);
+            logger.log("POSE", hoodMotorController.getActualPosition());
         }
-        hoodMotor.set(ControlMode.Position, hoodMotorController.getActualPosition());
+        hoodMotor.set(ControlMode.Position,hoodMotorController.getActualPosition());
     }
 
     public void returnToStartPos(){
-        adjustHoodPosition(hoodMotorController.getActualPosition() - 150);
+        double desired = hoodMotorController.getActualPosition() - 150;
+        adjustHoodPosition(desired);
+        while(!(Math.abs(desired-hoodMotorController.getActualPosition()) <= 5)){
+
+        }
+        hoodMotorController.setDesiredPosition(0);
+        hoodMotorController.resetPosition();
     }
 
 
