@@ -5,6 +5,18 @@ import frc.robot.subsystems.ClimbSubsystem;
 
 public class BaseClimbCommand extends CommandBase{
     
-    private final ClimbSubsystem climb;
+    protected ClimbSubsystem climb;
+
+    public BaseClimbCommand(ClimbSubsystem climb){
+        this.climb = climb;
+    }
+    public void initialize() {
+        super.initialize();
+    }
+
+    @Override
+    public boolean isFinished(){
+        return true;
+    }
     
 }

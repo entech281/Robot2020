@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
 import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
@@ -21,8 +22,8 @@ import frc.robot.controllers.TalonPositionController;
     private final WPI_TalonSRX hoodMotor = new WPI_TalonSRX(7);
     private TalonPositionController hoodMotorController;
 
-    private int HOOD_CRUISE_VELOCITY = 6400;
-    private int HOOD_ACCELERATION = 5;
+    private int HOOD_CRUISE_VELOCITY = 3200;
+    private int HOOD_ACCELERATION = 20;
     private int ALLOWABLE_ERROR = 5;
 
     private boolean homingLimitSwitchHit = false;
@@ -76,7 +77,10 @@ import frc.robot.controllers.TalonPositionController;
     }
 
     public void goToUpperLimit(){
-        adjustHoodPosition(this.HOOD_POSITION + 10);
+        while(!isUpperLimitHit()){
+            hoodMotor.set(ControlMode.PercentOutput, 0.3);
+        }
+        hoodMotor.set(ControlMode.Position, hoodMotorController.getActualPosition());
     }
 
     public void returnToStartPos(){
@@ -101,18 +105,17 @@ import frc.robot.controllers.TalonPositionController;
         return shootMotor.getEncoder().getVelocity();
     }
 
-    public boolean getLimitSwitchHit(){
-        return this.homingLimitSwitchHit;
-    }
-
-    public void updateHomingStatus(){
-        if(isUpperLimitHit()){
-            this.homingLimitSwitchHit = true;
-        }
-    }
 
     private static class LimitSwitchState {
         public static int closed = 1;
         public static int open = 0;
+    }
+
+    public double getHoodPosition(){
+        return hoodMotorController.getActualPosition();
+    }
+
+    public double getDesiredPositon(){
+        return this.HOOD_POSITION;
     }
 } 

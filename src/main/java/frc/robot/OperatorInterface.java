@@ -49,7 +49,9 @@ public class OperatorInterface implements DriveInstructionSource{
     }
 
     public void runHomingProgram(){
-        new HoodHomingCommand(robot.getShooterSubystem()).execute();
+        HoodHomingCommand hoodHomeCom = new HoodHomingCommand(robot.getShooterSubystem());
+        hoodHomeCom.initialize();
+        hoodHomeCom.execute();
     }
 
     @Override

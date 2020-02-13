@@ -61,6 +61,8 @@ public class Robot extends TimedRobot {
           robotDrive.updatePose(officialPose.getPose());
           logger.log("Current Pose",officialPose.getPose());
           logger.log("Shooter Speed", shoot.getShooterSpeed());
+          logger.log("UpperLimit", shoot.isUpperLimitHit());
+          logger.log("LowerLimit", shoot.isLowerLimitHit());
      }
 
      @Override
@@ -76,6 +78,8 @@ public class Robot extends TimedRobot {
      @Override
      public void autonomousPeriodic() {
           CommandScheduler.getInstance().run();
+          logger.log("Shooter Current Position", shoot.getHoodPosition());
+          logger.log("Shooter Desired Positon", shoot.getDesiredPositon());
      }
 
 
