@@ -34,7 +34,8 @@ public class PositionDriveController{
 			EncoderInchesConverter encoderConverter) {
 		this.sparks = sparks;
 		this.encoderConverter = encoderConverter;
-		this.positionSource = positionSource;
+        this.positionSource = positionSource;
+        dataLogger.log("sparks", sparks);
 	}
 
 
@@ -76,10 +77,6 @@ public class PositionDriveController{
  
 	public void periodic() {		
 		processPositionCommand();
-		EncoderChecker checker =  new EncoderChecker(sparks);
-		checker.adjustTalonSettingsToWorkAroundBrokenEncoders(sparks);;
-		
-		dataLogger.log("Motor Status:", checker.status());
 		displayControllerStatuses();
 	}
 
@@ -97,7 +94,8 @@ public class PositionDriveController{
 				Position p = positionSource.getCurrentPosition();
 				setCurrentCommand(p);
 				int encoderLeft = encoderConverter.toCounts(p.getLeftInches());
-				int encoderRight = encoderConverter.toCounts(p.getRightInches());
+                int encoderRight = encoderConverter.toCounts(p.getRightInches());
+                dataLogger.log("Position Controller Group", positionControllerGroup);
 				positionControllerGroup.setDesiredPosition(encoderLeft, encoderRight, p.isRelative());
 			}
 			else {

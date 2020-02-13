@@ -58,7 +58,7 @@ public class SparkMaxSettingsBuilder {
         }
 
         public interface ProfileSettings {
-            ProfileSettings withMotionProfile(int cruiseVelocityRPM, AccelStrategy accelStrategy, int allowableError);
+            Finish withMotionProfile(int cruiseVelocityRPM, AccelStrategy accelStrategy, int allowableError);
         }
 
         public interface Finish {
@@ -182,7 +182,7 @@ public class SparkMaxSettingsBuilder {
         }
 
         @Override
-        public ProfileSettings withMotionProfile(int cruiseVelocityRPM, AccelStrategy accelStrategy,
+        public Finish withMotionProfile(int cruiseVelocityRPM, AccelStrategy accelStrategy,
                 int allowableError) {
             settings.profile.allowableClosedLoopError = allowableError;
             settings.profile.cruiseVelocityRPM = cruiseVelocityRPM;

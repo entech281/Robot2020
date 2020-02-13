@@ -4,11 +4,15 @@ import java.util.List;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.logger.DataLogger;
+import frc.robot.logger.DataLoggerFactory;
 import frc.robot.path.Position;
 import frc.robot.path.PositionCalculator;
 
 
 public class FollowPositionPathCommand extends CommandBase{
+
+    private DataLogger logger = DataLoggerFactory.getLoggerFactory().createDataLogger(this.getName());
 
     @Override
     public int hashCode() {
@@ -50,9 +54,16 @@ public class FollowPositionPathCommand extends CommandBase{
     
     @Override
     public void initialize() {
+        driveSubsystem.startAutonomous();
+        
         for (Position p : path) {
             driveSubsystem.getPositionBuffer().addPosition(p);
         }
+    }
+
+    @Override
+    public void end(boolean interrupted){
+        driveSubsystem.endAutonomous();
     }
 
     @Override
