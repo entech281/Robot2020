@@ -9,6 +9,7 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.CommandGroup;
+import frc.robot.commands.HoodHomingCommand;
 import frc.robot.logger.DataLogger;
 import frc.robot.logger.DataLoggerFactory;
 import frc.robot.pose.PoseManager;
@@ -72,7 +73,9 @@ public class Robot extends TimedRobot {
 
      @Override
      public void autonomousInit() {
-          oi.runHomingProgram();
+          HoodHomingCommand hoodHomeCom = new HoodHomingCommand(shoot);
+          hoodHomeCom.initialize();
+          hoodHomeCom.execute();
      }
      
      @Override

@@ -26,12 +26,12 @@ public class OperatorInterface implements DriveInstructionSource{
         this.driveStick = new Joystick(RobotMap.GAMEPAD.driverStick);
         this.manager = new JoystickButtonManager(driveStick);
 
-        manager.addButton(1)
+        manager.addButton(RobotMap.BUTTONS.INTAKE_BUTTON)
                 .whenPressed(new StartIntakeCommand(robot.getIntakeSubsystem()))
                 .whenReleased(new StopIntakeCommand(robot.getIntakeSubsystem()))
                 .add();
 
-        manager.addButton(2)
+        manager.addButton(RobotMap.BUTTONS.SHOOT_BUTTON)
                 .whenPressed(new StartShooterCommand(robot.getShooterSubystem()))
                 .whenReleased(new StopShooterCommand(robot.getShooterSubystem()))
                 .add();
@@ -46,12 +46,6 @@ public class OperatorInterface implements DriveInstructionSource{
     public double getDriveInputY(){
         logger.log("drive Y", driveStick.getY());
         return -driveStick.getY();
-    }
-
-    public void runHomingProgram(){
-        HoodHomingCommand hoodHomeCom = new HoodHomingCommand(robot.getShooterSubystem());
-        hoodHomeCom.initialize();
-        hoodHomeCom.execute();
     }
 
     @Override

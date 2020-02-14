@@ -25,6 +25,7 @@ public class RobotMap{
 
     public interface BUTTONS{
         public static final int INTAKE_BUTTON = 1;
+        public static final int SHOOT_BUTTON = 2;
     }
 
     public interface DIMENSIONS {

@@ -30,6 +30,11 @@ import frc.robot.controllers.TalonPositionController;
     private boolean homingLimitSwitchHit = false;
     private Timer scheduler = new Timer();
 
+    private final double PID_F = 4;
+    private final double PID_P = 2.56*2;
+    private final double PID_I = 0;
+    private final double PID_D = 0;
+
     @Override
     public void initialize() {
 
@@ -48,7 +53,7 @@ import frc.robot.controllers.TalonPositionController;
                                         .noMotorOutputLimits()
                                         .noMotorStartupRamping()
                                         .usePositionControl()
-                                        .withGains(4, 2.56*2, 0, 0)
+                                        .withGains(PID_F, PID_P, PID_I, PID_D)
                                         .withMotionProfile(HOOD_CRUISE_VELOCITY, HOOD_ACCELERATION, ALLOWABLE_ERROR)
                                         .build();
 

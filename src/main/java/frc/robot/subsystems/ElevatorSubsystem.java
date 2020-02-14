@@ -14,10 +14,14 @@ import frc.robot.controllers.TalonSpeedController;
     private final WPI_TalonSRX elevatorMotor = new WPI_TalonSRX(RobotMap.CAN.INTAKE_MOTOR);
     private TalonSpeedController elevatorMotorController;
 
+    private final int maxCurrent = 20;
+    private final int maxSustainedCurrent = 15;
+    private final int maxCurrentTime = 200;
+
     @Override
     public void initialize() {
         TalonSettings motorSettings = TalonSettingsBuilder.defaults()
-            .withCurrentLimits(20, 15, 200)
+            .withCurrentLimits(maxCurrent, maxSustainedCurrent, maxCurrentTime)
             .brakeInNeutral()
             .withDirections(false, false)
             .noMotorOutputLimits()
