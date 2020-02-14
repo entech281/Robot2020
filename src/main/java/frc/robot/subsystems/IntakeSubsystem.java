@@ -6,6 +6,8 @@ import com.fasterxml.jackson.databind.deser.DeserializationProblemHandler;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.RobotMap;
+import frc.robot.controllers.TalonSettings;
+import frc.robot.controllers.TalonSettingsBuilder;
 import frc.robot.controllers.TalonSpeedController;
 import frc.robot.logger.DataLoggerFactory;
 

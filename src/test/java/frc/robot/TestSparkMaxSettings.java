@@ -10,8 +10,7 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.revrobotics.CANPIDController.AccelStrategy;
 import com.revrobotics.CANSparkMax.IdleMode;
 
-import frc.robot.subsystems.SparkMaxSettings;
-import frc.robot.subsystems.SparkMaxSettingsBuilder;
+import frc.robot.controllers.*;
 
 public class TestSparkMaxSettings {
 

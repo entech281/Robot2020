@@ -3,7 +3,7 @@ package frc.robot.controllers;
 
 import com.revrobotics.CANSparkMax;
 
-import frc.robot.subsystems.SparkMaxSettings;
+
 
 public class SparkPositionController extends BaseSparkController {
 

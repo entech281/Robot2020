@@ -2,7 +2,7 @@ package frc.robot.controllers;
 
 import com.revrobotics.CANSparkMax;
 
-import frc.robot.subsystems.SparkMaxSettings;
+
 
 public class SparkSpeedController extends BaseSparkController {
 	private double desiredSpeed = 0.0;
