@@ -1,8 +1,11 @@
 package frc.robot.controllers;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
+import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import frc.robot.subsystems.TalonSettings;
 
 public abstract class BaseTalonController {
@@ -54,4 +57,5 @@ public abstract class BaseTalonController {
 	public TalonSettings getSettings() {
 		return settings;
 	}
+
 }

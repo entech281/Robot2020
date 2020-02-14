@@ -50,6 +50,10 @@ public class SparkMaxSettingsBuilder {
         public PositionControlSettings.GainSettings usePositionControl();
 
         public SpeedControlSettings useSpeedControl();
+
+        public SpeedControlSettings.GainSettingsSpeed useSpeedControlWithPID();
+        
+
     }
 
     public interface PositionControlSettings {
@@ -67,6 +71,9 @@ public class SparkMaxSettingsBuilder {
     }
 
     public interface SpeedControlSettings {
+        public interface GainSettingsSpeed {
+            SpeedControlSettings withGainsSpeed(double f, double p, double i, double d);
+        }
         public SparkMaxSettings build();
     }
 
@@ -101,7 +108,7 @@ public class SparkMaxSettingsBuilder {
     public static class Builder 
                 implements SparkControlMode, PositionControlSettings, PositionControlSettings.GainSettings,
                 PositionControlSettings.ProfileSettings, PositionControlSettings.Finish, SpeedControlSettings,
-                SafetySettings, SafetySettings.BrakeMode, DirectionSettings, MotorOutputLimits, MotorRamping{
+                SafetySettings, SafetySettings.BrakeMode, DirectionSettings, MotorOutputLimits, MotorRamping, SpeedControlSettings.GainSettingsSpeed{
 
 
         private SparkMaxSettings settings = new SparkMaxSettings();
@@ -200,6 +207,15 @@ public class SparkMaxSettingsBuilder {
         }
 
         @Override
+        public SpeedControlSettings withGainsSpeed(double f, double p, double i, double d) {
+            settings.gains.f = f;
+            settings.gains.p = p;
+            settings.gains.i = i;
+            settings.gains.d = d;
+            return this;
+        }
+
+        @Override
         public GainSettings usePositionControl() {
             settings.setControlType(ControlType.kSmartMotion);
             return this;
@@ -208,6 +224,12 @@ public class SparkMaxSettingsBuilder {
         @Override
         public SpeedControlSettings useSpeedControl() {
             settings.setControlType(ControlType.kVelocity);
+            return this;
+        }
+
+        @Override
+        public GainSettingsSpeed useSpeedControlWithPID() {
+            settings.setControlType(ControlType.kSmartVelocity);
             return this;
         }
 

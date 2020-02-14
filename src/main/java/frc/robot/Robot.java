@@ -8,6 +8,8 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.command.CommandGroup;
+import frc.robot.commands.HoodHomingCommand;
 import frc.robot.logger.DataLogger;
 import frc.robot.logger.DataLoggerFactory;
 import frc.robot.pose.PoseManager;
@@ -15,6 +17,7 @@ import frc.robot.subsystems.BaseSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.NavXSubsystem;
+import frc.robot.subsystems.ShooterSubsystem;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
 /**
@@ -33,12 +36,15 @@ public class Robot extends TimedRobot {
      OperatorInterface oi;
      PoseManager officialPose;
      NavXSubsystem navX;
+     ShooterSubsystem shoot;
+
 
      public void robotInit(){
           
           intake = new IntakeSubsystem();
           robotDrive = new DriveSubsystem();
           navX = new NavXSubsystem();
+          shoot = new ShooterSubsystem();
           BaseSubsystem.initializeList();
           robotDrive.reset();          
           officialPose = new PoseManager(robotDrive.getEncoderPoseGenerator());
@@ -46,6 +52,7 @@ public class Robot extends TimedRobot {
           oi = new OperatorInterface(this);
           
           this.logger = DataLoggerFactory.getLoggerFactory().createDataLogger("Robot Main Loop");
+          
      }
 
      @Override
@@ -54,6 +61,9 @@ public class Robot extends TimedRobot {
           robotDrive.drive(oi.getNextInstruction());
           robotDrive.updatePose(officialPose.getPose());
           logger.log("Current Pose",officialPose.getPose());
+          logger.log("Shooter Speed", shoot.getShooterSpeed());
+          logger.log("UpperLimit", shoot.isUpperLimitHit());
+          logger.log("LowerLimit", shoot.isLowerLimitHit());
      }
 
      @Override
@@ -61,6 +71,19 @@ public class Robot extends TimedRobot {
           CommandScheduler.getInstance().run();
      }
 
+     @Override
+     public void autonomousInit() {
+          HoodHomingCommand hoodHomeCom = new HoodHomingCommand(shoot);
+          hoodHomeCom.initialize();
+          hoodHomeCom.execute();
+     }
+     
+     @Override
+     public void autonomousPeriodic() {
+          CommandScheduler.getInstance().run();
+          logger.log("Shooter Current Position", shoot.getHoodPosition());
+          logger.log("Shooter Desired Positon", shoot.getDesiredPositon());
+     }
 
 
      public IntakeSubsystem getIntakeSubsystem(){
@@ -77,6 +100,10 @@ public class Robot extends TimedRobot {
 
      public PoseManager getOfficialPose(){
           return officialPose;
+     }
+
+     public ShooterSubsystem getShooterSubystem(){
+          return shoot;
      }
   
 }

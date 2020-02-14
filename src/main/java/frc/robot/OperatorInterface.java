@@ -1,14 +1,18 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.command.CommandGroup;
 import frc.robot.Robot;
 import frc.robot.RobotMap;
 import frc.robot.logger.DataLogger;
 import frc.robot.logger.DataLoggerFactory;
+import frc.robot.commands.HoodHomingCommand;
 import frc.robot.commands.OutakeIntakeCommand;
 import frc.robot.commands.ResetPositionCommand;
 import frc.robot.commands.StartIntakeCommand;
+import frc.robot.commands.StartShooterCommand;
 import frc.robot.commands.StopIntakeCommand;
+import frc.robot.commands.StopShooterCommand;
 
 public class OperatorInterface implements DriveInstructionSource{
     private Robot robot;
@@ -23,18 +27,14 @@ public class OperatorInterface implements DriveInstructionSource{
         this.manager = new JoystickButtonManager(driveStick);
 
         manager.addButton(RobotMap.BUTTONS.INTAKE_BUTTON)
-            .whenPressed(new StartIntakeCommand(robot.getIntakeSubsystem()))
-            .whenReleased(new StopIntakeCommand(robot.getIntakeSubsystem()))
-            .add();
+                .whenPressed(new StartIntakeCommand(robot.getIntakeSubsystem()))
+                .whenReleased(new StopIntakeCommand(robot.getIntakeSubsystem()))
+                .add();
 
-        manager.addButton(2)
-            .whenPressed(new OutakeIntakeCommand(robot.getIntakeSubsystem()))
-            .whenReleased(new StopIntakeCommand(robot.getIntakeSubsystem()))
-            .add();
-
-        manager.addButton(10)
-            .whenPressed(new ResetPositionCommand(robot.getDriveSubsystem(), robot.getOfficialPose()))
-            .add();
+        manager.addButton(RobotMap.BUTTONS.SHOOT_BUTTON)
+                .whenPressed(new StartShooterCommand(robot.getShooterSubystem()))
+                .whenReleased(new StopShooterCommand(robot.getShooterSubystem()))
+                .add();
     }
   
     

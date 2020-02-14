@@ -70,6 +70,7 @@ public class DriveSubsystem extends BaseSubsystem{
                                                     .noMotorStartupRamping()
                                                     .useSpeedControl()
                                                     .build();
+                                                    
                                                 
         SparkMaxSettings frontRightSpeedSettings = SparkMaxSettingsBuilder.defaults()
                                                     .withCurrentLimits(35)
