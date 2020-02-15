@@ -37,7 +37,6 @@ public class NavXSubsystem extends BaseSubsystem {
             if(timer.get() > TIMEOUT_CALIBRATION_SECONDS){
                 throw new RuntimeException("Stuck in NAVX calibration");
             }
-            ;
         }
         navX.zeroYaw();
         logger.log("NavX Initialize Finish", false);
