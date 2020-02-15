@@ -13,8 +13,8 @@ import frc.robot.controllers.SparkMaxSettings;
 import frc.robot.controllers.SparkMaxSettingsBuilder;
 import frc.robot.controllers.SparkSpeedController;
 import frc.robot.controllers.TalonSpeedController;
-import frc.robot.newPoses.FieldPose;
-import frc.robot.newPoses.RobotPose;
+import frc.robot.posev2.FieldPose;
+import frc.robot.posev2.RobotPose;
 import edu.wpi.first.wpilibj2.command.Command;
 
 public class ClimbSubsystem extends BaseSubsystem {
@@ -108,9 +108,4 @@ public class ClimbSubsystem extends BaseSubsystem {
         winchController.setDesiredSpeed(0);
     }
 
-    @Override
-    public void customPeriodic(RobotPose rPose, FieldPose fPose) {
-        // TODO Auto-generated method stub
-
-    }
 } 

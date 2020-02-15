@@ -11,8 +11,8 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.commands.SingleShotCommand;
 import frc.robot.controllers.*;
-import frc.robot.newPoses.FieldPose;
-import frc.robot.newPoses.RobotPose;
+import frc.robot.posev2.FieldPose;
+import frc.robot.posev2.RobotPose;
 
 public class ShooterSubsystem extends BaseSubsystem {
     private double SHOOT_SPEED = 1;
@@ -122,6 +122,8 @@ public class ShooterSubsystem extends BaseSubsystem {
         };
     }
 
+
+
     public boolean isUpperLimitHit() {
         return hoodMotor.getSensorCollection().isFwdLimitSwitchClosed();
     }
@@ -151,9 +153,4 @@ public class ShooterSubsystem extends BaseSubsystem {
         return this.HOOD_POSITION;
     }
 
-    @Override
-    public void customPeriodic(RobotPose rPose, FieldPose fPose) {
-        // TODO Auto-generated method stub
-
-    }
 } 

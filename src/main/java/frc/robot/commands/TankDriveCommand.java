@@ -5,7 +5,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.DriveInstruction;
 import frc.robot.subsystems.DriveSubsystem;
 
-public class TankDriveCommand extends CommandBase {
+public class TankDriveCommand extends EntechCommandBase {
 
     @Override
     public boolean isFinished() {
@@ -20,6 +20,7 @@ public class TankDriveCommand extends CommandBase {
     private DriveSubsystem drive;
     private Joystick driveStick;
     public TankDriveCommand ( DriveSubsystem drive,Joystick driveStick){
+        super(drive);
         this.driveStick = driveStick;
         this.drive = drive;
     }

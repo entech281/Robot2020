@@ -1,6 +1,6 @@
 package frc.robot;
 
-import frc.robot.newPoses.*;
+import frc.robot.posev2.*;
 
 public class RobotMap{
     public static final int NAVX_PORT = 0;
@@ -26,6 +26,7 @@ public class RobotMap{
     public interface BUTTONS{
         public static final int INTAKE_BUTTON = 1;
         public static final int SHOOT_BUTTON = 2;
+        public static final int RESET_BUTTON = 10;
     }
 
     public interface DIMENSIONS {

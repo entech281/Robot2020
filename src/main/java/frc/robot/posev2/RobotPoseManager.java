@@ -1,5 +1,5 @@
   
-package frc.robot.newPoses;
+package frc.robot.posev2;
 
 import frc.robot.RobotMap;
 
@@ -20,7 +20,7 @@ public class RobotPoseManager {
     public void update(){
         //do all the maths to get a new pose
         pose = PoseMathematics.addPoses(pose, PoseMathematics.calculateRobotPositionChange(encoders.getDeltaLeft(), encoders.getDeltaRight()));
-        pose = new RobotPose(pose.getForward(), pose.getHorizontal(), navXData.getAngle(), vData);
+        pose = new RobotPose(pose.getRobotPosition().getForward(), pose.getRobotPosition().getHorizontal(), navXData.getAngle(), vData);
     }
     public void updateNavxAngle(NavXData newNavxData ){
         this.navXData = newNavxData;

@@ -10,9 +10,10 @@ package frc.robot.subsystems;
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.SPI;
-import frc.robot.newPoses.FieldPose;
-import frc.robot.newPoses.NavXData;
-import frc.robot.newPoses.RobotPose;
+import edu.wpi.first.wpilibj.Timer;
+import frc.robot.posev2.FieldPose;
+import frc.robot.posev2.NavXData;
+import frc.robot.posev2.RobotPose;
 
 /**
  *
@@ -21,14 +22,21 @@ import frc.robot.newPoses.RobotPose;
 public class NavXSubsystem extends BaseSubsystem {
 
     private final AHRS navX = new AHRS(SPI.Port.kMXP);
+    private Timer timer;
+    private double TIMEOUT_CALIBRATION_SECONDS = 31;
 
     public NavXSubsystem() {
+        timer = new Timer();
     }
 
     @Override
     public void initialize() {
         logger.log("NavX Initialize Start", false);
+        timer.start();
         while (navX.isCalibrating()) {
+            if(timer.get() > TIMEOUT_CALIBRATION_SECONDS){
+                throw new RuntimeException("Stuck in NAVX calibration");
+            }
             ;
         }
         navX.zeroYaw();
@@ -39,9 +47,4 @@ public class NavXSubsystem extends BaseSubsystem {
         return new NavXData(navX.getAngle());
     }
 
-    @Override
-    public void customPeriodic(RobotPose rPose, FieldPose fPose) {
-        // TODO Auto-generated method stub
-
-    }
 }

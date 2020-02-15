@@ -25,15 +25,15 @@ public class Robot extends TimedRobot {
 
 
      private DataLogger logger;
-     private SubsystemManager subManager = new SubsystemManager();
+     private SubsystemManager subsystemManager = new SubsystemManager();
      OperatorInterface oi;
 
 
      @Override
      public void robotInit(){
           this.logger = DataLoggerFactory.getLoggerFactory().createDataLogger("Robot Main Loop");
-          subManager.initAll();
-          oi = new OperatorInterface(subManager);
+          subsystemManager.initAll();
+          oi = new OperatorInterface(subsystemManager);
      }
 
      @Override
@@ -43,34 +43,28 @@ public class Robot extends TimedRobot {
 
      @Override
      public void teleopInit(){
-          subManager.getDriveSubsystem().setPositionMode();
+          subsystemManager.getDriveSubsystem().setSpeedMode();
      }
 
 
      @Override
      public void teleopPeriodic(){
-          subManager.periodicAll();
+          subsystemManager.periodicAll();
      }
 
-     @Override
-     public void disabledPeriodic(){
-     }
 
-     @Override
-     public void disabledInit(){
-          super.disabledInit();
-     }
 
      @Override
      public void autonomousInit() {
-          HoodHomingCommand hoodHomeCom = new HoodHomingCommand(subManager.getShooterSubsystem());
+          subsystemManager.getDriveSubsystem().setPositionMode();
+          HoodHomingCommand hoodHomeCom = new HoodHomingCommand(subsystemManager.getShooterSubsystem());
           hoodHomeCom.initialize();
           hoodHomeCom.execute();
      }
      
      @Override
      public void autonomousPeriodic() {
-          subManager.periodicAll();
+          subsystemManager.periodicAll();
      }
 
   

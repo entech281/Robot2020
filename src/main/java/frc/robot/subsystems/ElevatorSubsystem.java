@@ -9,8 +9,8 @@ import frc.robot.commands.SingleShotCommand;
 import frc.robot.controllers.TalonSettings;
 import frc.robot.controllers.TalonSettingsBuilder;
 import frc.robot.controllers.TalonSpeedController;
-import frc.robot.newPoses.FieldPose;
-import frc.robot.newPoses.RobotPose;
+import frc.robot.posev2.FieldPose;
+import frc.robot.posev2.RobotPose;
 
 public class ElevatorSubsystem extends BaseSubsystem {
     private double elevatorSpeed = 1;
@@ -61,9 +61,4 @@ public class ElevatorSubsystem extends BaseSubsystem {
         };
     }
 
-    @Override
-    public void customPeriodic(RobotPose rPose, FieldPose fPose) {
-        // TODO Auto-generated method stub
-
-    }
  } 

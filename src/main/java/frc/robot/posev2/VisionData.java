@@ -1,10 +1,17 @@
-package frc.robot.newPoses;
+package frc.robot.posev2;
 
 /**
  *
  * @author dcowden
  */
 public class VisionData {
+    private double lateralOffset  = 0.0;
+    private double verticalOffset = 0.0;
+
+    public VisionData(double lateralOffset, double verticalOffset){
+        this.lateralOffset = lateralOffset;
+        this.verticalOffset = verticalOffset;
+    }
 
     public double getLateralOffset() {
         return lateralOffset;
@@ -21,6 +28,5 @@ public class VisionData {
     public void setVerticalOffset(double verticalOffset) {
         this.verticalOffset = verticalOffset;
     }
-    private double lateralOffset  = 0.0;
-    private double verticalOffset = 0.0;
+
 }

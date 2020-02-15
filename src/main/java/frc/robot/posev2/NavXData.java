@@ -1,4 +1,4 @@
-package frc.robot.newPoses;
+package frc.robot.posev2;
 
 public class NavXData {
     public NavXData(double angle){

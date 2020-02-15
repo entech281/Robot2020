@@ -12,11 +12,15 @@ import frc.robot.controllers.TalonSettings;
 import frc.robot.controllers.TalonSettingsBuilder;
 import frc.robot.controllers.TalonSpeedController;
 import frc.robot.logger.DataLoggerFactory;
-import frc.robot.newPoses.FieldPose;
-import frc.robot.newPoses.RobotPose;
+import frc.robot.posev2.FieldPose;
+import frc.robot.posev2.RobotPose;
 
 public class IntakeSubsystem extends BaseSubsystem {
-    private double INTAKE_SPEED = 1;
+    private double CURRENT_INTAKE_SPEED = 1;
+
+    private double FULL_SPEED_FWD = 1;
+    private double FULL_SPEED_BWD = -1;
+    private double STOP_SPEED = 0;
 
     private final WPI_TalonSRX intakeMotor = new WPI_TalonSRX(RobotMap.CAN.INTAKE_MOTOR);
     private TalonSpeedController intakeMotorController;
@@ -33,19 +37,19 @@ public class IntakeSubsystem extends BaseSubsystem {
 
     public void setIntakeMotorSpeed(double desiredSpeed) {
         logger.log("Intake Motor speed", desiredSpeed);
-        this.INTAKE_SPEED = desiredSpeed;
+        this.CURRENT_INTAKE_SPEED = desiredSpeed;
         updateIntakeMotor();
     }
 
     public void updateIntakeMotor() {
-        intakeMotorController.setDesiredSpeed(this.INTAKE_SPEED);
+        intakeMotorController.setDesiredSpeed(this.CURRENT_INTAKE_SPEED);
     }
 
     public Command start(){
         return new SingleShotCommand(this){        
             @Override
             public void doCommand() {
-                setIntakeMotorSpeed(1);;
+                setIntakeMotorSpeed(FULL_SPEED_FWD);
             }
         };
     }
@@ -54,7 +58,7 @@ public class IntakeSubsystem extends BaseSubsystem {
         return new SingleShotCommand(this){        
             @Override
             public void doCommand() {
-                setIntakeMotorSpeed(0);;
+                setIntakeMotorSpeed(STOP_SPEED);
             }
         };
     }
@@ -63,14 +67,9 @@ public class IntakeSubsystem extends BaseSubsystem {
         return new SingleShotCommand(this){        
             @Override
             public void doCommand() {
-                setIntakeMotorSpeed(-1);;
+                setIntakeMotorSpeed(FULL_SPEED_BWD);
             }
         };
     }
 
-    @Override
-    public void customPeriodic(RobotPose rPose, FieldPose fPose) {
-        // TODO Auto-generated method stub
-
-    }
  } 

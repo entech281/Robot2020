@@ -3,8 +3,8 @@ package frc.robot.subsystems;
 import java.util.*;
 
 import frc.robot.logger.DataLoggerFactory;
-import frc.robot.newPoses.FieldPoseManager;
-import frc.robot.newPoses.RobotPoseManager;
+import frc.robot.posev2.FieldPoseManager;
+import frc.robot.posev2.RobotPoseManager;
 import frc.robot.pose.RobotPose;
 
 public class SubsystemManager{

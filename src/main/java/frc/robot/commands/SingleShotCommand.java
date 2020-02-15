@@ -2,7 +2,7 @@ package frc.robot.commands;
 
 import frc.robot.subsystems.BaseSubsystem;
 
-public abstract class SingleShotCommand extends BaseCommand {
+public abstract class SingleShotCommand extends EntechCommandBase {
 
     public SingleShotCommand(BaseSubsystem bs){
         super(bs);
@@ -15,7 +15,6 @@ public abstract class SingleShotCommand extends BaseCommand {
     
     @Override
     public void execute() {
-        doCommand();
     }
 
     @Override

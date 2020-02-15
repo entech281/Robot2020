@@ -12,8 +12,8 @@ import java.util.List;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.logger.DataLogger;
 import frc.robot.logger.DataLoggerFactory;
-import frc.robot.newPoses.FieldPose;
-import frc.robot.newPoses.RobotPose;
+import frc.robot.posev2.FieldPose;
+import frc.robot.posev2.RobotPose;
 
 /**
  * Add your docs here.
@@ -32,14 +32,9 @@ public abstract class BaseSubsystem extends SubsystemBase {
     initialize_these_list.add(this);
   }
 
-  public static void initializeList() {
-    // Loop through all the Subsystems and initialize them
-   
-    for ( BaseSubsystem subsystem: initialize_these_list ) {
-      subsystem.initialize();
-    }
-  }
 
   public abstract void initialize();
-  public abstract void customPeriodic(RobotPose rPose, FieldPose fPose);
+  public void customPeriodic(RobotPose rPose, FieldPose fPose){
+
+  }
 }

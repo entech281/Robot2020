@@ -1,4 +1,4 @@
-package frc.robot.newPoses;
+package frc.robot.posev2;
 
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
@@ -23,16 +23,8 @@ public class RobotPose {
         this.theta = t;        
     }
 
-    public double getTheta(){
-        return theta;
-    }
-    
-    public double getHorizontal(){
-        return horizontal;
-    }
-    
-    public double getForward(){
-        return forward;
+    public RobotPosition getRobotPosition(){
+        return new RobotPosition(forward, horizontal, theta);
     }
     
     public Pose2d getWPIRobotPose() {

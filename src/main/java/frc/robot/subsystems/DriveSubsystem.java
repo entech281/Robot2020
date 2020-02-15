@@ -16,7 +16,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.commands.SingleShotCommand;
-import frc.robot.newPoses.*;
+import frc.robot.posev2.*;
 
 
 
@@ -37,7 +37,6 @@ public class DriveSubsystem extends BaseSubsystem{
     private CANEncoder rearLeftEncoder;
     private CANEncoder rearRightEncoder;
 
-    private SparkPositionControllerGroup positionController;
     
     private SpeedControllerGroup leftSpeedController;
     private SpeedControllerGroup rightSpeedController;    
@@ -77,9 +76,6 @@ public class DriveSubsystem extends BaseSubsystem{
         rearLeftPositionController = new SparkPositionController(rearLeftSpark, positionSettings);
         rearRightPositionController = new SparkPositionController(rearRightSpark, positionSettings);
 
-        positionController = new SparkPositionControllerGroup(frontLeftPositionController, 
-                frontRightPositionController, rearLeftPositionController, rearRightPositionController);
-
         reset();
     }
     public void setSpeedMode(){
@@ -89,7 +85,10 @@ public class DriveSubsystem extends BaseSubsystem{
         speedSettings.configureSparkMax(rearRightSpark);        
     }
     public void setPositionMode(){
-        positionController.configureAll();
+        positionSettings.configureSparkMax(frontLeftSpark);
+        positionSettings.configureSparkMax(frontRightSpark);
+        positionSettings.configureSparkMax(rearLeftSpark);
+        positionSettings.configureSparkMax(rearRightSpark);
     }
     
     public EncoderValues getEncoderValues(){
@@ -109,31 +108,22 @@ public class DriveSubsystem extends BaseSubsystem{
         
     }
 
-    private void localReset(){
-        frontLeftPositionController.resetPosition();
-        frontRightPositionController.resetPosition();
-        rearLeftPositionController.resetPosition();
-        rearRightPositionController.resetPosition();
-        logger.log("Clicks per rotation", rearRightEncoder.getCountsPerRevolution());
-    }
     public Command reset(){
-        return new ResetPositionCommand(this);
+        return new SingleShotCommand(this){
+        
+            @Override
+            public void doCommand() {
+                frontLeftPositionController.resetPosition();
+                frontRightPositionController.resetPosition();
+                rearLeftPositionController.resetPosition();
+                rearRightPositionController.resetPosition();
+                logger.log("Clicks per rotation", rearRightEncoder.getCountsPerRevolution());
+            }
+        };
+
     }
 
     public void drive(DriveInstruction di) {
         robotDrive.arcadeDrive(di.getFoward(), di.getRotation());
     }
-
-    public class ResetPositionCommand extends SingleShotCommand {
-
-        public ResetPositionCommand(BaseSubsystem bs) {
-            super(bs);
-        }
-
-        @Override
-        public void doCommand() {
-            localReset();
-        }
-
-    }    
 }

@@ -31,7 +31,7 @@ public class OperatorInterface{
 
         DriveSubsystem drive = subsystemManager.getDriveSubsystem();
 
-        manager.addButton(10)
+        manager.addButton(RobotMap.BUTTONS.RESET_BUTTON)
             .whenPressed(drive.reset())
             .add();
 

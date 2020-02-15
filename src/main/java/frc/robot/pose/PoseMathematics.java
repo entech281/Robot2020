@@ -1,5 +1,4 @@
 package frc.robot.pose;
-import frc.robot.newPoses.*;
 import frc.robot.RobotMap;
 
 public class PoseMathematics{
