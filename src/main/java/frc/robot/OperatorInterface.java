@@ -1,55 +1,42 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.command.CommandGroup;
 import frc.robot.Robot;
 import frc.robot.RobotMap;
 import frc.robot.logger.DataLogger;
 import frc.robot.logger.DataLoggerFactory;
-import frc.robot.commands.HoodHomingCommand;
-import frc.robot.commands.OutakeIntakeCommand;
-import frc.robot.commands.ResetPositionCommand;
-import frc.robot.commands.StartIntakeCommand;
-import frc.robot.commands.StartShooterCommand;
-import frc.robot.commands.StopIntakeCommand;
-import frc.robot.commands.StopShooterCommand;
+import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.SubsystemManager;
+import frc.robot.commands.TankDriveCommand;
 
-public class OperatorInterface implements DriveInstructionSource{
-    private Robot robot;
+public class OperatorInterface{
     private Joystick driveStick;
     private JoystickButtonManager manager;
-    private DataLogger logger;
+    private SubsystemManager subsystemManager;
 
-    public OperatorInterface(final Robot robot){
-        this.robot = robot;
-        logger = DataLoggerFactory.getLoggerFactory().createDataLogger("OperatorInterface");
+    public OperatorInterface(final SubsystemManager subMan){
+        this.subsystemManager = subMan;
         this.driveStick = new Joystick(RobotMap.GAMEPAD.driverStick);
         this.manager = new JoystickButtonManager(driveStick);
 
         manager.addButton(RobotMap.BUTTONS.INTAKE_BUTTON)
-                .whenPressed(new StartIntakeCommand(robot.getIntakeSubsystem()))
-                .whenReleased(new StopIntakeCommand(robot.getIntakeSubsystem()))
+                .whenPressed(subsystemManager.getIntakeSubsystem().start())
+                .whenReleased(subsystemManager.getIntakeSubsystem().stop())
                 .add();
 
         manager.addButton(RobotMap.BUTTONS.SHOOT_BUTTON)
-                .whenPressed(new StartShooterCommand(robot.getShooterSubystem()))
-                .whenReleased(new StopShooterCommand(robot.getShooterSubystem()))
+                .whenPressed(subsystemManager.getShooterSubsystem().shootMaxSpeed())
+                .whenReleased(subsystemManager.getShooterSubsystem().stop())
                 .add();
-    }
-  
-    
-    public double getDriveInputX(){
-        logger.log("drive X", driveStick.getX());
-        return driveStick.getX();
+
+        DriveSubsystem drive = subsystemManager.getDriveSubsystem();
+
+        manager.addButton(10)
+            .whenPressed(drive.reset())
+            .add();
+
+        drive.setDefaultCommand(new TankDriveCommand(drive, driveStick));
+
     }
 
-    public double getDriveInputY(){
-        logger.log("drive Y", driveStick.getY());
-        return -driveStick.getY();
-    }
-
-    @Override
-    public DriveInstruction getNextInstruction() {
-        return new DriveInstruction( -driveStick.getY() , driveStick.getX());
-    }
 }

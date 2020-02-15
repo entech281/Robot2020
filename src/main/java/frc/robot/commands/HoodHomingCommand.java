@@ -8,6 +8,6 @@ import frc.robot.subsystems.ShooterSubsystem;
 
 public class HoodHomingCommand extends SequentialCommandGroup{
     public HoodHomingCommand(ShooterSubsystem shoot) {
-        addCommands(new HoodLimitResetCommand(shoot), new HoodHomeCommand(shoot));
+        addCommands(shoot.goToUpperLimit(), shoot.returnToStartPos());
     }
 }

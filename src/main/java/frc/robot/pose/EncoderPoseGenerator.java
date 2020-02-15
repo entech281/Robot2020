@@ -16,7 +16,7 @@ public class EncoderPoseGenerator implements PoseGenerator{
     public final double ENCODER_CLICKS_PER_INCH = RobotMap.DIMENSIONS.ENCODER_TICKS_PER_INCH;
     
     SparkPositionControllerGroup sparkControllers;
-    RobotPose pose = RobotMap.DIMENSIONS.START_POSE;
+    RobotPose pose = new RobotPose(0, 0, 90);
     double lastLeft;
     double lastRight;
 

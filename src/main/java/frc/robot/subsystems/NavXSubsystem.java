@@ -10,17 +10,18 @@ package frc.robot.subsystems;
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.SPI;
-
+import frc.robot.newPoses.FieldPose;
+import frc.robot.newPoses.NavXData;
+import frc.robot.newPoses.RobotPose;
 
 /**
  *
  * @author dcowden
  */
-public class NavXSubsystem extends BaseSubsystem{
+public class NavXSubsystem extends BaseSubsystem {
 
     private final AHRS navX = new AHRS(SPI.Port.kMXP);
-    
-    
+
     public NavXSubsystem() {
     }
 
@@ -31,5 +32,16 @@ public class NavXSubsystem extends BaseSubsystem{
             ;
         }
         navX.zeroYaw();
-        logger.log("NavX Initialize Finish", false);    }
+        logger.log("NavX Initialize Finish", false);
+    }
+
+    public NavXData updateNavXAngle() {
+        return new NavXData(navX.getAngle());
+    }
+
+    @Override
+    public void customPeriodic(RobotPose rPose, FieldPose fPose) {
+        // TODO Auto-generated method stub
+
+    }
 }

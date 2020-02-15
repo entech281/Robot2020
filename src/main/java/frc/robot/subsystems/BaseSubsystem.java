@@ -12,6 +12,8 @@ import java.util.List;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.logger.DataLogger;
 import frc.robot.logger.DataLoggerFactory;
+import frc.robot.newPoses.FieldPose;
+import frc.robot.newPoses.RobotPose;
 
 /**
  * Add your docs here.
@@ -39,4 +41,5 @@ public abstract class BaseSubsystem extends SubsystemBase {
   }
 
   public abstract void initialize();
+  public abstract void customPeriodic(RobotPose rPose, FieldPose fPose);
 }

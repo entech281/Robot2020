@@ -11,6 +11,6 @@ import frc.robot.subsystems.ShooterSubsystem;
 public class FullClimbCommand extends SequentialCommandGroup {
     double delayTimeSec = 0.5;
     public FullClimbCommand(ClimbSubsystem climb) {
-        addCommands(new DropHookMechCommand(climb), new DelayCommand(climb, delayTimeSec), new ClimbUpCommand(climb));
+        addCommands(climb.dropHookRaisingMech(), new DelayCommand(climb, delayTimeSec), climb.pullRobotUp());
     }
 }
