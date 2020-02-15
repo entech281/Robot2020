@@ -13,7 +13,7 @@ import frc.robot.logger.*;
 public class EncoderPoseGenerator implements PoseGenerator{
     private DataLogger logger;
 
-    public final double ENCODER_CLICKS_PER_INCH = RobotMap.DIMENSIONS.ENCODER_TICKS_PER_INCH;
+    public final double ENCODER_CLICKS_PER_INCH = RobotMap.DIMENSIONS.MOTOR_REVOLUTIONS_PER_INCH;
     
     SparkPositionControllerGroup sparkControllers;
     RobotPose pose = RobotMap.DIMENSIONS.START_POSE;
@@ -53,7 +53,5 @@ public class EncoderPoseGenerator implements PoseGenerator{
         this.pose.setForward(pose.getForward());
         this.pose.setTheta(pose.getTheta());
     }
-
-
 
 }

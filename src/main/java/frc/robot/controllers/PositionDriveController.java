@@ -20,7 +20,7 @@ import frc.robot.subsystems.drive.FourSparkMaxWithSettings;
 public class PositionDriveController{
 
     // TODO: this should be computed from the spark settings
-    public static final double TOLERANCE_INCHES = 1.0;
+    public static final double TOLERANCE_INCHES = RobotMap.AUTONOMOUS.ACCEPTABLE_ERROR/RobotMap.DIMENSIONS.MOTOR_REVOLUTIONS_PER_INCH;
 
     private FourSparkMaxWithSettings sparks;
 	private SparkPositionControllerGroup positionControllerGroup;
@@ -121,12 +121,15 @@ public class PositionDriveController{
 	}
 	
 	protected void displayControllerStatus(CANSparkMax spark, String name) {
-        dataLogger.log(name + "_errorMsg", spark.getLastError());
-        dataLogger.log(name +"_get", spark.get() );
-        dataLogger.log(name +"_tvolts", spark.getBusVoltage() );
-        dataLogger.log(name +"_current", spark.getOutputCurrent() );
-        dataLogger.log(name +"_pos", spark.getEncoder().getPosition() );
-        dataLogger.log(name +"_vel", spark.getEncoder().getVelocity() );		
+        dataLogger.log(name + ": errorMsg", spark.getLastError());
+        dataLogger.log(name + ": get", spark.get() );
+        dataLogger.log(name + ": tvolts", spark.getBusVoltage() );
+        dataLogger.log(name + ": current", spark.getOutputCurrent() );
+        dataLogger.log(name + ": pos", spark.getEncoder().getPosition() );
+		dataLogger.log(name + ": vel", spark.getEncoder().getVelocity() );
+		dataLogger.log(name + ": appliedoutput", spark.getAppliedOutput());	
+		dataLogger.log(name + ": max accel", spark.getPIDController().getSmartMotionMaxAccel(0));
+		dataLogger.log(name + ": max vel", spark.getPIDController().getSmartMotionMaxVelocity(0));
 	}
 	
 }

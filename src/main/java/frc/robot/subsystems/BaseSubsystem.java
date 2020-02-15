@@ -26,7 +26,7 @@ public abstract class BaseSubsystem extends SubsystemBase {
 
   public BaseSubsystem() {
     DataLoggerFactory.configureForMatch();
-    this.logger = DataLoggerFactory.getLoggerFactory().createDataLogger(this.getName());
+    logger = DataLoggerFactory.getLoggerFactory().createDataLogger(this.getName());
     initialize_these_list.add(this);
   }
 

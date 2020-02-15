@@ -11,42 +11,21 @@ import frc.robot.path.PositionCalculator;
 
 
 public class FollowPositionPathCommand extends CommandBase{
-
+    int counter = 0;
     private DataLogger logger = DataLoggerFactory.getLoggerFactory().createDataLogger(this.getName());
 
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((path == null) ? 0 : path.hashCode());
-        return result;
-    }
 
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        FollowPositionPathCommand other = (FollowPositionPathCommand) obj;
-        if (path == null) {
-            if (other.path != null)
-                return false;
-        } else if (!path.equals(other.path))
-            return false;
-        return true;
-    }
     public DriveSubsystem driveSubsystem;
     public List<Position> path;
     public FollowPositionPathCommand(DriveSubsystem subsystem, List<Position> path) {
         this.driveSubsystem = subsystem;
         this.path = path;
+        this.addRequirements(subsystem);
     }
     public FollowPositionPathCommand(DriveSubsystem subsystem, List<Position> path, double timeoutSeconds) {
         this.driveSubsystem = subsystem;
         this.path = path;
+        this.addRequirements(subsystem);
     }    
     public FollowPositionPathCommand mirror() {
         return new FollowPositionPathCommand(this.driveSubsystem,PositionCalculator.mirror(this.path));
@@ -55,7 +34,7 @@ public class FollowPositionPathCommand extends CommandBase{
     @Override
     public void initialize() {
         driveSubsystem.startAutonomous();
-        
+        logger.log("Is Running", true);
         for (Position p : path) {
             driveSubsystem.getPositionBuffer().addPosition(p);
         }
@@ -64,10 +43,13 @@ public class FollowPositionPathCommand extends CommandBase{
     @Override
     public void end(boolean interrupted){
         driveSubsystem.endAutonomous();
+        logger.log("Is Running", false);
     }
 
     @Override
     public boolean isFinished() {
+        ++counter;
+        logger.log("Times Ran", counter);
         return ! driveSubsystem.getPositionBuffer().hasNextPosition() ;
     }
     

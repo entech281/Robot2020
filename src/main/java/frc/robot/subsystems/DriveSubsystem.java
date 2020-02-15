@@ -16,11 +16,9 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANPIDController.AccelStrategy;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 
-
-public class DriveSubsystem extends BaseSubsystem{
+public class DriveSubsystem extends BaseSubsystem {
 
     private static final int ENCODER_TOLERANCE = 50;
 
@@ -31,16 +29,16 @@ public class DriveSubsystem extends BaseSubsystem{
     SparkPositionController frontLeftPositionController;
     CANSparkMax rearLeftMotor;
     SparkPositionController rearLeftPositionController;
-	SpeedControllerGroup leftSpeedControllerGroup;
+    SpeedControllerGroup leftSpeedControllerGroup;
 
     CANSparkMax frontRightMotor;
     SparkPositionController frontRightPositionController;
     CANSparkMax rearRightMotor;
     SparkPositionController rearRightPositionController;
     SpeedControllerGroup rightSpeedController;
-    
+
     DifferentialDrive robotDrive;
-    
+
     CANEncoder frontLeftEncoder;
     CANEncoder frontRightEncoder;
     CANEncoder rearLeftEncoder;
@@ -62,105 +60,63 @@ public class DriveSubsystem extends BaseSubsystem{
         frontLeftMotor = new CANSparkMax(RobotMap.CAN.FRONT_LEFT_MOTOR, MotorType.kBrushless);
         rearLeftMotor = new CANSparkMax(RobotMap.CAN.REAR_LEFT_MOTOR, MotorType.kBrushless);
         leftSpeedControllerGroup = new SpeedControllerGroup(frontLeftMotor, rearLeftMotor);
-    
+
         frontRightMotor = new CANSparkMax(RobotMap.CAN.FRONT_RIGHT_MOTOR, MotorType.kBrushless);
         rearRightMotor = new CANSparkMax(RobotMap.CAN.REAR_RIGHT_MOTOR, MotorType.kBrushless);
         rightSpeedController = new SpeedControllerGroup(frontRightMotor, rearRightMotor);
-        
+
         robotDrive = new DifferentialDrive(leftSpeedControllerGroup, rightSpeedController);
 
-        SparkMaxSettings frontLeftSpeedSettings = SparkMaxSettingsBuilder.defaults()
-                                                    .withCurrentLimits(35)
-                                                    .coastInNeutral()
-                                                    .withDirections(false, false)
-                                                    .limitMotorOutputs(1.0, -1.0)
-                                                    .noMotorStartupRamping()
-                                                    .useSpeedControl()
-                                                    .build();
-                                                
-        SparkMaxSettings frontRightSpeedSettings = SparkMaxSettingsBuilder.defaults()
-                                                    .withCurrentLimits(35)
-                                                    .coastInNeutral()
-                                                    .withDirections(false, false)
-                                                    .limitMotorOutputs(1.0, -1.0)
-                                                    .noMotorStartupRamping()
-                                                    .useSpeedControl()
-                                                    .build();
-        SparkMaxSettings rearLeftSpeedSettings = SparkMaxSettingsBuilder.defaults()
-                                                    .withCurrentLimits(35)
-                                                    .coastInNeutral()
-                                                    .withDirections(false, false)
-                                                    .limitMotorOutputs(1.0, -1.0)
-                                                    .noMotorStartupRamping()
-                                                    .useSpeedControl()
-                                                    .build();
-        SparkMaxSettings rearRightSpeedSettings = SparkMaxSettingsBuilder.defaults()
-                                                    .withCurrentLimits(35)
-                                                    .coastInNeutral()
-                                                    .withDirections(false, false)
-                                                    .limitMotorOutputs(1.0, -1.0)
-                                                    .noMotorStartupRamping()
-                                                    .useSpeedControl()
-                                                    .build();
+        SparkMaxSettings frontLeftSpeedSettings = SparkMaxSettingsBuilder.defaults().withCurrentLimits(35)
+                .coastInNeutral().withDirections(false, false).limitMotorOutputs(1.0, -1.0).noMotorStartupRamping()
+                .useSpeedControl().build();
 
-        
-        speedModeSparks = new FourSparkMaxWithSettings(frontLeftMotor, rearLeftMotor, frontRightMotor, rearRightMotor, frontLeftSpeedSettings, rearLeftSpeedSettings, frontRightSpeedSettings, rearRightSpeedSettings);                                            
-    
-        SparkMaxSettings frontLeftPositionSettings = SparkMaxSettingsBuilder.defaults()
-                                                        .withCurrentLimits(35)
-                                                        .coastInNeutral()
-                                                        .withDirections(false, false)
-                                                        .limitMotorOutputs(1.0, -1.0)
-                                                        .noMotorStartupRamping()
-                                                        .usePositionControl()
-                                                        .withGains(0.3,100, 0.0, 0.0)
-                                                        .withMotionProfile(400, AccelStrategy.kSCurve, ENCODER_TOLERANCE)
-                                                        .build();
-                                                
-        SparkMaxSettings frontRightPositionSettings = SparkMaxSettingsBuilder.defaults()
-                                                        .withCurrentLimits(35)
-                                                        .coastInNeutral()
-                                                        .withDirections(false, false)
-                                                        .limitMotorOutputs(1.0, -1.0)
-                                                        .noMotorStartupRamping()
-                                                        .usePositionControl()
-                                                        .withGains(0.3,100, 0.0, 0.0)
-                                                        .withMotionProfile(400, AccelStrategy.kSCurve, ENCODER_TOLERANCE)
-                                                        .build();
-        SparkMaxSettings rearLeftPositionSettings = SparkMaxSettingsBuilder.defaults()
-                                                        .withCurrentLimits(35)
-                                                        .coastInNeutral()
-                                                        .withDirections(false, false)
-                                                        .limitMotorOutputs(1.0, -1.0)
-                                                        .noMotorStartupRamping()
-                                                        .usePositionControl()
-                                                        .withGains(0.3,100, 0.0, 0.0)
-                                                        .withMotionProfile(400, AccelStrategy.kSCurve, ENCODER_TOLERANCE)
-                                                        .build();        
-        SparkMaxSettings rearRightPositionSettings = SparkMaxSettingsBuilder.defaults()
-                                                        .withCurrentLimits(35)
-                                                        .coastInNeutral()
-                                                        .withDirections(false, false)
-                                                        .limitMotorOutputs(1.0, -1.0)
-                                                        .noMotorStartupRamping()
-                                                        .usePositionControl()
-                                                        .withGains(0.3,100, 0.0, 0.0)
-                                                        .withMotionProfile(400, AccelStrategy.kSCurve, ENCODER_TOLERANCE)
-                                                        .build();
+        SparkMaxSettings speedSettings = SparkMaxSettingsBuilder.defaults()
+                .withCurrentLimits(35)
+                .coastInNeutral()
+                .withDirections(false, false)
+                .limitMotorOutputs(1.0, -1.0)
+                .noMotorStartupRamping()
+                .useSpeedControl()
+                .build();
 
-        frontLeftPositionController = new SparkPositionController(frontLeftMotor, frontLeftPositionSettings);
+        speedModeSparks = new FourSparkMaxWithSettings(frontLeftMotor, rearLeftMotor, frontRightMotor, rearRightMotor,
+                frontLeftSpeedSettings, speedSettings, speedSettings, speedSettings);
+
+        SparkMaxSettings smartMotionSettings = SparkMaxSettingsBuilder.defaults()
+                .withCurrentLimits(35)
+                .coastInNeutral()
+                .withDirections(false, false)
+                .limitMotorOutputs(1.0, -1.0)
+                .noMotorStartupRamping()
+                .useSmartMotionControl()
+                .withPositionGains(RobotMap.PID.DRIVE.F, 
+                    RobotMap.PID.DRIVE.P, 
+                    RobotMap.PID.DRIVE.I, 
+                    RobotMap.PID.DRIVE.D)
+                .useAccelerationStrategy(AccelStrategy.kTrapezoidal)
+                .withMaxVelocity(RobotMap.AUTONOMOUS.MAX_VELOCITY)
+                .withMaxAcceleration(RobotMap.AUTONOMOUS.MAX_ACCELLERATION)
+                .withClosedLoopError(RobotMap.AUTONOMOUS.ACCEPTABLE_ERROR)
+                .build();
+
+        frontLeftPositionController = new SparkPositionController(frontLeftMotor, smartMotionSettings);
         frontLeftPositionController.configure();
-        frontRightPositionController = new SparkPositionController(frontRightMotor, frontRightPositionSettings);
+        frontRightPositionController = new SparkPositionController(frontRightMotor, smartMotionSettings);
         frontRightPositionController.configure();
-        rearLeftPositionController = new SparkPositionController(rearLeftMotor, rearLeftPositionSettings);
+        rearLeftPositionController = new SparkPositionController(rearLeftMotor, smartMotionSettings);
         rearLeftPositionController.configure();
-        rearRightPositionController = new SparkPositionController(rearRightMotor, rearRightPositionSettings);
+        rearRightPositionController = new SparkPositionController(rearRightMotor, smartMotionSettings);
         rearRightPositionController.configure();
 
-        posController = new SparkPositionControllerGroup(frontLeftPositionController, frontRightPositionController, rearLeftPositionController, rearRightPositionController);
-        positionModeSparks = new FourSparkMaxWithSettings(frontLeftMotor, rearLeftMotor, frontRightMotor, rearRightMotor, frontLeftPositionSettings, rearLeftPositionSettings, frontRightPositionSettings, rearRightPositionSettings);
+        posController = new SparkPositionControllerGroup(frontLeftPositionController, frontRightPositionController,
+                rearLeftPositionController, rearRightPositionController);
+        positionModeSparks = new FourSparkMaxWithSettings(frontLeftMotor, rearLeftMotor, frontRightMotor,
+                rearRightMotor, smartMotionSettings, smartMotionSettings, smartMotionSettings,
+                smartMotionSettings);
         positionBuffer = new PositionBuffer();
-        autoController = new PositionDriveController(positionModeSparks, positionBuffer, new EncoderInchesConverter(RobotMap.DIMENSIONS.ENCODER_TICKS_PER_INCH));
+        autoController = new PositionDriveController(positionModeSparks, positionBuffer,
+                new EncoderInchesConverter(RobotMap.DIMENSIONS.MOTOR_REVOLUTIONS_PER_INCH));
 
         poseGen = new EncoderPoseGenerator(posController);
         frontLeftEncoder = frontLeftMotor.getEncoder();
@@ -170,48 +126,56 @@ public class DriveSubsystem extends BaseSubsystem{
 
     }
 
-    @Override 
-    public void periodic(){
-        if (inAuto){
+    @Override
+    public void periodic() {
+        if (inAuto) {
             autoController.periodic();
         }
         logger.log("Front Left Encoder Ticks", frontLeftEncoder.getPosition());
         logger.log("Front Right Encoder Ticks", frontRightEncoder.getPosition());
         logger.log("Rear Left Encoder Ticks", rearLeftEncoder.getPosition());
         logger.log("Rear Right Encoder Ticks", rearRightEncoder.getPosition());
+        logger.log("Positions in path", positionBuffer.hasNextPosition());
+        if (getCurrentCommand() != null) {
+            logger.log("current command", getCurrentCommand().getName());
+        }
     }
 
-
-    public void startAutonomous(){
+    public void startAutonomous() {
         inAuto = true;
+        robotDrive.setSafetyEnabled(false);
         autoController.activate();
     }
 
-    public void endAutonomous(){
+    public void endAutonomous() {
         inAuto = false;
+        robotDrive.setSafetyEnabled(true);
     }
 
-    public void reset(){
+    public void reset() {
         frontLeftPositionController.resetPosition();
         frontRightPositionController.resetPosition();
         rearLeftPositionController.resetPosition();
         rearRightPositionController.resetPosition();
         logger.log("Clicks per rotation", rearRightEncoder.getCountsPerRevolution());
     }
-    
 
-    public void updatePose(PositionReader pose){
+    public void updatePose(PositionReader pose) {
         poseGen.updateFromOfficialPose(pose);
         poseGen.updatePose();
     }
+
     public void drive(DriveInstruction di) {
-        robotDrive.arcadeDrive(di.getFoward(), di.getRotation());
+        if (!inAuto) {
+            robotDrive.arcadeDrive(di.getFoward(), di.getRotation());
+        }
     }
-    public EncoderPoseGenerator getEncoderPoseGenerator(){
+
+    public EncoderPoseGenerator getEncoderPoseGenerator() {
         return this.poseGen;
     }
 
-	public PositionBuffer getPositionBuffer() {
-		return positionBuffer;
-	}
+    public PositionBuffer getPositionBuffer() {
+        return positionBuffer;
+    }
 }

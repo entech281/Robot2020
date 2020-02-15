@@ -61,7 +61,10 @@ public class Robot extends TimedRobot {
           CommandScheduler.getInstance().run();
      }
 
-
+     @Override 
+     public void autonomousInit(){
+          
+     }
 
      public IntakeSubsystem getIntakeSubsystem(){
           return intake;

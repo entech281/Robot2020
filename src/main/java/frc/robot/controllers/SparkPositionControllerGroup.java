@@ -1,15 +1,20 @@
 package frc.robot.controllers;
 
+import frc.robot.logger.DataLogger;
+import frc.robot.logger.DataLoggerFactory;
 import frc.robot.path.Position;
 import frc.robot.subsystems.EncoderInchesConverter;
 
 public class SparkPositionControllerGroup {
+
+    private DataLogger logger = DataLoggerFactory.getLoggerFactory().createDataLogger("SparkPositionControllerGroup");;
+
     private SparkPositionController frontLeft;
     private SparkPositionController frontRight;
     private SparkPositionController rearLeft;
     private SparkPositionController rearRight;
-    public static final double FRONT_RIGHT_ADJUST = 1.0;
-    public static final double REAR_RIGHT_ADJUST = 1.0;
+    public static final double FRONT_RIGHT_ADJUST = -1.0;
+    public static final double REAR_RIGHT_ADJUST = -1.0;
     public SparkPositionControllerGroup(SparkPositionController fL, SparkPositionController fR, SparkPositionController rL, SparkPositionController rR){
         this.frontLeft = fL;
         this.frontRight = fR;
@@ -42,6 +47,8 @@ public class SparkPositionControllerGroup {
         if(isRelative){
             resetPosition();
         }
+        logger.log("Desired Position Left", leftPose);
+        logger.log("Desired Position Right", rightPose);
 
         frontLeft.setDesiredPosition(leftPose);
         rearLeft.setDesiredPosition(leftPose);

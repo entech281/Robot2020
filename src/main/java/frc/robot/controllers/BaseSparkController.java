@@ -1,11 +1,6 @@
 package frc.robot.controllers;
-
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.revrobotics.CANSparkMax;
-
 import frc.robot.subsystems.SparkMaxSettings;
-import frc.robot.subsystems.TalonSettings;
 
 public abstract class BaseSparkController {
 

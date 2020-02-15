@@ -15,8 +15,8 @@ import org.apache.commons.lang3.SerializationUtils;
 
 
 
+
 public class SparkMaxSettings implements Serializable{
-	
 	/**
 	 *
 	 */
@@ -48,6 +48,7 @@ public class SparkMaxSettings implements Serializable{
 	
     public void configureSparkMax(CANSparkMax spark){
 		//Current Limits
+		spark.restoreFactoryDefaults();
 		pidController = new CANPIDController(spark);
 
 
@@ -57,7 +58,6 @@ public class SparkMaxSettings implements Serializable{
 		spark.setOpenLoopRampRate(rampUp.rampUpSecondsOpenLoop);
 		spark.setInverted(motorDirections.inverted);
 		spark.setIdleMode(brakeMode);
-		spark.getEncoder().setPositionConversionFactor(spark.getEncoder().getCountsPerRevolution());
 
 		
 		pidController.setOutputRange(outputLimits.minMotorOutput, outputLimits.maxMotorOutput);
@@ -65,9 +65,11 @@ public class SparkMaxSettings implements Serializable{
 		pidController.setI(gains.i);
 		pidController.setP(gains.p);
 		pidController.setD(gains.d);
-		pidController.setSmartMotionAccelStrategy(profile.trapezoStrategy, PID_SLOT);
+		pidController.setSmartMotionAccelStrategy(profile.accelStrategy, PID_SLOT);
 		pidController.setSmartMotionAllowedClosedLoopError(profile.allowableClosedLoopError, PID_SLOT);
-
+		pidController.setSmartMotionMaxAccel(profile.maxAccel, PID_SLOT);
+		pidController.setSmartMotionMaxVelocity(profile.cruiseVelocityRPM, PID_SLOT);
+		pidController.setSmartMotionMinOutputVelocity(-profile.cruiseVelocityRPM, PID_SLOT);
 
 		spark.burnFlash();
 	}
@@ -86,6 +88,7 @@ public class SparkMaxSettings implements Serializable{
 		} else {
 			pidController = spark.getPIDController();
 			pidController.setReference(value, this.ctrlType);
+
 		}
 	}
 
@@ -117,8 +120,9 @@ public class SparkMaxSettings implements Serializable{
 	public static class MotionProfile implements Serializable {
 		private static final long serialVersionUID = -9034830588710443069L;
 		public int cruiseVelocityRPM = 3200;
-		public AccelStrategy trapezoStrategy = AccelStrategy.kTrapezoidal;
+		public AccelStrategy accelStrategy = AccelStrategy.kTrapezoidal;
 		public int allowableClosedLoopError = 20;
+		public int maxAccel = 20;
 	}
 
 	public static class CurrentLimits implements Serializable {
