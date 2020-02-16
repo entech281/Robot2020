@@ -1,12 +1,11 @@
-package frc.robot.subsystems;
+package frc.robot.controllers;
 
 import com.revrobotics.ControlType;
 import com.revrobotics.SparkMax;
 import com.revrobotics.CANPIDController.AccelStrategy;
 import com.revrobotics.CANSparkMax.IdleMode;
 
-import frc.robot.subsystems.SparkMaxSettings.MotorOutputLimits;
-import frc.robot.subsystems.SparkMaxSettings.MotorRampUp;
+
 
 
 

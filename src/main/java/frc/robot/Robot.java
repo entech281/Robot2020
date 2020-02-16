@@ -8,16 +8,10 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.command.CommandGroup;
 import frc.robot.commands.HoodHomingCommand;
 import frc.robot.logger.DataLogger;
 import frc.robot.logger.DataLoggerFactory;
-import frc.robot.pose.PoseManager;
-import frc.robot.subsystems.BaseSubsystem;
-import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.subsystems.IntakeSubsystem;
-import frc.robot.subsystems.NavXSubsystem;
-import frc.robot.subsystems.ShooterSubsystem;
+import frc.robot.subsystems.SubsystemManager;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
 /**
@@ -31,79 +25,46 @@ public class Robot extends TimedRobot {
 
 
      private DataLogger logger;
-     DriveSubsystem robotDrive;
-     IntakeSubsystem intake;
+     private SubsystemManager subsystemManager = new SubsystemManager();
      OperatorInterface oi;
-     PoseManager officialPose;
-     NavXSubsystem navX;
-     ShooterSubsystem shoot;
 
 
+     @Override
      public void robotInit(){
-          
-          intake = new IntakeSubsystem();
-          robotDrive = new DriveSubsystem();
-          navX = new NavXSubsystem();
-          shoot = new ShooterSubsystem();
-          BaseSubsystem.initializeList();
-          robotDrive.reset();          
-          officialPose = new PoseManager(robotDrive.getEncoderPoseGenerator());
-          officialPose.configureRobotPose(0, 0, 90);
-          oi = new OperatorInterface(this);
-          
           this.logger = DataLoggerFactory.getLoggerFactory().createDataLogger("Robot Main Loop");
-          
+          subsystemManager.initAll();
+          oi = new OperatorInterface(subsystemManager);
      }
+
+     @Override
+     public void robotPeriodic() {
+     }
+
+     @Override
+     public void teleopInit(){
+          subsystemManager.getDriveSubsystem().setSpeedMode();
+     }
+
 
      @Override
      public void teleopPeriodic(){
+          subsystemManager.periodicAll();
           CommandScheduler.getInstance().run();
-          robotDrive.drive(oi.getNextInstruction());
-          robotDrive.updatePose(officialPose.getPose());
-          logger.log("Current Pose",officialPose.getPose());
-          logger.log("Shooter Speed", shoot.getShooterSpeed());
-          logger.log("UpperLimit", shoot.isUpperLimitHit());
-          logger.log("LowerLimit", shoot.isLowerLimitHit());
      }
 
-     @Override
-     public void disabledPeriodic(){
-          CommandScheduler.getInstance().run();
-     }
+
 
      @Override
      public void autonomousInit() {
-          HoodHomingCommand hoodHomeCom = new HoodHomingCommand(shoot);
-          hoodHomeCom.initialize();
-          hoodHomeCom.execute();
+          subsystemManager.getDriveSubsystem().setPositionMode();
+          new HoodHomingCommand(subsystemManager.getShooterSubsystem()).schedule();
      }
      
      @Override
      public void autonomousPeriodic() {
+          subsystemManager.periodicAll();
           CommandScheduler.getInstance().run();
-          logger.log("Shooter Current Position", shoot.getHoodPosition());
-          logger.log("Shooter Desired Positon", shoot.getDesiredPositon());
      }
 
-
-     public IntakeSubsystem getIntakeSubsystem(){
-          return intake;
-     }
-
-     public NavXSubsystem getNavXSubsystem(){
-          return navX;
-     }
-
-     public DriveSubsystem getDriveSubsystem(){
-          return robotDrive;
-     }
-
-     public PoseManager getOfficialPose(){
-          return officialPose;
-     }
-
-     public ShooterSubsystem getShooterSubystem(){
-          return shoot;
-     }
   
 }

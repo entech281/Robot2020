@@ -6,7 +6,7 @@ import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.wpilibj.DigitalInput;
-import frc.robot.subsystems.TalonSettings;
+
 
 public abstract class BaseTalonController {
 
