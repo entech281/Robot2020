@@ -2,6 +2,7 @@ plugins {
     id "java"
     id "eclipse"
     id "edu.wpi.first.GradleRIO" version "2020.1.2"
+    id "com.github.spotbugs" version "3.0.0"
 }
 
 sourceCompatibility = JavaVersion.VERSION_11
@@ -63,7 +64,6 @@ dependencies {
 
     testImplementation 'junit:junit:4.12'
 
-    
 
     // Enable simulation gui support. Must check the box in vscode to enable support
     // upon debugging
@@ -76,4 +76,12 @@ dependencies {
 jar {
     from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
     manifest edu.wpi.first.gradlerio.GradleRIOPlugin.javaManifest(ROBOT_MAIN_CLASS)
+}
+
+tasks.withType(com.github.spotbugs.SpotBugsTask) {
+  reportLevel = "high"
+  reports {
+    xml.enabled = false
+    html.enabled = true
+  }
 }
