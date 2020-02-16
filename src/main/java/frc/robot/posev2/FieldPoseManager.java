@@ -9,7 +9,7 @@ public class FieldPoseManager {
     }
     
     public void setCurrentColorWheel(ColorWheel wheelColor){
-        this.colorWheel = colorWheel;
+        this.colorWheel = wheelColor;
     
     }
 }
