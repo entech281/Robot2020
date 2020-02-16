@@ -8,6 +8,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.RobotMap;
+import frc.robot.commands.EntechCommandBase;
 import frc.robot.commands.SingleShotCommand;
 import frc.robot.controllers.SparkMaxSettings;
 import frc.robot.controllers.SparkMaxSettingsBuilder;
@@ -45,41 +46,40 @@ public class ClimbSubsystem extends BaseSubsystem {
     }
 
     public Command pullRobotUp() {
-        return new SingleShotCommand(this){        
+        return new SingleShotCommand(this) {
             @Override
             public void doCommand() {
                 winchController.setDesiredSpeed(0.7);
             }
-        };
+        }.withTimeout(EntechCommandBase.DEFAULT_TIMEOUT_SECONDS);
     }
 
     public Command stop() {
-        return new SingleShotCommand(this){        
+        return new SingleShotCommand(this) {
             @Override
             public void doCommand() {
                 winchController.setDesiredSpeed(0);
             }
-        };
+        }.withTimeout(EntechCommandBase.DEFAULT_TIMEOUT_SECONDS);
     }
 
-    public Command engageClutchCommand(){
-        return new SingleShotCommand(this){        
+    public Command engageClutchCommand() {
+        return new SingleShotCommand(this) {
             @Override
             public void doCommand() {
                 engageClutchWithWinch();
             }
-        };
+        }.withTimeout(EntechCommandBase.DEFAULT_TIMEOUT_SECONDS);
     }
 
+    public Command AttachHook() {
+        return new SingleShotCommand(this) {
 
-    public Command AttachHook(){
-        return new SingleShotCommand(this){
-        
             @Override
             public void doCommand() {
                 raiseHook();
             }
-        };
+        }.withTimeout(EntechCommandBase.DEFAULT_TIMEOUT_SECONDS);
     }
 
     public void raiseHook() {
@@ -88,11 +88,12 @@ public class ClimbSubsystem extends BaseSubsystem {
     }
 
     public Command dropHookRaisingMech() {
-        return new SingleShotCommand(this){
-			@Override
-			public void doCommand() {
-                attachHookSolenoid.set(false);				
-			}};
+        return new SingleShotCommand(this) {
+            @Override
+            public void doCommand() {
+                attachHookSolenoid.set(false);
+            }
+        }.withTimeout(EntechCommandBase.DEFAULT_TIMEOUT_SECONDS);
     }
 
     public void delay(double time) {
@@ -108,4 +109,4 @@ public class ClimbSubsystem extends BaseSubsystem {
         winchController.setDesiredSpeed(0);
     }
 
-} 
+}

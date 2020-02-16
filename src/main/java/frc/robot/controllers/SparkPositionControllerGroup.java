@@ -1,7 +1,7 @@
 package frc.robot.controllers;
 
 import frc.robot.subsystems.Position;
-import frc.robot.subsystems.EncoderInchesConverter;
+import frc.robot.utils.EncoderInchesConverter;
 
 public class SparkPositionControllerGroup {
     private SparkPositionController frontLeft;

@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.deser.DeserializationProblemHandler;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.RobotMap;
+import frc.robot.commands.EntechCommandBase;
 import frc.robot.commands.SingleShotCommand;
 import frc.robot.controllers.TalonSettings;
 import frc.robot.controllers.TalonSettingsBuilder;
@@ -51,7 +52,7 @@ public class IntakeSubsystem extends BaseSubsystem {
             public void doCommand() {
                 setIntakeMotorSpeed(FULL_SPEED_FWD);
             }
-        };
+        }.withTimeout(EntechCommandBase.DEFAULT_TIMEOUT_SECONDS);
     }
 
     public Command stop(){
@@ -60,7 +61,7 @@ public class IntakeSubsystem extends BaseSubsystem {
             public void doCommand() {
                 setIntakeMotorSpeed(STOP_SPEED);
             }
-        };
+        }.withTimeout(EntechCommandBase.DEFAULT_TIMEOUT_SECONDS);
     }
 
     public Command reverse(){
@@ -69,7 +70,7 @@ public class IntakeSubsystem extends BaseSubsystem {
             public void doCommand() {
                 setIntakeMotorSpeed(FULL_SPEED_BWD);
             }
-        };
+        }.withTimeout(EntechCommandBase.DEFAULT_TIMEOUT_SECONDS);
     }
 
  } 

@@ -1,6 +1,6 @@
 package frc.robot.posev2;
 
-public enum WheelColor{
+public enum WheelColorValue{
     BLUE,
     YELLOW,
     RED

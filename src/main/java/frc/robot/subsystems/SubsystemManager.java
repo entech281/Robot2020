@@ -43,9 +43,10 @@ public class SubsystemManager{
     private ShooterSubsystem shootSubsystem;
     private ClimbSubsystem climbSubsystem;
     private ElevatorSubsystem elevatorSubsystem;
+    private ColorSubsystem colorSubsystem;
 
-    private final RobotPoseManager robotPoseMan = new RobotPoseManager();
-    private final FieldPoseManager fieldPoseMan = new FieldPoseManager();
+    private final RobotPoseManager robotPoseManager = new RobotPoseManager();
+    private final FieldPoseManager fieldPoseManager = new FieldPoseManager();
 
     private final List<BaseSubsystem> allSubsystems = new ArrayList<>();
 
@@ -56,6 +57,7 @@ public class SubsystemManager{
         shootSubsystem = new ShooterSubsystem();
         climbSubsystem = new ClimbSubsystem();
         elevatorSubsystem = new ElevatorSubsystem();
+        colorSubsystem = new ColorSubsystem();
         
         Collections.addAll(allSubsystems, driveSubsystem, intakeSubsystem, navXSubsystem, shootSubsystem, climbSubsystem, elevatorSubsystem);
 
@@ -66,14 +68,15 @@ public class SubsystemManager{
     public void periodicAll(){
         updatePoses();
         allSubsystems.forEach(subsystem -> subsystem.customPeriodic(
-                            robotPoseMan.getCurrentPose(), 
-                            fieldPoseMan.getCurrentPose()
+                            robotPoseManager.getCurrentPose(), 
+                            fieldPoseManager.getCurrentPose()
                             ));
     }
 
     private void updatePoses(){
-        robotPoseMan.updateEncoders(driveSubsystem.getEncoderValues());
-        robotPoseMan.updateNavxAngle(navXSubsystem.updateNavXAngle());
+        robotPoseManager.updateEncoders(driveSubsystem.getEncoderValues());
+        robotPoseManager.updateNavxAngle(navXSubsystem.updateNavXAngle());
+        robotPoseManager.updateWheelColor(colorSubsystem.getRobotColorSensorReading());
     }    
 
 

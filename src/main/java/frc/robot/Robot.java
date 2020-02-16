@@ -38,7 +38,6 @@ public class Robot extends TimedRobot {
 
      @Override
      public void robotPeriodic() {
-          CommandScheduler.getInstance().run();
      }
 
      @Override
@@ -50,6 +49,7 @@ public class Robot extends TimedRobot {
      @Override
      public void teleopPeriodic(){
           subsystemManager.periodicAll();
+          CommandScheduler.getInstance().run();
      }
 
 
@@ -57,14 +57,13 @@ public class Robot extends TimedRobot {
      @Override
      public void autonomousInit() {
           subsystemManager.getDriveSubsystem().setPositionMode();
-          HoodHomingCommand hoodHomeCom = new HoodHomingCommand(subsystemManager.getShooterSubsystem());
-          hoodHomeCom.initialize();
-          hoodHomeCom.execute();
+          new HoodHomingCommand(subsystemManager.getShooterSubsystem()).schedule();
      }
      
      @Override
      public void autonomousPeriodic() {
           subsystemManager.periodicAll();
+          CommandScheduler.getInstance().run();
      }
 
   

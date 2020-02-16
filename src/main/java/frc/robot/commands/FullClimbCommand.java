@@ -1,4 +1,4 @@
-package frc.robot.commands.climb;
+package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.CommandGroup;
@@ -11,6 +11,6 @@ import frc.robot.subsystems.ShooterSubsystem;
 public class FullClimbCommand extends SequentialCommandGroup {
     double delayTimeSec = 0.5;
     public FullClimbCommand(ClimbSubsystem climb) {
-        addCommands(climb.dropHookRaisingMech(), new DelayCommand(climb, delayTimeSec), climb.pullRobotUp());
+        addCommands(climb.dropHookRaisingMech().withTimeout(EntechCommandBase.DEFAULT_TIMEOUT_SECONDS), new DelayCommand(climb, delayTimeSec), climb.pullRobotUp().withTimeout(EntechCommandBase.DEFAULT_TIMEOUT_SECONDS));
     }
 }

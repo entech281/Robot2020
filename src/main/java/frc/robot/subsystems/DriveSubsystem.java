@@ -12,9 +12,9 @@ import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.commands.EntechCommandBase;
 import frc.robot.commands.SingleShotCommand;
 import frc.robot.posev2.*;
 
@@ -69,6 +69,11 @@ public class DriveSubsystem extends BaseSubsystem{
         rearRightSpark = new CANSparkMax(RobotMap.CAN.REAR_RIGHT_MOTOR, MotorType.kBrushless);
         rightSpeedController = new SpeedControllerGroup(frontRightSpark, rearRightSpark);
         
+        frontLeftEncoder = frontLeftSpark.getEncoder();
+        frontRightEncoder = frontRightSpark.getEncoder();
+        rearLeftEncoder = rearLeftSpark.getEncoder();
+        rearRightEncoder = rearRightSpark.getEncoder();
+
         robotDrive = new DifferentialDrive(leftSpeedController, rightSpeedController);                                            
 
         frontLeftPositionController = new SparkPositionController(frontLeftSpark, positionSettings);
@@ -119,7 +124,7 @@ public class DriveSubsystem extends BaseSubsystem{
                 rearRightPositionController.resetPosition();
                 logger.log("Clicks per rotation", rearRightEncoder.getCountsPerRevolution());
             }
-        };
+        }.withTimeout(EntechCommandBase.DEFAULT_TIMEOUT_SECONDS);
 
     }
 

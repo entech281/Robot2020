@@ -6,15 +6,15 @@ public class ColorWheel {
         
     }
     
-    public WheelColor getCurrentColor(){
+    public WheelColorValue getCurrentColor(){
         return null;
     }
     
-    public WheelColor getNextColor(){
+    public WheelColorValue getNextColor(){
         return null;
     }
     
-    public int getNumSectionsTillColor(WheelColor wc){
+    public int getNumSectionsTillColor(WheelColorValue wc){
         return 0;
     }
 }

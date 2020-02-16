@@ -24,6 +24,7 @@ public class NavXSubsystem extends BaseSubsystem {
     private final AHRS navX = new AHRS(SPI.Port.kMXP);
     private Timer timer;
     private double TIMEOUT_CALIBRATION_SECONDS = 31;
+    private boolean navXWorking = true;
 
     public NavXSubsystem() {
         timer = new Timer();
@@ -35,7 +36,9 @@ public class NavXSubsystem extends BaseSubsystem {
         timer.start();
         while (navX.isCalibrating()) {
             if(timer.get() > TIMEOUT_CALIBRATION_SECONDS){
-                throw new RuntimeException("Stuck in NAVX calibration");
+                logger.log("NAVX Initialization FAILED", 0.0);
+                navXWorking = false;
+                break;
             }
         }
         navX.zeroYaw();
@@ -43,7 +46,7 @@ public class NavXSubsystem extends BaseSubsystem {
     }
 
     public NavXData updateNavXAngle() {
-        return new NavXData(navX.getAngle());
+        return new NavXData(navX.getAngle(), this.navXWorking);
     }
 
 }

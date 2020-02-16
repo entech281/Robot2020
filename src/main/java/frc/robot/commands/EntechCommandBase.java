@@ -14,6 +14,5 @@ public class EntechCommandBase extends CommandBase{
 
     public EntechCommandBase(BaseSubsystem subsystem, double timeout){
         addRequirements(subsystem);
-        withTimeout(timeout);
     }
 }

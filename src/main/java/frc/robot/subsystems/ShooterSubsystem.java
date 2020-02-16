@@ -9,14 +9,19 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.commands.EntechCommandBase;
 import frc.robot.commands.SingleShotCommand;
 import frc.robot.controllers.*;
 import frc.robot.posev2.FieldPose;
 import frc.robot.posev2.RobotPose;
+import frc.robot.posev2.ShooterConfiguration;
 
 public class ShooterSubsystem extends BaseSubsystem {
     private double SHOOT_SPEED = 1;
     private double HOOD_POSITION;
+
+    //Trial and error determination
+    private double ENCODER_CLICKS_PER_HOOD_MOTOR_REVOLUTION = 2100;
 
     private final CANSparkMax shootMotor = new CANSparkMax(5, MotorType.kBrushless);
     private SparkSpeedController shooterMotorController;
@@ -79,7 +84,7 @@ public class ShooterSubsystem extends BaseSubsystem {
             public void doCommand() {
                 adjustShooterSpeed(1);
             }
-        };
+        }.withTimeout(EntechCommandBase.DEFAULT_TIMEOUT_SECONDS);
     }
 
     public Command stop(){
@@ -88,7 +93,7 @@ public class ShooterSubsystem extends BaseSubsystem {
             public void doCommand() {
                 adjustShooterSpeed(0);
             }
-        };
+        }.withTimeout(EntechCommandBase.DEFAULT_TIMEOUT_SECONDS);
     }
 
     public Command goToUpperLimit() {
@@ -104,7 +109,7 @@ public class ShooterSubsystem extends BaseSubsystem {
                 }
                 hoodMotor.set(ControlMode.Position, hoodMotorController.getActualPosition());                
             }
-        };
+        }.withTimeout(EntechCommandBase.DEFAULT_TIMEOUT_SECONDS);
     }
 
     public Command returnToStartPos() {
@@ -119,7 +124,7 @@ public class ShooterSubsystem extends BaseSubsystem {
                 hoodMotorController.setDesiredPosition(0);
                 hoodMotorController.resetPosition();
             }
-        };
+        }.withTimeout(EntechCommandBase.DEFAULT_TIMEOUT_SECONDS);
     }
 
 
@@ -151,6 +156,11 @@ public class ShooterSubsystem extends BaseSubsystem {
 
     public double getDesiredPositon() {
         return this.HOOD_POSITION;
+    }
+
+    public void setDesiredShooterConfiguration(ShooterConfiguration configuration){
+        double desiredPosition = ((90 - configuration.getDesiredHoodAngle())/360)*ENCODER_CLICKS_PER_HOOD_MOTOR_REVOLUTION;
+        adjustHoodPosition(desiredPosition);
     }
 
 } 

@@ -11,6 +11,12 @@ public class RobotPosition{
         this.theta = theta;
     }
 
+    public RobotPosition(){
+        this.forward = 0;
+        this.horizontal = 0;
+        this.theta = 0;
+    }
+
     public double getForward(){
         return forward;
     }
