@@ -77,9 +77,9 @@ public class RobotPose implements PositionReader{
     @Override
     public String toString() {
         return "{" +
-            " theta='" + theta + "'" +
-            ", horizontal='" + horizontal + "'" +
-            ", forward='" + forward + "'" +
+            " theta='" + theta + "'\n" +
+            ", horizontal='" + horizontal + "'\n" +
+            ", forward='" + forward + "'\n" +
             "}";
     }
 }

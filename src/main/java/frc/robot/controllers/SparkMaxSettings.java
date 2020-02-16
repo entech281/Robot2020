@@ -1,4 +1,4 @@
-package frc.robot.subsystems;
+package frc.robot.controllers;
 
 import java.io.Serializable;
 
@@ -43,7 +43,16 @@ public class SparkMaxSettings implements Serializable{
 	
 
     public SparkMaxSettings copy(){
-		return SerializationUtils.clone(this);
+		SparkMaxSettings settingsNew = new SparkMaxSettings();
+		settingsNew.setControlType(ctrlType);
+		settingsNew.gains = this.gains;
+		settingsNew.currentLimits = this.currentLimits;
+		settingsNew.rampUp = this.rampUp;
+		settingsNew.brakeMode = this.brakeMode;
+		settingsNew.motorDirections = this.motorDirections;
+		settingsNew.outputLimits = this.outputLimits;
+		settingsNew.profile = this.profile;
+		return settingsNew;
 	}
 	
     public void configureSparkMax(CANSparkMax spark){
@@ -68,8 +77,6 @@ public class SparkMaxSettings implements Serializable{
 		pidController.setSmartMotionAccelStrategy(profile.trapezoStrategy, PID_SLOT);
 		pidController.setSmartMotionAllowedClosedLoopError(profile.allowableClosedLoopError, PID_SLOT);
 
-
-		spark.burnFlash();
 	}
 
 	/**

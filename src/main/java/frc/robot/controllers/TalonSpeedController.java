@@ -2,7 +2,6 @@ package frc.robot.controllers;
 
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
-import frc.robot.subsystems.TalonSettings;
 
 public class TalonSpeedController extends BaseTalonController {
 

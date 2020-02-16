@@ -1,4 +1,4 @@
-package frc.robot.pose;
+package frc.robot.posev2;
 import frc.robot.RobotMap;
 
 public class PoseMathematics{
@@ -41,18 +41,19 @@ public class PoseMathematics{
 
     // This is not commutative (I.E addposes(pose1, pose2) != addposes(pose2,
     // pose1))
-    public static RobotPose addPoses(PositionReader pose1, PositionReader pose2) {
-        RobotPose pose = new RobotPose();
-        pose.setTheta(pose1.getTheta() + pose2.getTheta());
-        pose.setHorizontal(
-            pose1.getHorizontal() + 
-            Math.cos(pose1.getTheta() * DEGREES_TO_RADIANS) * pose2.getHorizontal() +
-            Math.cos(pose1.getTheta() * DEGREES_TO_RADIANS + Math.PI/2) * pose2.getForward());
-        pose.setForward(pose1.getForward() + 
-            Math.sin(pose1.getTheta() * DEGREES_TO_RADIANS) * pose2.getHorizontal() +
-            Math.sin(pose1.getTheta() * DEGREES_TO_RADIANS + Math.PI/2) * pose2.getForward());
+    public static RobotPose addPoses(RobotPose pose1, RobotPose pose2) {
+        double theta = pose1.getRobotPosition().getTheta() + pose2.getRobotPosition().getTheta();
+        double horizontal = pose1.getRobotPosition().getHorizontal() + 
+        Math.cos(pose1.getRobotPosition().getTheta() * DEGREES_TO_RADIANS) * pose2.getRobotPosition().getHorizontal() +
+        Math.cos(pose1.getRobotPosition().getTheta() * DEGREES_TO_RADIANS + Math.PI/2) * pose2.getRobotPosition().getForward();
+        
+        double forward = pose1.getRobotPosition().getForward() + 
+        Math.sin(pose1.getRobotPosition().getTheta() * DEGREES_TO_RADIANS) * pose2.getRobotPosition().getHorizontal() +
+        Math.sin(pose1.getRobotPosition().getTheta() * DEGREES_TO_RADIANS + Math.PI/2) * pose2.getRobotPosition().getForward(); 
+        
+
     
-        return pose;
+        return new RobotPose(forward, horizontal, theta);
     }
     
 }

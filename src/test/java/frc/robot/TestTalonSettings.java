@@ -8,8 +8,7 @@ import org.junit.Test;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 
-import frc.robot.subsystems.TalonSettings;
-import frc.robot.subsystems.TalonSettingsBuilder;
+import frc.robot.controllers.*;
 
 public class TestTalonSettings {
 

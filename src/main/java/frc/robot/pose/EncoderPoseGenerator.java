@@ -6,7 +6,7 @@ import frc.robot.logger.DataLoggerFactory;
 import frc.robot.logger.DataLogger;
 import frc.robot.pose.PoseGenerator;
 import frc.robot.pose.RobotPose;
-import frc.robot.subsystems.EncoderInchesConverter;
+import frc.robot.utils.*;
 import frc.robot.logger.*;
 
 
@@ -16,7 +16,7 @@ public class EncoderPoseGenerator implements PoseGenerator{
     public final double ENCODER_CLICKS_PER_INCH = RobotMap.DIMENSIONS.ENCODER_TICKS_PER_INCH;
     
     SparkPositionControllerGroup sparkControllers;
-    RobotPose pose = RobotMap.DIMENSIONS.START_POSE;
+    RobotPose pose = new RobotPose(0, 0, 90);
     double lastLeft;
     double lastRight;
 
