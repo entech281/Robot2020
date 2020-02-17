@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.SerialPort;
 import frc.robot.posev2.RobotPose;
 import frc.robot.posev2.VisionData;
 import frc.robot.utils.VisionDataFormatter;
+import frc.robot.RobotMap;
 import frc.robot.posev2.FieldPose;
 
 public class VisionSubsystem extends BaseSubsystem{
@@ -40,11 +41,24 @@ public class VisionSubsystem extends BaseSubsystem{
     public void calculateVisionData(String readings){
         outputData = readings.split(" ");
         boolean visionTargetFound = Boolean.parseBoolean(outputData[0]);
-        if(visionTargetFound){
-            int lateralOffset = 
 
+        double lateralOffset = -1;
+        double verticalOffset = -1;
+        double blobWidth = -1;
+
+        double frameRate = 0.0;
+
+        if(visionTargetFound){
+            lateralOffset = Math.abs((RobotMap.VISION.FRAME_WIDTH)/2 - Integer.parseInt(outputData[1]));
+            verticalOffset = Double.parseDouble(outputData[2]);
+            blobWidth = Double.parseDouble(outputData[3]);
+            frameRate = Double.parseDouble(outputData[4]);
         }
-        visionData = new VisionData(lateralOffset, verticalOffset, blobWidth);
+        visionData = new VisionData(visionTargetFound, lateralOffset, verticalOffset, blobWidth);
+    }
+
+    public VisionData getVisionData(){
+        return visionData;
     }
 
 }

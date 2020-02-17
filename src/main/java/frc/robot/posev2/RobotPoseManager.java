@@ -8,7 +8,7 @@ public class RobotPoseManager {
  
     EncoderValues encoders;
     NavXData navXData;
-    VisionData vData;
+    VisionData vData = RobotMap.DIMENSIONS.DEFAULT_EMPTY_VISION_DATA;
     WheelColorValue wColor;
 
     RobotPose pose = RobotMap.DIMENSIONS.START_POSE;
@@ -20,7 +20,7 @@ public class RobotPoseManager {
     
     public void update(){
         //do all the maths to get a new pose
-        pose = PoseMathematics.addPoses(pose, PoseMathematics.calculateRobotPositionChange(encoders.getDeltaLeft(), encoders.getDeltaRight()));
+        pose = new RobotPose(PoseMathematics.addPoses(pose, new RobotPose(PoseMathematics.calculateRobotPositionChange(encoders.getDeltaLeft(), encoders.getDeltaRight()))), vData);
         if(navXWorking){
             pose = new RobotPose(pose.getRobotPosition().getForward(), pose.getRobotPosition().getHorizontal(), navXData.getAngle(), vData);
         }
@@ -41,4 +41,5 @@ public class RobotPoseManager {
     public void updateWheelColor ( WheelColorValue newWheelColor){
         this.wColor = newWheelColor;
     }
+
 }

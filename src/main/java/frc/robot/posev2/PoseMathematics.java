@@ -11,7 +11,7 @@ public class PoseMathematics{
     }
 
     // X is positive to the right of the robot & y is positive forward
-    public static RobotPose calculateRobotPositionChange(double inchesLeft, double inchesRight) {
+    public static RobotPosition calculateRobotPositionChange(double inchesLeft, double inchesRight) {
         double deltaX;
         double deltaY;
         double deltaTheta;
@@ -36,12 +36,12 @@ public class PoseMathematics{
                 deltaTheta = theta;
             }
         }
-        return new RobotPose(deltaY, deltaX, deltaTheta * RADIANS_TO_DEGREES);
+        return new RobotPosition(deltaY, deltaX, deltaTheta * RADIANS_TO_DEGREES);
     }
 
     // This is not commutative (I.E addposes(pose1, pose2) != addposes(pose2,
     // pose1))
-    public static RobotPose addPoses(RobotPose pose1, RobotPose pose2) {
+    public static RobotPosition addPoses(RobotPose pose1, RobotPose pose2) {
         double theta = pose1.getRobotPosition().getTheta() + pose2.getRobotPosition().getTheta();
         double horizontal = pose1.getRobotPosition().getHorizontal() + 
         Math.cos(pose1.getRobotPosition().getTheta() * DEGREES_TO_RADIANS) * pose2.getRobotPosition().getHorizontal() +
@@ -53,7 +53,7 @@ public class PoseMathematics{
         
 
     
-        return new RobotPose(forward, horizontal, theta);
+        return new RobotPosition(forward, horizontal, theta);
     }
     
 }

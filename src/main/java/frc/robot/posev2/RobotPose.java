@@ -2,6 +2,7 @@ package frc.robot.posev2;
 
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
+import frc.robot.RobotMap;
 
 
 public class RobotPose {
@@ -17,12 +18,18 @@ public class RobotPose {
         robotPose2d = new Pose2d(f, h, new Rotation2d(t));
         wheelColor = null;
         targetLocation = new TargetLocation(vData);
-        }
-
-    public RobotPose(double f, double h, double t){
-        robotPose2d = new Pose2d(f, h, new Rotation2d(t));
-        robotPosition = new RobotPosition(f, h, t);      
-        visionData = null;
+    }
+    public RobotPose(RobotPosition position){
+        this.robotPosition = position;
+        this.visionData = RobotMap.DIMENSIONS.DEFAULT_EMPTY_VISION_DATA;
+        robotPose2d = new Pose2d(position.getForward(), position.getHorizontal(), new Rotation2d(position.getTheta()));
+        wheelColor = null;
+        targetLocation = new TargetLocation(visionData);
+    }
+    public RobotPose(RobotPosition position, VisionData vData){
+        this.robotPosition = position;
+        this.visionData = vData;
+        robotPose2d = new Pose2d(position.getForward(), position.getHorizontal(), new Rotation2d(position.getTheta()));
         wheelColor = null;
         targetLocation = new TargetLocation(visionData);
     }
