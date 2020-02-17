@@ -57,17 +57,7 @@ public class RobotPose implements PositionReader{
     public Pose2d getWPIRobotPose() {
         return new Pose2d(forward, horizontal, new Rotation2d(theta));
     }
-    
-    @Override
-    public boolean equals(Object o) {
-        if (o == this)
-            return true;
-        if (!(o instanceof RobotPose)) {
-            return false;
-        }
-        RobotPose robotPose = (RobotPose) o;
-        return theta == robotPose.theta && horizontal == robotPose.horizontal && forward == robotPose.forward;
-    }
+
 
     @Override
     public int hashCode() {
