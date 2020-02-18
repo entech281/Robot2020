@@ -14,4 +14,8 @@ public class VisionDataProcessor {
         //Code here from empirical testing
         return new TargetLocation(distance, angle);
     }
+    
+    public static String removeFirstInput(String inp){
+        return inp.substring(inp.indexOf("\n", 1) + 1);
+    }
 }

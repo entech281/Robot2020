@@ -9,11 +9,13 @@ public class VisionData {
     private double lateralOffset = 0.0;
     private double verticalOffset = 0.0;
     private double targetWidth = 0.0;
+    private boolean targetFound = false;
 
-    public VisionData(double lateralOffset, double verticalOffset, double targetWidth) {
+    public VisionData(boolean targetFound, double lateralOffset, double verticalOffset, double targetWidth) {
         this.lateralOffset = lateralOffset;
         this.verticalOffset = verticalOffset;
         this.targetWidth = targetWidth;
+        this.targetFound = targetFound;
     }
 
     public double getLateralOffset() {
@@ -28,4 +30,7 @@ public class VisionData {
         return targetWidth;
     }
 
+    public boolean targetFound(){
+        return targetFound;
+    }
 }
