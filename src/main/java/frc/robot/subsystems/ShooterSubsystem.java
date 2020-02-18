@@ -6,7 +6,6 @@ import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.commands.EntechCommandBase;
@@ -18,7 +17,7 @@ import frc.robot.posev2.ShooterConfiguration;
 
 public class ShooterSubsystem extends BaseSubsystem {
 
-    private double SHOOT_SPEED = 1;
+    private double SHOOT_SPEED = 4000;
     private double HOOD_POSITION;
 
     //Trial and error determination
@@ -37,20 +36,46 @@ public class ShooterSubsystem extends BaseSubsystem {
     private boolean homingLimitSwitchHit = false;
     private Timer scheduler = new Timer();
 
-    private final double PID_F = 4;
-    private final double PID_P = 2.56 * 2;
-    private final double PID_I = 0;
-    private final double PID_D = 0;
+    private final double HOOD_PID_F = 4;
+    private final double HOOD_PID_P = 2.56 * 2;
+    private final double HOOD_PID_I = 0;
+    private final double HOOD_PID_D = 0;
 
-    public Command shootMaxSpeed() {
+    private final double SHOOTER_PID_F = 50;
+    private final double SHOOTER_PID_P = 0;
+    private final double SHOOTER_PID_I = 0;
+    private final double SHOOTER_PID_D = 0;
+
+    private final double RPM = 4000;
+
+    public Command shootRPMSpeed() {
         return new SingleShotCommand(this) {
             @Override
             public void doCommand() {
-                adjustShooterSpeed(1);
+                adjustShooterSpeed(SHOOT_SPEED);
             }
         }.withTimeout(EntechCommandBase.DEFAULT_TIMEOUT_SECONDS);
     }
+    
+    public Command increaseShooterSpeed() {
+        return new SingleShotCommand(this){
+            @Override
+            public void doCommand(){
+                increaseRPM();
+            }
+        };
+    }
 
+    public Command decreaseShooterSpeed() {
+        return new SingleShotCommand(this){
+            @Override
+            public void doCommand(){
+                decreaseRPM();
+            }
+        };
+    }
+    
+    
     public Command stop() {
         return new SingleShotCommand(this) {
             @Override
@@ -95,14 +120,16 @@ public class ShooterSubsystem extends BaseSubsystem {
     public void initialize() {
 
         SparkMaxSettings shooterSettings = SparkMaxSettingsBuilder.defaults().withCurrentLimits(35).coastInNeutral()
-                .withDirections(false, true).noMotorOutputLimits().noMotorStartupRamping().useSpeedControl().build();
+                .withDirections(false, true).noMotorOutputLimits().noMotorStartupRamping().useSpeedControlWithPID()
+                .withGainsSpeed(SHOOTER_PID_F, SHOOTER_PID_P, SHOOTER_PID_I, SHOOTER_PID_D).build();
+
         TalonSettings hoodSettings = TalonSettingsBuilder.defaults().withPrettySafeCurrentLimits().brakeInNeutral()
                 .withDirections(false, false).noMotorOutputLimits().noMotorStartupRamping().usePositionControl()
-                .withGains(PID_F, PID_P, PID_I, PID_D)
+                .withGains(HOOD_PID_F, HOOD_PID_P, HOOD_PID_I, HOOD_PID_D)
                 .withMotionProfile(HOOD_CRUISE_VELOCITY, HOOD_ACCELERATION, ALLOWABLE_ERROR).build();
 
         // Basic outline for shooter
-        shooterSettings.configureSparkMax(shootMotor);
+        shooterMotorController = new SparkSpeedController(shootMotor, shooterSettings);
 
         hoodMotorController = new TalonPositionController(hoodMotor, hoodSettings);
         hoodMotorController.configure();
@@ -116,12 +143,30 @@ public class ShooterSubsystem extends BaseSubsystem {
         HOOD_POSITION = hoodMotorController.getActualPosition();
     }
 
-    public void adjustShooterSpeed(double desiredSpeed) {
-        logger.log("Intake Motor speed", desiredSpeed);
-        this.SHOOT_SPEED = desiredSpeed;
-        shootMotor.set(this.SHOOT_SPEED);
+    @Override
+    public void customPeriodic(RobotPose rPose, FieldPose fPose) {
+        logger.log("Shooter subsystem command", this.getCurrentCommand());
+        logger.log("Shooter Motor speed", this.SHOOT_SPEED);
+        logger.log("Current Shooter Speed", shootMotor.getEncoder().getVelocity());
     }
 
+    public void adjustShooterSpeed(double desiredSpeed) {
+        this.SHOOT_SPEED = desiredSpeed;
+        shooterMotorController.setDesiredSpeed(this.SHOOT_SPEED);
+    }
+    
+    public void increaseRPM(){
+        if(this.SHOOT_SPEED < 5700){
+            this.SHOOT_SPEED += 150;
+        }
+    }
+
+    public void decreaseRPM(){
+        if(this.SHOOT_SPEED > 3500){
+            this.SHOOT_SPEED -= 150;
+        }
+    }
+    
     public void adjustHoodPosition(double desiredPosition) {
         this.HOOD_POSITION = desiredPosition;
         hoodMotorController.setDesiredPosition(desiredPosition);

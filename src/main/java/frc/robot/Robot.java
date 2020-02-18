@@ -41,7 +41,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void teleopInit() {
-        subsystemManager.getDriveSubsystem().setSpeedMode();
+//        subsystemManager.getDriveSubsystem().setSpeedMode();
     }
 
     @Override
@@ -52,7 +52,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void autonomousInit() {
-        subsystemManager.getDriveSubsystem().setPositionMode();
+//        subsystemManager.getDriveSubsystem().setPositionMode();
         autoCommand.schedule();
     }
 

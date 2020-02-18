@@ -20,23 +20,31 @@ public class OperatorInterface {
         this.driveStick = new Joystick(RobotMap.GAMEPAD.DRIVER_JOYSTICK);
         this.manager = new JoystickButtonManager(driveStick);
 
-        manager.addButton(RobotMap.BUTTONS.INTAKE_BUTTON)
-                .whenPressed(subsystemManager.getIntakeSubsystem().start())
-                .whenReleased(subsystemManager.getIntakeSubsystem().stop())
-                .add();
+//        manager.addButton(RobotMap.BUTTONS.INTAKE_BUTTON)
+//                .whenPressed(subsystemManager.getIntakeSubsystem().start())
+//                .whenReleased(subsystemManager.getIntakeSubsystem().stop())
+//                .add();
 
         manager.addButton(RobotMap.BUTTONS.SHOOT_BUTTON)
-                .whenPressed(subsystemManager.getShooterSubsystem().shootMaxSpeed())
+                .whenPressed(subsystemManager.getShooterSubsystem().shootRPMSpeed())
                 .whenReleased(subsystemManager.getShooterSubsystem().stop())
                 .add();
 
-        DriveSubsystem drive = subsystemManager.getDriveSubsystem();
-
-        manager.addButton(RobotMap.BUTTONS.RESET_BUTTON)
-                .whenPressed(drive.reset())
+        manager.addButton(5)
+                .whenPressed(subsystemManager.getShooterSubsystem().increaseShooterSpeed())
                 .add();
+        
+        manager.addButton(3)
+            .whenPressed(subsystemManager.getShooterSubsystem().decreaseShooterSpeed())
+            .add();
+        
+//        DriveSubsystem drive = subsystemManager.getDriveSubsystem();
 
-        drive.setDefaultCommand(new TankDriveCommand(drive, driveStick));
+//        manager.addButton(RobotMap.BUTTONS.RESET_BUTTON)
+//                .whenPressed(drive.reset())
+//                .add();
+
+//        drive.setDefaultCommand(new TankDriveCommand(drive, driveStick));
 
     }
 

@@ -239,7 +239,7 @@ public class SparkMaxSettingsBuilder {
 
         @Override
         public GainSettingsSpeed useSpeedControlWithPID() {
-            settings.setControlType(ControlType.kSmartVelocity);
+            settings.setControlType(ControlType.kVelocity);
             return this;
         }
 

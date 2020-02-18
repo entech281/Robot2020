@@ -1,6 +1,7 @@
 package frc.robot.controllers;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.ControlType;
 
 public class SparkSpeedController extends BaseSparkController {
 
@@ -15,8 +16,7 @@ public class SparkSpeedController extends BaseSparkController {
     }
 
     public void setDesiredSpeed(double desiredSpeed) {
-        this.desiredSpeed = desiredSpeed;
-        this.resetMode(desiredSpeed);
+        this.getSettings().setMode(this.getSpark(), desiredSpeed);
     }
 
     public SparkSpeedController(CANSparkMax spark, SparkMaxSettings settings) {
