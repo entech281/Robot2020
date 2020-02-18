@@ -9,14 +9,15 @@ import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.SubsystemManager;
 import frc.robot.commands.TankDriveCommand;
 
-public class OperatorInterface{
+public class OperatorInterface {
+
     private Joystick driveStick;
     private JoystickButtonManager manager;
     private SubsystemManager subsystemManager;
 
-    public OperatorInterface(final SubsystemManager subMan){
+    public OperatorInterface(final SubsystemManager subMan) {
         this.subsystemManager = subMan;
-        this.driveStick = new Joystick(RobotMap.GAMEPAD.driverStick);
+        this.driveStick = new Joystick(RobotMap.GAMEPAD.DRIVER_JOYSTICK);
         this.manager = new JoystickButtonManager(driveStick);
 
         manager.addButton(RobotMap.BUTTONS.INTAKE_BUTTON)
@@ -32,8 +33,8 @@ public class OperatorInterface{
         DriveSubsystem drive = subsystemManager.getDriveSubsystem();
 
         manager.addButton(RobotMap.BUTTONS.RESET_BUTTON)
-            .whenPressed(drive.reset())
-            .add();
+                .whenPressed(drive.reset())
+                .add();
 
         drive.setDefaultCommand(new TankDriveCommand(drive, driveStick));
 

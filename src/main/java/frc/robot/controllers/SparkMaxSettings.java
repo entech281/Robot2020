@@ -1,6 +1,5 @@
 package frc.robot.controllers;
 
-
 import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANPIDController.AccelStrategy;
@@ -8,12 +7,11 @@ import com.revrobotics.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-public class SparkMaxSettings  {
+public class SparkMaxSettings {
 
     /**
      *
      */
-
     public static final int TIMEOUT_MS = 10;
     public static final int PID_SLOT = 0;
     public static final int PROFILE_SLOT = 0;
@@ -102,7 +100,8 @@ public class SparkMaxSettings  {
         }
     }
 
-    public static class Gains  {
+    public static class Gains {
+
         public double f = 0.0;
         public double p = 0.0;
         public double i = 0.0;
@@ -110,7 +109,6 @@ public class SparkMaxSettings  {
     }
 
     public static class MotionProfile {
-
 
         public int cruiseVelocityRPM = 3200;
         public AccelStrategy trapezoStrategy = AccelStrategy.kTrapezoidal;
@@ -122,7 +120,7 @@ public class SparkMaxSettings  {
         public int smartLimit = 80;
     }
 
-    public static class MotorOutputLimits  {
+    public static class MotorOutputLimits {
 
         public double maxMotorOutput = 1.0;
         public double minMotorOutput = -1.0;
@@ -135,13 +133,13 @@ public class SparkMaxSettings  {
         public double neutralDeadband = 0.001;
     }
 
-    public static class FramePeriods  {
+    public static class FramePeriods {
 
         public int motionMagicMilliseconds = DEFAULT_FAST_FRAMERATE_MILLIS;
         public int pidMilliseconds = DEFAULT_FAST_FRAMERATE_MILLIS;
     }
 
-    public static class MotorDirections{
+    public static class MotorDirections {
 
         public boolean sensorPhase = false;
         public boolean inverted = false;

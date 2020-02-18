@@ -2,8 +2,9 @@ package frc.robot.subsystems;
 
 import frc.robot.posev2.WheelColorValue;
 
-public class ColorSubsystem extends BaseSubsystem{
-    public ColorSubsystem(){
+public class ColorSubsystem extends BaseSubsystem {
+
+    public ColorSubsystem() {
     }
 
     @Override
@@ -11,9 +12,8 @@ public class ColorSubsystem extends BaseSubsystem{
 
     }
 
-    public WheelColorValue getRobotColorSensorReading(){
+    public WheelColorValue getRobotColorSensorReading() {
         return null;
     }
-
 
 }

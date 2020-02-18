@@ -17,6 +17,7 @@ import frc.robot.posev2.RobotPose;
 import frc.robot.posev2.ShooterConfiguration;
 
 public class ShooterSubsystem extends BaseSubsystem {
+
     private double SHOOT_SPEED = 1;
     private double HOOD_POSITION;
 
@@ -41,9 +42,8 @@ public class ShooterSubsystem extends BaseSubsystem {
     private final double PID_I = 0;
     private final double PID_D = 0;
 
-
-    public Command shootMaxSpeed(){
-        return new SingleShotCommand(this){        
+    public Command shootMaxSpeed() {
+        return new SingleShotCommand(this) {
             @Override
             public void doCommand() {
                 adjustShooterSpeed(1);
@@ -51,8 +51,8 @@ public class ShooterSubsystem extends BaseSubsystem {
         }.withTimeout(EntechCommandBase.DEFAULT_TIMEOUT_SECONDS);
     }
 
-    public Command stop(){
-        return new SingleShotCommand(this){        
+    public Command stop() {
+        return new SingleShotCommand(this) {
             @Override
             public void doCommand() {
                 adjustShooterSpeed(0);
@@ -61,8 +61,8 @@ public class ShooterSubsystem extends BaseSubsystem {
     }
 
     public Command goToUpperLimit() {
-        return new SingleShotCommand(this){
-        
+        return new SingleShotCommand(this) {
+
             @Override
             public void doCommand() {
                 hoodMotorController.resetPosition();
@@ -71,19 +71,19 @@ public class ShooterSubsystem extends BaseSubsystem {
                     hoodMotor.set(ControlMode.PercentOutput, 0.3);
                     logger.log("POSE", hoodMotorController.getActualPosition());
                 }
-                hoodMotor.set(ControlMode.Position, hoodMotorController.getActualPosition());                
+                hoodMotor.set(ControlMode.Position, hoodMotorController.getActualPosition());
             }
         }.withTimeout(EntechCommandBase.DEFAULT_TIMEOUT_SECONDS);
     }
 
     public Command returnToStartPos() {
-        return new SingleShotCommand(this){        
+        return new SingleShotCommand(this) {
             @Override
             public void doCommand() {
                 double desired = hoodMotorController.getActualPosition() - 150;
                 adjustHoodPosition(desired);
                 while (!(Math.abs(desired - hoodMotorController.getActualPosition()) <= 5)) {
-        
+
                 }
                 hoodMotorController.setDesiredPosition(0);
                 hoodMotorController.resetPosition();
@@ -127,7 +127,6 @@ public class ShooterSubsystem extends BaseSubsystem {
         hoodMotorController.setDesiredPosition(desiredPosition);
     }
 
-
     public boolean isUpperLimitHit() {
         return hoodMotor.getSensorCollection().isFwdLimitSwitchClosed();
     }
@@ -145,6 +144,7 @@ public class ShooterSubsystem extends BaseSubsystem {
     }
 
     private static class LimitSwitchState {
+
         public static int closed = 1;
         public static int open = 0;
     }
@@ -157,9 +157,9 @@ public class ShooterSubsystem extends BaseSubsystem {
         return this.HOOD_POSITION;
     }
 
-    public void setDesiredShooterConfiguration(ShooterConfiguration configuration){
-        double desiredPosition = ((90 - configuration.getDesiredHoodAngle())/360)*ENCODER_CLICKS_PER_HOOD_MOTOR_REVOLUTION;
+    public void setDesiredShooterConfiguration(ShooterConfiguration configuration) {
+        double desiredPosition = ((90 - configuration.getDesiredHoodAngle()) / 360) * ENCODER_CLICKS_PER_HOOD_MOTOR_REVOLUTION;
         adjustHoodPosition(desiredPosition);
     }
 
-} 
+}

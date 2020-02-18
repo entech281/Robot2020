@@ -7,8 +7,9 @@ import frc.robot.posev2.FieldPoseManager;
 import frc.robot.posev2.RobotPoseManager;
 import frc.robot.pose.RobotPose;
 
-public class SubsystemManager{
-    public SubsystemManager(){
+public class SubsystemManager {
+
+    public SubsystemManager() {
         DataLoggerFactory.configureForMatch();
     }
 
@@ -36,7 +37,6 @@ public class SubsystemManager{
         return shootSubsystem;
     }
 
-
     private DriveSubsystem driveSubsystem;
     private IntakeSubsystem intakeSubsystem;
     private NavXSubsystem navXSubsystem;
@@ -50,7 +50,7 @@ public class SubsystemManager{
 
     private final List<BaseSubsystem> allSubsystems = new ArrayList<>();
 
-    public void initAll(){
+    public void initAll() {
         driveSubsystem = new DriveSubsystem();
         intakeSubsystem = new IntakeSubsystem();
         navXSubsystem = new NavXSubsystem();
@@ -58,26 +58,25 @@ public class SubsystemManager{
         climbSubsystem = new ClimbSubsystem();
         elevatorSubsystem = new ElevatorSubsystem();
         colorSubsystem = new ColorSubsystem();
-        
+
         Collections.addAll(allSubsystems, driveSubsystem, intakeSubsystem, navXSubsystem, shootSubsystem, climbSubsystem, elevatorSubsystem);
 
         allSubsystems.forEach(subsystem -> subsystem.initialize());
 
     }
 
-    public void periodicAll(){
+    public void periodicAll() {
         updatePoses();
         allSubsystems.forEach(subsystem -> subsystem.customPeriodic(
-                            robotPoseManager.getCurrentPose(), 
-                            fieldPoseManager.getCurrentPose()
-                            ));
+                robotPoseManager.getCurrentPose(),
+                fieldPoseManager.getCurrentPose()
+        ));
     }
 
-    private void updatePoses(){
+    private void updatePoses() {
         robotPoseManager.updateEncoders(driveSubsystem.getEncoderValues());
         robotPoseManager.updateNavxAngle(navXSubsystem.updateNavXAngle());
         robotPoseManager.updateWheelColor(colorSubsystem.getRobotColorSensorReading());
-    }    
-
+    }
 
 }

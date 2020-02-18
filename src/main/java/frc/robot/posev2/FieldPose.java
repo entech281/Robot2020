@@ -1,11 +1,14 @@
 package frc.robot.posev2;
 
 public class FieldPose {
+
     private ColorWheel colorWheel = new ColorWheel();
-    public FieldPose(ColorWheel colorWheel){
+
+    public FieldPose(ColorWheel colorWheel) {
         this.colorWheel = colorWheel;
-    } 
-    public ColorWheel getColorWheel(){
+    }
+
+    public ColorWheel getColorWheel() {
         return colorWheel;
     }
 }
