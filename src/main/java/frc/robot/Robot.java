@@ -7,11 +7,11 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
-import frc.robot.commands.HoodHomingCommand;
 import frc.robot.logger.DataLogger;
 import frc.robot.logger.DataLoggerFactory;
 import frc.robot.subsystems.SubsystemManager;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.commands.AutoCommand;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -25,12 +25,14 @@ public class Robot extends TimedRobot {
     private DataLogger logger;
     private SubsystemManager subsystemManager = new SubsystemManager();
     OperatorInterface oi;
+    AutoCommand autoCommand;
 
     @Override
     public void robotInit() {
         this.logger = DataLoggerFactory.getLoggerFactory().createDataLogger("Robot Main Loop");
         subsystemManager.initAll();
         oi = new OperatorInterface(subsystemManager);
+        autoCommand = new AutoCommand(subsystemManager.getShooterSubsystem());
     }
 
     @Override
@@ -51,7 +53,7 @@ public class Robot extends TimedRobot {
     @Override
     public void autonomousInit() {
         subsystemManager.getDriveSubsystem().setPositionMode();
-        new HoodHomingCommand(subsystemManager.getShooterSubsystem()).schedule();
+        autoCommand.schedule();
     }
 
     @Override
