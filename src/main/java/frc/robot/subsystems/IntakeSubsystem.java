@@ -17,6 +17,7 @@ import frc.robot.posev2.FieldPose;
 import frc.robot.posev2.RobotPose;
 
 public class IntakeSubsystem extends BaseSubsystem {
+
     private double CURRENT_INTAKE_SPEED = 1;
 
     private double FULL_SPEED_FWD = 1;
@@ -46,8 +47,8 @@ public class IntakeSubsystem extends BaseSubsystem {
         intakeMotorController.setDesiredSpeed(this.CURRENT_INTAKE_SPEED);
     }
 
-    public Command start(){
-        return new SingleShotCommand(this){        
+    public Command start() {
+        return new SingleShotCommand(this) {
             @Override
             public void doCommand() {
                 setIntakeMotorSpeed(FULL_SPEED_FWD);
@@ -55,8 +56,8 @@ public class IntakeSubsystem extends BaseSubsystem {
         }.withTimeout(EntechCommandBase.DEFAULT_TIMEOUT_SECONDS);
     }
 
-    public Command stop(){
-        return new SingleShotCommand(this){        
+    public Command stop() {
+        return new SingleShotCommand(this) {
             @Override
             public void doCommand() {
                 setIntakeMotorSpeed(STOP_SPEED);
@@ -64,8 +65,8 @@ public class IntakeSubsystem extends BaseSubsystem {
         }.withTimeout(EntechCommandBase.DEFAULT_TIMEOUT_SECONDS);
     }
 
-    public Command reverse(){
-        return new SingleShotCommand(this){        
+    public Command reverse() {
+        return new SingleShotCommand(this) {
             @Override
             public void doCommand() {
                 setIntakeMotorSpeed(FULL_SPEED_BWD);
@@ -73,4 +74,4 @@ public class IntakeSubsystem extends BaseSubsystem {
         }.withTimeout(EntechCommandBase.DEFAULT_TIMEOUT_SECONDS);
     }
 
- } 
+}

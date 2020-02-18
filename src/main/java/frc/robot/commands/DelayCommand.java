@@ -9,25 +9,27 @@ import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 
 public class DelayCommand extends CommandBase {
+
     ClimbSubsystem climb;
     double time;
+
     public DelayCommand(ClimbSubsystem climb, double seconds) {
         this.climb = climb;
         time = seconds;
     }
 
     @Override
-    public void initialize(){
+    public void initialize() {
 
     }
 
     @Override
-    public void execute(){
+    public void execute() {
         climb.delay(time);
     }
 
     @Override
-    public boolean isFinished(){
+    public boolean isFinished() {
         return true;
     }
 }

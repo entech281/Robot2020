@@ -5,28 +5,27 @@ import com.revrobotics.SparkMax;
 import com.revrobotics.CANPIDController.AccelStrategy;
 import com.revrobotics.CANSparkMax.IdleMode;
 
-
-
-
-
-
-
 public class SparkMaxSettingsBuilder {
+
     public static SafetySettings defaults() {
         return new Builder(new SparkMaxSettings());
     }
-    public static SafetySettings copyOf(SparkMaxSettings settings){
+
+    public static SafetySettings copyOf(SparkMaxSettings settings) {
         return new Builder(settings);
     }
-    public static SparkMaxSettings copy(SparkMaxSettings settings){
+
+    public static SparkMaxSettings copy(SparkMaxSettings settings) {
         return settings.copy();
     }
-    public static SparkMaxSettings withDirectionSettings(SparkMaxSettings settings, boolean invertedDirections){
+
+    public static SparkMaxSettings withDirectionSettings(SparkMaxSettings settings, boolean invertedDirections) {
         SparkMaxSettings s = settings.copy();
         s.motorDirections.inverted = invertedDirections;
         return s;
     }
-    public static SparkMaxSettings inverted(SparkMaxSettings settings){
+
+    public static SparkMaxSettings inverted(SparkMaxSettings settings) {
         SparkMaxSettings s = settings.copy();
         s.motorDirections.inverted = !settings.motorDirections.inverted;
         return s;
@@ -39,45 +38,54 @@ public class SparkMaxSettingsBuilder {
         return s;
     }
 
-    public static SparkMaxSettings disabledCopy(SparkMaxSettings other){
+    public static SparkMaxSettings disabledCopy(SparkMaxSettings other) {
         SparkMaxSettings s = other.copy();
         s.setControlType(ControlType.kDutyCycle);
         return s;
     }
 
     public interface SparkControlMode {
+
         public PositionControlSettings.GainSettings usePositionControl();
 
         public SpeedControlSettings useSpeedControl();
 
         public SpeedControlSettings.GainSettingsSpeed useSpeedControlWithPID();
-        
 
     }
 
     public interface PositionControlSettings {
+
         public interface GainSettings {
+
             ProfileSettings withGains(double f, double p, double i, double d);
         }
 
         public interface ProfileSettings {
+
             ProfileSettings withMotionProfile(int cruiseVelocityRPM, AccelStrategy accelStrategy, int allowableError);
         }
 
         public interface Finish {
+
             public SparkMaxSettings build();
         }
     }
 
     public interface SpeedControlSettings {
+
         public interface GainSettingsSpeed {
+
             SpeedControlSettings withGainsSpeed(double f, double p, double i, double d);
         }
+
         public SparkMaxSettings build();
     }
 
     public interface SafetySettings {
+
         public interface BrakeMode {
+
             public DirectionSettings brakeInNeutral();
 
             public DirectionSettings coastInNeutral();
@@ -89,30 +97,34 @@ public class SparkMaxSettingsBuilder {
     }
 
     public interface DirectionSettings {
+
         public MotorOutputLimits defaultDirectionSettings();
 
         public MotorOutputLimits withDirections(boolean sensorPhase, boolean inverted);
     }
 
     public interface MotorOutputLimits {
+
         public MotorRamping noMotorOutputLimits();
+
         public MotorRamping limitMotorOutputs(double peak, double min);
     }
 
-
     public interface MotorRamping {
+
         public SparkControlMode noMotorStartupRamping();
+
         public SparkControlMode withMotorRampUpOnStart(double secondsToFullPower);
     }
-    public static class Builder 
-                implements SparkControlMode, PositionControlSettings, PositionControlSettings.GainSettings,
-                PositionControlSettings.ProfileSettings, PositionControlSettings.Finish, SpeedControlSettings,
-                SafetySettings, SafetySettings.BrakeMode, DirectionSettings, MotorOutputLimits, MotorRamping, SpeedControlSettings.GainSettingsSpeed{
 
+    public static class Builder
+            implements SparkControlMode, PositionControlSettings, PositionControlSettings.GainSettings,
+            PositionControlSettings.ProfileSettings, PositionControlSettings.Finish, SpeedControlSettings,
+            SafetySettings, SafetySettings.BrakeMode, DirectionSettings, MotorOutputLimits, MotorRamping, SpeedControlSettings.GainSettingsSpeed {
 
         private SparkMaxSettings settings = new SparkMaxSettings();
 
-        private Builder(SparkMaxSettings settings){
+        private Builder(SparkMaxSettings settings) {
             this.settings = settings;
         }
 

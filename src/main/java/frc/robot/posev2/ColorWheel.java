@@ -2,19 +2,19 @@ package frc.robot.posev2;
 
 public class ColorWheel {
 
-    public ColorWheel(){
-        
+    public ColorWheel() {
+
     }
-    
-    public WheelColorValue getCurrentColor(){
+
+    public WheelColorValue getCurrentColor() {
         return null;
     }
-    
-    public WheelColorValue getNextColor(){
+
+    public WheelColorValue getNextColor() {
         return null;
     }
-    
-    public int getNumSectionsTillColor(WheelColorValue wc){
+
+    public int getNumSectionsTillColor(WheelColorValue wc) {
         return 0;
     }
 }

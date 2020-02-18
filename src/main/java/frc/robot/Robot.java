@@ -1,10 +1,9 @@
 /*----------------------------------------------------------------------------*/
-/* Copyright (c) 2017-2018 FIRST. All Rights Reserved.                        */
-/* Open Source Software - may be modified and shared by FRC teams. The code   */
-/* must be accompanied by the FIRST BSD license file in the root directory of */
-/* the project.                                                               */
-/*----------------------------------------------------------------------------*/
-
+ /* Copyright (c) 2017-2018 FIRST. All Rights Reserved.                        */
+ /* Open Source Software - may be modified and shared by FRC teams. The code   */
+ /* must be accompanied by the FIRST BSD license file in the root directory of */
+ /* the project.                                                               */
+ /*----------------------------------------------------------------------------*/
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -23,48 +22,42 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
  */
 public class Robot extends TimedRobot {
 
+    private DataLogger logger;
+    private SubsystemManager subsystemManager = new SubsystemManager();
+    OperatorInterface oi;
 
-     private DataLogger logger;
-     private SubsystemManager subsystemManager = new SubsystemManager();
-     OperatorInterface oi;
+    @Override
+    public void robotInit() {
+        this.logger = DataLoggerFactory.getLoggerFactory().createDataLogger("Robot Main Loop");
+        subsystemManager.initAll();
+        oi = new OperatorInterface(subsystemManager);
+    }
 
+    @Override
+    public void robotPeriodic() {
+    }
 
-     @Override
-     public void robotInit(){
-          this.logger = DataLoggerFactory.getLoggerFactory().createDataLogger("Robot Main Loop");
-          subsystemManager.initAll();
-          oi = new OperatorInterface(subsystemManager);
-     }
+    @Override
+    public void teleopInit() {
+        subsystemManager.getDriveSubsystem().setSpeedMode();
+    }
 
-     @Override
-     public void robotPeriodic() {
-     }
+    @Override
+    public void teleopPeriodic() {
+        subsystemManager.periodicAll();
+        CommandScheduler.getInstance().run();
+    }
 
-     @Override
-     public void teleopInit(){
-          subsystemManager.getDriveSubsystem().setSpeedMode();
-     }
+    @Override
+    public void autonomousInit() {
+        subsystemManager.getDriveSubsystem().setPositionMode();
+        new HoodHomingCommand(subsystemManager.getShooterSubsystem()).schedule();
+    }
 
+    @Override
+    public void autonomousPeriodic() {
+        subsystemManager.periodicAll();
+        CommandScheduler.getInstance().run();
+    }
 
-     @Override
-     public void teleopPeriodic(){
-          subsystemManager.periodicAll();
-          CommandScheduler.getInstance().run();
-     }
-
-
-
-     @Override
-     public void autonomousInit() {
-          subsystemManager.getDriveSubsystem().setPositionMode();
-          new HoodHomingCommand(subsystemManager.getShooterSubsystem()).schedule();
-     }
-     
-     @Override
-     public void autonomousPeriodic() {
-          subsystemManager.periodicAll();
-          CommandScheduler.getInstance().run();
-     }
-
-  
 }

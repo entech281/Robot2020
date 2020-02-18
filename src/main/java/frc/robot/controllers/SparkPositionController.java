@@ -1,30 +1,27 @@
 package frc.robot.controllers;
 
-
 import com.revrobotics.CANSparkMax;
-
-
 
 public class SparkPositionController extends BaseSparkController {
 
-	private double desiredPosition = 0.0;
+    private double desiredPosition = 0.0;
 
-	public double getDesiredPosition() {
-		return desiredPosition;
-	}
+    public double getDesiredPosition() {
+        return desiredPosition;
+    }
 
-	/**
-	 * When you call this, the talon will be put in the right mode for control
-	 * 
-	 * @param desiredPosition
-	 */
-	public void setDesiredPosition(double desiredPosition) {
-		this.desiredPosition = desiredPosition;
-		this.resetMode(desiredPosition);
+    /**
+     * When you call this, the talon will be put in the right mode for control
+     *
+     * @param desiredPosition
+     */
+    public void setDesiredPosition(double desiredPosition) {
+        this.desiredPosition = desiredPosition;
+        this.resetMode(desiredPosition);
 
-	}
+    }
 
-	public SparkPositionController(CANSparkMax spark, SparkMaxSettings settings) {
-		super(spark, settings);
-	}
+    public SparkPositionController(CANSparkMax spark, SparkMaxSettings settings) {
+        super(spark, settings);
+    }
 }

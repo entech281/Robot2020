@@ -1,10 +1,9 @@
 /*----------------------------------------------------------------------------*/
-/* Copyright (c) 2018 FIRST. All Rights Reserved.                             */
-/* Open Source Software - may be modified and shared by FRC teams. The code   */
-/* must be accompanied by the FIRST BSD license file in the root directory of */
-/* the project.                                                               */
-/*----------------------------------------------------------------------------*/
-
+ /* Copyright (c) 2018 FIRST. All Rights Reserved.                             */
+ /* Open Source Software - may be modified and shared by FRC teams. The code   */
+ /* must be accompanied by the FIRST BSD license file in the root directory of */
+ /* the project.                                                               */
+ /*----------------------------------------------------------------------------*/
 package frc.robot.subsystems;
 
 import com.kauailabs.navx.frc.AHRS;
@@ -35,7 +34,7 @@ public class NavXSubsystem extends BaseSubsystem {
         logger.log("NavX Initialize Start", false);
         timer.start();
         while (navX.isCalibrating()) {
-            if(timer.get() > TIMEOUT_CALIBRATION_SECONDS){
+            if (timer.get() > TIMEOUT_CALIBRATION_SECONDS) {
                 logger.log("NAVX Initialization FAILED", 0.0);
                 navXWorking = false;
                 break;

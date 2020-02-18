@@ -9,27 +9,27 @@ import frc.robot.pose.RobotPose;
 import frc.robot.utils.*;
 import frc.robot.logger.*;
 
+public class EncoderPoseGenerator implements PoseGenerator {
 
-public class EncoderPoseGenerator implements PoseGenerator{
     private DataLogger logger;
 
     public final double ENCODER_CLICKS_PER_INCH = RobotMap.DIMENSIONS.ENCODER_TICKS_PER_INCH;
-    
+
     SparkPositionControllerGroup sparkControllers;
     RobotPose pose = new RobotPose(0, 0, 90);
     double lastLeft;
     double lastRight;
 
     EncoderInchesConverter converter = new EncoderInchesConverter(ENCODER_CLICKS_PER_INCH);
-    
-    public EncoderPoseGenerator(SparkPositionControllerGroup group){
+
+    public EncoderPoseGenerator(SparkPositionControllerGroup group) {
         this.sparkControllers = group;
-        
+
         this.logger = DataLoggerFactory.getLoggerFactory().createDataLogger("Encoder Pose Genorator");
 
     }
 
-    public void updatePose(){
+    public void updatePose() {
         double currentLeft = sparkControllers.getLeftCurrentPosition(converter);
         double currentRight = sparkControllers.getRightCurrentPosition(converter);
         logger.log("currentLeft", currentLeft);
@@ -53,7 +53,5 @@ public class EncoderPoseGenerator implements PoseGenerator{
         this.pose.setForward(pose.getForward());
         this.pose.setTheta(pose.getTheta());
     }
-
-
 
 }

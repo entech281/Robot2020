@@ -8,7 +8,8 @@ public class TankDriveCommand extends EntechCommandBase {
 
     private DriveSubsystem drive;
     private Joystick driveStick;
-    public TankDriveCommand ( DriveSubsystem drive,Joystick driveStick){
+
+    public TankDriveCommand(DriveSubsystem drive, Joystick driveStick) {
         super(drive);
         this.driveStick = driveStick;
         this.drive = drive;
@@ -16,6 +17,6 @@ public class TankDriveCommand extends EntechCommandBase {
 
     @Override
     public void execute() {
-        drive.drive(new DriveInstruction( -driveStick.getY() , driveStick.getX()));
+        drive.drive(new DriveInstruction(-driveStick.getY(), driveStick.getX()));
     }
 }

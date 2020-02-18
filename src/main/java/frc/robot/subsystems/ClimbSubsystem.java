@@ -23,9 +23,9 @@ public class ClimbSubsystem extends BaseSubsystem {
     CANSparkMax winch = new CANSparkMax(RobotMap.CAN.INTAKE_MOTOR, MotorType.kBrushless);
     SparkSpeedController winchController;
 
-    private final Solenoid attachHookSolenoid = new Solenoid(RobotMap.CAN.PCM_ID, RobotMap.PNEUMATICS.attachSolenoid);
+    private final Solenoid attachHookSolenoid = new Solenoid(RobotMap.CAN.PCM_ID, RobotMap.PNEUMATICS.ATTACH_SOLENOID);
     private final Solenoid engageWinchSolenoid = new Solenoid(RobotMap.CAN.PCM_ID,
-            RobotMap.PNEUMATICS.engageWinchSolenoid);
+            RobotMap.PNEUMATICS.ENGAGE_WINCH);
 
     Timer coord = new Timer();
 

@@ -5,15 +5,15 @@ package frc.robot.posev2;
  * @author dcowden
  */
 public class VisionData {
-    private double lateralOffset  = 0.0;
+
+    private double lateralOffset = 0.0;
     private double verticalOffset = 0.0;
     private double targetWidth = 0.0;
 
-    public VisionData(double lateralOffset, double verticalOffset){
+    public VisionData(double lateralOffset, double verticalOffset) {
         this.lateralOffset = lateralOffset;
         this.verticalOffset = verticalOffset;
     }
-
 
     public double getLateralOffset() {
         return lateralOffset;
@@ -31,11 +31,11 @@ public class VisionData {
         this.verticalOffset = verticalOffset;
     }
 
-    public void setTargetWidth(double targetWidth){
+    public void setTargetWidth(double targetWidth) {
         this.targetWidth = targetWidth;
     }
 
-    public double getTargetWidth(){
+    public double getTargetWidth() {
         return targetWidth;
     }
 

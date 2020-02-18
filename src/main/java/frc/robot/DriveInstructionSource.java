@@ -5,7 +5,7 @@ package frc.robot;
  * OperatorInterface is the main implementation, but using this seam allows
  * testing commands without an OperatorInterface, which creates Joysticks and
  * stuff ( and thus cannot be used in unit tests )
- * 
+ *
  * @author dcowden
  *
  */

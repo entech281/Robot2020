@@ -14,6 +14,7 @@ import frc.robot.posev2.FieldPose;
 import frc.robot.posev2.RobotPose;
 
 public class ElevatorSubsystem extends BaseSubsystem {
+
     private double elevatorSpeed = 1;
 
     private final WPI_TalonSRX elevatorMotor = new WPI_TalonSRX(RobotMap.CAN.INTAKE_MOTOR);
@@ -44,8 +45,8 @@ public class ElevatorSubsystem extends BaseSubsystem {
         elevatorMotorController.setDesiredSpeed(this.elevatorSpeed);
     }
 
-    public Command start(){
-        return new SingleShotCommand(this){        
+    public Command start() {
+        return new SingleShotCommand(this) {
             @Override
             public void doCommand() {
                 setElevatorSpeed(0.7);
@@ -53,8 +54,8 @@ public class ElevatorSubsystem extends BaseSubsystem {
         }.withTimeout(EntechCommandBase.DEFAULT_TIMEOUT_SECONDS);
     }
 
-    public Command stop(){
-        return new SingleShotCommand(this){        
+    public Command stop() {
+        return new SingleShotCommand(this) {
             @Override
             public void doCommand() {
                 setElevatorSpeed(0);
@@ -62,4 +63,4 @@ public class ElevatorSubsystem extends BaseSubsystem {
         }.withTimeout(EntechCommandBase.DEFAULT_TIMEOUT_SECONDS);
     }
 
- } 
+}

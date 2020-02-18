@@ -3,7 +3,7 @@ package frc.robot;
 /**
  * An instruction to the drive system. When represented as a seprate class, it
  * can be tested more easily.
- * 
+ *
  * @author dcowden
  *
  */
@@ -23,7 +23,7 @@ public class DriveInstruction {
     private double lateral = 0.0;
     private double rotation = 0.0;
 
-    public DriveInstruction( double lateral, double rotation) {
+    public DriveInstruction(double lateral, double rotation) {
         this.lateral = lateral;
         this.rotation = rotation;
     }
