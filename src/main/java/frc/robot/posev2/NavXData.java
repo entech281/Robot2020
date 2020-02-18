@@ -1,10 +1,11 @@
 package frc.robot.posev2;
 
 public class NavXData {
+
     private double angle;
     private boolean status;
 
-    public NavXData(double angle, boolean status){
+    public NavXData(double angle, boolean status) {
         this.angle = angle;
         this.status = status;
     }
@@ -13,7 +14,7 @@ public class NavXData {
         return angle;
     }
 
-    public boolean getValidity(){
+    public boolean getValidity() {
         return status;
     }
 }

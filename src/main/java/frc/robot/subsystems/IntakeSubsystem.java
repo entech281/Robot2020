@@ -17,6 +17,7 @@ import frc.robot.posev2.FieldPose;
 import frc.robot.posev2.RobotPose;
 
 public class IntakeSubsystem extends BaseSubsystem {
+
     private double CURRENT_INTAKE_SPEED = 1;
 
     private double FULL_SPEED_FWD = 1;
@@ -25,6 +26,33 @@ public class IntakeSubsystem extends BaseSubsystem {
 
     private final WPI_TalonSRX intakeMotor = new WPI_TalonSRX(RobotMap.CAN.INTAKE_MOTOR);
     private TalonSpeedController intakeMotorController;
+
+    public Command start() {
+        return new SingleShotCommand(this) {
+            @Override
+            public void doCommand() {
+                setIntakeMotorSpeed(FULL_SPEED_FWD);
+            }
+        }.withTimeout(EntechCommandBase.DEFAULT_TIMEOUT_SECONDS);
+    }
+
+    public Command stop() {
+        return new SingleShotCommand(this) {
+            @Override
+            public void doCommand() {
+                setIntakeMotorSpeed(STOP_SPEED);
+            }
+        }.withTimeout(EntechCommandBase.DEFAULT_TIMEOUT_SECONDS);
+    }
+
+    public Command reverse() {
+        return new SingleShotCommand(this) {
+            @Override
+            public void doCommand() {
+                setIntakeMotorSpeed(FULL_SPEED_BWD);
+            }
+        }.withTimeout(EntechCommandBase.DEFAULT_TIMEOUT_SECONDS);
+    }
 
     @Override
     public void initialize() {
@@ -39,38 +67,7 @@ public class IntakeSubsystem extends BaseSubsystem {
     public void setIntakeMotorSpeed(double desiredSpeed) {
         logger.log("Intake Motor speed", desiredSpeed);
         this.CURRENT_INTAKE_SPEED = desiredSpeed;
-        updateIntakeMotor();
-    }
-
-    public void updateIntakeMotor() {
         intakeMotorController.setDesiredSpeed(this.CURRENT_INTAKE_SPEED);
     }
 
-    public Command start(){
-        return new SingleShotCommand(this){        
-            @Override
-            public void doCommand() {
-                setIntakeMotorSpeed(FULL_SPEED_FWD);
-            }
-        }.withTimeout(EntechCommandBase.DEFAULT_TIMEOUT_SECONDS);
-    }
-
-    public Command stop(){
-        return new SingleShotCommand(this){        
-            @Override
-            public void doCommand() {
-                setIntakeMotorSpeed(STOP_SPEED);
-            }
-        }.withTimeout(EntechCommandBase.DEFAULT_TIMEOUT_SECONDS);
-    }
-
-    public Command reverse(){
-        return new SingleShotCommand(this){        
-            @Override
-            public void doCommand() {
-                setIntakeMotorSpeed(FULL_SPEED_BWD);
-            }
-        }.withTimeout(EntechCommandBase.DEFAULT_TIMEOUT_SECONDS);
-    }
-
- } 
+}

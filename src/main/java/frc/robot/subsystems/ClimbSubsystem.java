@@ -23,27 +23,11 @@ public class ClimbSubsystem extends BaseSubsystem {
     CANSparkMax winch = new CANSparkMax(RobotMap.CAN.INTAKE_MOTOR, MotorType.kBrushless);
     SparkSpeedController winchController;
 
-    private final Solenoid attachHookSolenoid = new Solenoid(RobotMap.CAN.PCM_ID, RobotMap.PNEUMATICS.attachSolenoid);
+    private final Solenoid attachHookSolenoid = new Solenoid(RobotMap.CAN.PCM_ID, RobotMap.PNEUMATICS.ATTACH_SOLENOID);
     private final Solenoid engageWinchSolenoid = new Solenoid(RobotMap.CAN.PCM_ID,
-            RobotMap.PNEUMATICS.engageWinchSolenoid);
+            RobotMap.PNEUMATICS.ENGAGE_WINCH);
 
     Timer coord = new Timer();
-
-    @Override
-    public void initialize() {
-
-        SparkMaxSettings motorSettings = SparkMaxSettingsBuilder.defaults().withPrettySafeCurrentLimits()
-                .brakeInNeutral().withDirections(false, false).noMotorOutputLimits().noMotorStartupRamping()
-                .useSpeedControl().build();
-        winchController = new SparkSpeedController(winch, motorSettings);
-        winchController.configure();
-
-        // The solenoid that controls the hook needs to be disengaged where as the
-        // clutch needs to be engaged until we raise hook
-        attachHookSolenoid.set(false);
-        engageWinchSolenoid.set(true);
-
-    }
 
     public Command pullRobotUp() {
         return new SingleShotCommand(this) {
@@ -82,11 +66,6 @@ public class ClimbSubsystem extends BaseSubsystem {
         }.withTimeout(EntechCommandBase.DEFAULT_TIMEOUT_SECONDS);
     }
 
-    public void raiseHook() {
-        engageWinchSolenoid.set(false);
-        attachHookSolenoid.set(true);
-    }
-
     public Command dropHookRaisingMech() {
         return new SingleShotCommand(this) {
             @Override
@@ -94,6 +73,27 @@ public class ClimbSubsystem extends BaseSubsystem {
                 attachHookSolenoid.set(false);
             }
         }.withTimeout(EntechCommandBase.DEFAULT_TIMEOUT_SECONDS);
+    }
+
+    @Override
+    public void initialize() {
+
+        SparkMaxSettings motorSettings = SparkMaxSettingsBuilder.defaults().withPrettySafeCurrentLimits()
+                .brakeInNeutral().withDirections(false, false).noMotorOutputLimits().noMotorStartupRamping()
+                .useSpeedControl().build();
+        winchController = new SparkSpeedController(winch, motorSettings);
+        winchController.configure();
+
+        // The solenoid that controls the hook needs to be disengaged where as the
+        // clutch needs to be engaged until we raise hook
+        attachHookSolenoid.set(false);
+        engageWinchSolenoid.set(true);
+
+    }
+
+    public void raiseHook() {
+        engageWinchSolenoid.set(false);
+        attachHookSolenoid.set(true);
     }
 
     public void delay(double time) {

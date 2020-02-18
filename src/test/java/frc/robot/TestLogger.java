@@ -25,6 +25,7 @@ public class TestLogger {
 }
 
 class FakeDataLogger extends DataLogger {
+
     private int counter = 0;
 
     public FakeDataLogger(String name) {
