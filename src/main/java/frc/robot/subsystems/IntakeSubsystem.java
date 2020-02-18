@@ -26,26 +26,6 @@ public class IntakeSubsystem extends BaseSubsystem {
     private final WPI_TalonSRX intakeMotor = new WPI_TalonSRX(RobotMap.CAN.INTAKE_MOTOR);
     private TalonSpeedController intakeMotorController;
 
-    @Override
-    public void initialize() {
-        TalonSettings motorSettings = TalonSettingsBuilder.defaults().withCurrentLimits(20, 15, 200).brakeInNeutral()
-                .withDirections(false, false).noMotorOutputLimits().noMotorStartupRamping().useSpeedControl().build();
-
-        intakeMotorController = new TalonSpeedController(intakeMotor, motorSettings);
-        intakeMotorController.configure();
-        intakeMotor.set(ControlMode.PercentOutput, 0);
-    }
-
-    public void setIntakeMotorSpeed(double desiredSpeed) {
-        logger.log("Intake Motor speed", desiredSpeed);
-        this.CURRENT_INTAKE_SPEED = desiredSpeed;
-        updateIntakeMotor();
-    }
-
-    public void updateIntakeMotor() {
-        intakeMotorController.setDesiredSpeed(this.CURRENT_INTAKE_SPEED);
-    }
-
     public Command start(){
         return new SingleShotCommand(this){        
             @Override
@@ -71,6 +51,22 @@ public class IntakeSubsystem extends BaseSubsystem {
                 setIntakeMotorSpeed(FULL_SPEED_BWD);
             }
         }.withTimeout(EntechCommandBase.DEFAULT_TIMEOUT_SECONDS);
+    }
+
+    @Override
+    public void initialize() {
+        TalonSettings motorSettings = TalonSettingsBuilder.defaults().withCurrentLimits(20, 15, 200).brakeInNeutral()
+                .withDirections(false, false).noMotorOutputLimits().noMotorStartupRamping().useSpeedControl().build();
+
+        intakeMotorController = new TalonSpeedController(intakeMotor, motorSettings);
+        intakeMotorController.configure();
+        intakeMotor.set(ControlMode.PercentOutput, 0);
+    }
+
+    public void setIntakeMotorSpeed(double desiredSpeed) {
+        logger.log("Intake Motor speed", desiredSpeed);
+        this.CURRENT_INTAKE_SPEED = desiredSpeed;
+        intakeMotorController.setDesiredSpeed(this.CURRENT_INTAKE_SPEED);
     }
 
  } 

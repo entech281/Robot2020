@@ -1,6 +1,5 @@
 package frc.robot.controllers;
 
-import frc.robot.subsystems.Position;
 import frc.robot.utils.EncoderInchesConverter;
 
 public class SparkPositionControllerGroup {

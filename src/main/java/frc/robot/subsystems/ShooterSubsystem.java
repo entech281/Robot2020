@@ -41,42 +41,6 @@ public class ShooterSubsystem extends BaseSubsystem {
     private final double PID_I = 0;
     private final double PID_D = 0;
 
-    @Override
-    public void initialize() {
-
-        SparkMaxSettings shooterSettings = SparkMaxSettingsBuilder.defaults().withCurrentLimits(35).coastInNeutral()
-                .withDirections(false, true).noMotorOutputLimits().noMotorStartupRamping().useSpeedControl().build();
-        TalonSettings hoodSettings = TalonSettingsBuilder.defaults().withPrettySafeCurrentLimits().brakeInNeutral()
-                .withDirections(false, false).noMotorOutputLimits().noMotorStartupRamping().usePositionControl()
-                .withGains(PID_F, PID_P, PID_I, PID_D)
-                .withMotionProfile(HOOD_CRUISE_VELOCITY, HOOD_ACCELERATION, ALLOWABLE_ERROR).build();
-
-        // Basic outline for shooter
-        shooterSettings.configureSparkMax(shootMotor);
-
-        hoodMotorController = new TalonPositionController(hoodMotor, hoodSettings);
-        hoodMotorController.configure();
-        hoodMotor.configForwardLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen,
-                0);
-
-        hoodMotor.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen,
-                0);
-
-        hoodMotor.overrideLimitSwitchesEnable(true);
-        HOOD_POSITION = hoodMotorController.getActualPosition();
-    }
-
-    public void adjustShooterSpeed(double desiredSpeed) {
-        logger.log("Intake Motor speed", desiredSpeed);
-        this.SHOOT_SPEED = desiredSpeed;
-        shootMotor.set(this.SHOOT_SPEED);
-    }
-
-    public void adjustHoodPosition(double desiredPosition) {
-        this.HOOD_POSITION = desiredPosition;
-        hoodMotorController.setDesiredPosition(desiredPosition);
-    }
-
 
     public Command shootMaxSpeed(){
         return new SingleShotCommand(this){        
@@ -127,6 +91,41 @@ public class ShooterSubsystem extends BaseSubsystem {
         }.withTimeout(EntechCommandBase.DEFAULT_TIMEOUT_SECONDS);
     }
 
+    @Override
+    public void initialize() {
+
+        SparkMaxSettings shooterSettings = SparkMaxSettingsBuilder.defaults().withCurrentLimits(35).coastInNeutral()
+                .withDirections(false, true).noMotorOutputLimits().noMotorStartupRamping().useSpeedControl().build();
+        TalonSettings hoodSettings = TalonSettingsBuilder.defaults().withPrettySafeCurrentLimits().brakeInNeutral()
+                .withDirections(false, false).noMotorOutputLimits().noMotorStartupRamping().usePositionControl()
+                .withGains(PID_F, PID_P, PID_I, PID_D)
+                .withMotionProfile(HOOD_CRUISE_VELOCITY, HOOD_ACCELERATION, ALLOWABLE_ERROR).build();
+
+        // Basic outline for shooter
+        shooterSettings.configureSparkMax(shootMotor);
+
+        hoodMotorController = new TalonPositionController(hoodMotor, hoodSettings);
+        hoodMotorController.configure();
+        hoodMotor.configForwardLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen,
+                0);
+
+        hoodMotor.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen,
+                0);
+
+        hoodMotor.overrideLimitSwitchesEnable(true);
+        HOOD_POSITION = hoodMotorController.getActualPosition();
+    }
+
+    public void adjustShooterSpeed(double desiredSpeed) {
+        logger.log("Intake Motor speed", desiredSpeed);
+        this.SHOOT_SPEED = desiredSpeed;
+        shootMotor.set(this.SHOOT_SPEED);
+    }
+
+    public void adjustHoodPosition(double desiredPosition) {
+        this.HOOD_POSITION = desiredPosition;
+        hoodMotorController.setDesiredPosition(desiredPosition);
+    }
 
 
     public boolean isUpperLimitHit() {

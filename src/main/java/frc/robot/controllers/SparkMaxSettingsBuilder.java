@@ -183,7 +183,6 @@ public class SparkMaxSettingsBuilder {
 
         @Override
         public SparkMaxSettings build() {
-            // TODO Auto-generated method stub
             return settings;
         }
 

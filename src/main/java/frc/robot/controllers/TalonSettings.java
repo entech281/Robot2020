@@ -1,9 +1,5 @@
 package frc.robot.controllers;
 
-import java.io.Serializable;
-
-import org.apache.commons.lang3.SerializationUtils;
-
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
@@ -24,7 +20,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
  * @author dcowden
  *
  */
-public class TalonSettings implements Serializable {
+public class TalonSettings{
 
 	/**
 	 * This class doesnt use javabean conventions becasue its just a huge structure,
@@ -52,7 +48,19 @@ public class TalonSettings implements Serializable {
 	public double demand = DEFAULT_DEMAND;
 
 	public TalonSettings copy() {
-		return SerializationUtils.clone(this);
+		TalonSettings copySettings = new TalonSettings();
+
+		copySettings.gains = this.gains;
+		copySettings.currentLimits = this.currentLimits;
+		copySettings.outputLimits = this.outputLimits;
+		copySettings.rampUp = this.rampUp;
+		copySettings.framePeriods = this.framePeriods;
+		copySettings.motorDirections = this.motorDirections;
+		copySettings.brakeMode = this.brakeMode;
+		copySettings.feedbackDevice = this.feedbackDevice;
+		copySettings.controlMode = this.controlMode;
+		copySettings.demand = this.demand;
+		return copySettings;
 	}
 
 	/**
@@ -115,55 +123,48 @@ public class TalonSettings implements Serializable {
 		talon.set(this.controlMode, this.demand);
 	}
 
-	public static class Gains implements Serializable {
+	public static class Gains{
 		/**
 		 * 
 		 */
-		private static final long serialVersionUID = -1615614551300215877L;
 		public double f = 0.0;
 		public double p = 0.0;
 		public double i = 0.0;
 		public double d = 0.0;
 	}
 
-	public static class MotionProfile implements Serializable {
-		private static final long serialVersionUID = -9034830588710443069L;
+	public static class MotionProfile{
 		public int cruiseVelocityEncoderClicksPerSecond = 3200;
 		public int accelerationEncoderClicksPerSecond2 = 1;
 		public int allowableClosedLoopError = 20;
 	}
 
-	public static class CurrentLimits implements Serializable {
-		private static final long serialVersionUID = 9098684713948573571L;
+	public static class CurrentLimits{
 		public int instantaneousPeak = 35;
 		public int continuousPeak = 30;
 		public int continuousPeakMilliseconds = 200;
 
 	}
 
-	public static class MotorOutputLimits implements Serializable {
-		private static final long serialVersionUID = -288486995864831923L;
+	public static class MotorOutputLimits{
 		public double maxMotorOutputForward = 1.0;
 		public double maxMotorOutputBackward = 1.0;
 		public double minMotorOutputForward = -1.0;
 		public double minMotorOutputBackward = -1.0;
 	}
 
-	public static class MotorRampUp implements Serializable {
-		private static final long serialVersionUID = 7622395199499681872L;
+	public static class MotorRampUp{
 		public double rampUpSecondsOpenLoop = 0.0;
 		public double rampUpSecondsClosedLoop = 0.0;
 		public double neutralDeadband = 0.001;
 	}
 
-	public static class FramePeriods implements Serializable {
-		private static final long serialVersionUID = 2845750610037826988L;
+	public static class FramePeriods{
 		public int motionMagicMilliseconds = DEFAULT_FAST_FRAMERATE_MILLIS;
 		public int pidMilliseconds = DEFAULT_FAST_FRAMERATE_MILLIS;
 	}
 
-	public static class MotorDirections implements Serializable {
-		private static final long serialVersionUID = -331460067125013734L;
+	public static class MotorDirections{
 		public boolean sensorPhase = false;
 		public boolean inverted = false;
 	}

@@ -23,26 +23,6 @@ public class ElevatorSubsystem extends BaseSubsystem {
     private final int maxSustainedCurrent = 15;
     private final int maxCurrentTime = 200;
 
-    @Override
-    public void initialize() {
-        TalonSettings motorSettings = TalonSettingsBuilder.defaults()
-                .withCurrentLimits(maxCurrent, maxSustainedCurrent, maxCurrentTime).brakeInNeutral()
-                .withDirections(false, false).noMotorOutputLimits().noMotorStartupRamping().useSpeedControl().build();
-
-        elevatorMotorController = new TalonSpeedController(elevatorMotor, motorSettings);
-        elevatorMotorController.configure();
-        elevatorMotor.set(ControlMode.PercentOutput, 0);
-    }
-
-    public void setElevatorSpeed(double desiredSpeed) {
-        logger.log("Intake Motor speed", desiredSpeed);
-        this.elevatorSpeed = desiredSpeed;
-        update();
-    }
-
-    public void update() {
-        elevatorMotorController.setDesiredSpeed(this.elevatorSpeed);
-    }
 
     public Command start(){
         return new SingleShotCommand(this){        
@@ -61,5 +41,24 @@ public class ElevatorSubsystem extends BaseSubsystem {
             }
         }.withTimeout(EntechCommandBase.DEFAULT_TIMEOUT_SECONDS);
     }
+
+    @Override
+    public void initialize() {
+        TalonSettings motorSettings = TalonSettingsBuilder.defaults()
+                .withCurrentLimits(maxCurrent, maxSustainedCurrent, maxCurrentTime).brakeInNeutral()
+                .withDirections(false, false).noMotorOutputLimits().noMotorStartupRamping().useSpeedControl().build();
+
+        elevatorMotorController = new TalonSpeedController(elevatorMotor, motorSettings);
+        elevatorMotorController.configure();
+        elevatorMotor.set(ControlMode.PercentOutput, 0);
+    }
+
+    public void setElevatorSpeed(double desiredSpeed) {
+        logger.log("Intake Motor speed", desiredSpeed);
+        this.elevatorSpeed = desiredSpeed;
+        elevatorMotorController.setDesiredSpeed(this.elevatorSpeed);
+    }
+
+
 
  } 

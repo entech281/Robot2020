@@ -58,7 +58,23 @@ public class DriveSubsystem extends BaseSubsystem{
                                                     .noMotorOutputLimits()
                                                     .noMotorStartupRamping()
                                                     .useSpeedControl()
-                                                    .build();    
+                                                    .build(); 
+    
+    public Command reset(){
+        return new SingleShotCommand(this){
+        
+            @Override
+            public void doCommand() {
+                frontLeftPositionController.resetPosition();
+                frontRightPositionController.resetPosition();
+                rearLeftPositionController.resetPosition();
+                rearRightPositionController.resetPosition();
+                logger.log("Clicks per rotation", rearRightEncoder.getCountsPerRevolution());
+            }
+        }.withTimeout(EntechCommandBase.DEFAULT_TIMEOUT_SECONDS);
+
+    }                                                
+    
     @Override
     public void initialize() {
         frontLeftSpark = new CANSparkMax(RobotMap.CAN.FRONT_LEFT_MOTOR, MotorType.kBrushless);
@@ -111,21 +127,6 @@ public class DriveSubsystem extends BaseSubsystem{
         logger.log("Rear Left Encoder Ticks", rearLeftEncoder.getPosition());
         logger.log("Rear Right Encoder Ticks", rearRightEncoder.getPosition());
         
-    }
-
-    public Command reset(){
-        return new SingleShotCommand(this){
-        
-            @Override
-            public void doCommand() {
-                frontLeftPositionController.resetPosition();
-                frontRightPositionController.resetPosition();
-                rearLeftPositionController.resetPosition();
-                rearRightPositionController.resetPosition();
-                logger.log("Clicks per rotation", rearRightEncoder.getCountsPerRevolution());
-            }
-        }.withTimeout(EntechCommandBase.DEFAULT_TIMEOUT_SECONDS);
-
     }
 
     public void drive(DriveInstruction di) {

@@ -22,14 +22,11 @@ public abstract class BaseSubsystem extends SubsystemBase {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
   protected DataLogger logger;
-  // Creates a list of all the subsystems extending BaseSubsystem
-  private static List <BaseSubsystem> initialize_these_list = new ArrayList <BaseSubsystem>();
 
 
   public BaseSubsystem() {
     DataLoggerFactory.configureForMatch();
     this.logger = DataLoggerFactory.getLoggerFactory().createDataLogger(this.getName());
-    initialize_these_list.add(this);
   }
 
 

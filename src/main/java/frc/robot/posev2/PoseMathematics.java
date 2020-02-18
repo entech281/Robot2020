@@ -36,7 +36,7 @@ public class PoseMathematics{
                 deltaTheta = theta;
             }
         }
-        return new RobotPose(deltaY, deltaX, deltaTheta * RADIANS_TO_DEGREES);
+        return new RobotPose(new RobotPosition(deltaY, deltaX, deltaTheta * RADIANS_TO_DEGREES));
     }
 
     // This is not commutative (I.E addposes(pose1, pose2) != addposes(pose2,
@@ -53,7 +53,7 @@ public class PoseMathematics{
         
 
     
-        return new RobotPose(forward, horizontal, theta);
+        return new RobotPose(new RobotPosition(forward, horizontal, theta));
     }
     
 }

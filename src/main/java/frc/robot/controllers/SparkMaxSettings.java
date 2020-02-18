@@ -1,6 +1,5 @@
 package frc.robot.controllers;
 
-import java.io.Serializable;
 
 import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
@@ -48,6 +47,7 @@ public class SparkMaxSettings  {
     }
 
     public void configureSparkMax(CANSparkMax spark) {
+        spark.restoreFactoryDefaults();
         //Current Limits
         pidController = new CANPIDController(spark);
 
