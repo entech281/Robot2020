@@ -10,7 +10,7 @@ public class TestRobotPose {
 
     @Test
     public void testThatThisRuns() {
-        RobotPose rp = new RobotPose(5, 7, 9);
+        RobotPosition rp = new RobotPosition(5, 7, 9);
         assertEquals(5, rp.getHorizontal(), 0.03);
         assertEquals(7, rp.getForward(), 0.03);
         assertEquals(9, rp.getTheta(), 0.03);
