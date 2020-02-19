@@ -1,7 +1,7 @@
 package frc.robot.utils;
 
-import frc.robot.posev2.TargetLocation;
-import frc.robot.posev2.VisionData;
+import frc.robot.pose.TargetLocation;
+import frc.robot.pose.VisionData;
 
 public class VisionDataProcessor {
 

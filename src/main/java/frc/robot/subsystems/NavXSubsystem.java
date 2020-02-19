@@ -10,9 +10,9 @@ import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.Timer;
-import frc.robot.posev2.FieldPose;
-import frc.robot.posev2.NavXData;
-import frc.robot.posev2.RobotPose;
+import frc.robot.pose.FieldPose;
+import frc.robot.pose.NavXData;
+import frc.robot.pose.RobotPose;
 
 /**
  *

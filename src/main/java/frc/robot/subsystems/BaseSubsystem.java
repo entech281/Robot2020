@@ -11,8 +11,8 @@ import java.util.List;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.logger.DataLogger;
 import frc.robot.logger.DataLoggerFactory;
-import frc.robot.posev2.FieldPose;
-import frc.robot.posev2.RobotPose;
+import frc.robot.pose.FieldPose;
+import frc.robot.pose.RobotPose;
 
 /**
  * Add your docs here.

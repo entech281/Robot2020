@@ -12,9 +12,9 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.commands.EntechCommandBase;
 import frc.robot.commands.SingleShotCommand;
 import frc.robot.controllers.*;
-import frc.robot.posev2.FieldPose;
-import frc.robot.posev2.RobotPose;
-import frc.robot.posev2.ShooterConfiguration;
+import frc.robot.pose.FieldPose;
+import frc.robot.pose.RobotPose;
+import frc.robot.pose.ShooterConfiguration;
 
 public class ShooterSubsystem extends BaseSubsystem {
 

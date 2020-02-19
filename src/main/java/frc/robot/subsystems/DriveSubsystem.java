@@ -1,24 +1,31 @@
 package frc.robot.subsystems;
 
+import frc.robot.controllers.PositionDriveController;
 import frc.robot.controllers.SparkMaxSettings;
 import frc.robot.controllers.SparkMaxSettingsBuilder;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import frc.robot.DriveInstruction;
 import frc.robot.DriveInstructionSource;
-import frc.robot.RobotMap;
+import frc.robot.RobotConstants;
 import frc.robot.controllers.SparkPositionController;
 import frc.robot.controllers.SparkPositionControllerGroup;
+import frc.robot.path.PositionBuffer;
+
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANPIDController.AccelStrategy;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.commands.EntechCommandBase;
 import frc.robot.commands.SingleShotCommand;
-import frc.robot.posev2.*;
+import frc.robot.pose.*;
+import frc.robot.utils.EncoderInchesConverter;
 
 public class DriveSubsystem extends BaseSubsystem {
+
+    private boolean inAuto;
 
     private CANSparkMax frontLeftSpark;
     private CANSparkMax frontRightSpark;
@@ -38,6 +45,11 @@ public class DriveSubsystem extends BaseSubsystem {
     private SpeedControllerGroup leftSpeedController;
     private SpeedControllerGroup rightSpeedController;
     private DifferentialDrive robotDrive;
+    
+    private PositionDriveController autoController;
+    private SparkPositionControllerGroup posController;
+
+    private PositionBuffer positionBuffer = new PositionBuffer();
 
     private SparkMaxSettings speedSettings = SparkMaxSettingsBuilder.defaults()
             .withCurrentLimits(35)
@@ -55,6 +67,22 @@ public class DriveSubsystem extends BaseSubsystem {
             .noMotorOutputLimits()
             .noMotorStartupRamping()
             .useSpeedControl()
+            .build();
+    private SparkMaxSettings smartMotionSettings = SparkMaxSettingsBuilder.defaults()
+            .withCurrentLimits(35)
+            .brakeInNeutral()
+            .withDirections(false, false)
+            .limitMotorOutputs(1.0, -1.0)
+            .noMotorStartupRamping()
+            .useSmartMotionControl()
+            .withPositionGains(RobotConstants.PID.DRIVE.F, 
+                RobotConstants.PID.DRIVE.P, 
+                RobotConstants.PID.DRIVE.I, 
+                RobotConstants.PID.DRIVE.D)
+            .useAccelerationStrategy(AccelStrategy.kTrapezoidal)
+            .withMaxVelocity(RobotConstants.AUTONOMOUS.MAX_VELOCITY)
+            .withMaxAcceleration(RobotConstants.AUTONOMOUS.MAX_ACCELLERATION)
+            .withClosedLoopError(RobotConstants.AUTONOMOUS.ACCEPTABLE_ERROR)
             .build();
 
     public Command reset() {
@@ -74,12 +102,12 @@ public class DriveSubsystem extends BaseSubsystem {
 
     @Override
     public void initialize() {
-        frontLeftSpark = new CANSparkMax(RobotMap.CAN.FRONT_LEFT_MOTOR, MotorType.kBrushless);
-        rearLeftSpark = new CANSparkMax(RobotMap.CAN.REAR_LEFT_MOTOR, MotorType.kBrushless);
+        frontLeftSpark = new CANSparkMax(RobotConstants.CAN.FRONT_LEFT_MOTOR, MotorType.kBrushless);
+        rearLeftSpark = new CANSparkMax(RobotConstants.CAN.REAR_LEFT_MOTOR, MotorType.kBrushless);
         leftSpeedController = new SpeedControllerGroup(frontLeftSpark, rearLeftSpark);
 
-        frontRightSpark = new CANSparkMax(RobotMap.CAN.FRONT_RIGHT_MOTOR, MotorType.kBrushless);
-        rearRightSpark = new CANSparkMax(RobotMap.CAN.REAR_RIGHT_MOTOR, MotorType.kBrushless);
+        frontRightSpark = new CANSparkMax(RobotConstants.CAN.FRONT_RIGHT_MOTOR, MotorType.kBrushless);
+        rearRightSpark = new CANSparkMax(RobotConstants.CAN.REAR_RIGHT_MOTOR, MotorType.kBrushless);
         rightSpeedController = new SpeedControllerGroup(frontRightSpark, rearRightSpark);
 
         frontLeftEncoder = frontLeftSpark.getEncoder();
@@ -89,11 +117,16 @@ public class DriveSubsystem extends BaseSubsystem {
 
         robotDrive = new DifferentialDrive(leftSpeedController, rightSpeedController);
 
-        frontLeftPositionController = new SparkPositionController(frontLeftSpark, positionSettings);
-        frontRightPositionController = new SparkPositionController(frontRightSpark, positionSettings);
-        rearLeftPositionController = new SparkPositionController(rearLeftSpark, positionSettings);
-        rearRightPositionController = new SparkPositionController(rearRightSpark, positionSettings);
-
+        frontLeftPositionController = new SparkPositionController(frontLeftSpark, smartMotionSettings);
+        frontRightPositionController = new SparkPositionController(frontRightSpark, smartMotionSettings);
+        rearLeftPositionController = new SparkPositionController(rearLeftSpark, smartMotionSettings);
+        rearRightPositionController = new SparkPositionController(rearRightSpark, smartMotionSettings);
+        
+        posController = new SparkPositionControllerGroup(frontLeftPositionController, frontRightPositionController,
+                rearLeftPositionController, rearRightPositionController);
+        autoController = new PositionDriveController(frontLeftSpark, frontRightSpark, 
+                rearLeftSpark, rearRightSpark, smartMotionSettings, positionBuffer,
+                new EncoderInchesConverter(1/ RobotConstants.DIMENSIONS.MOTOR_REVOLUTIONS_PER_INCH));
         reset();
     }
 
@@ -120,15 +153,34 @@ public class DriveSubsystem extends BaseSubsystem {
 
     @Override
     public void customPeriodic(RobotPose rp, FieldPose fp) {
-
+        if (inAuto) {
+            autoController.periodic();
+        }
         logger.log("Front Left Encoder Ticks", frontLeftEncoder.getPosition());
         logger.log("Front Right Encoder Ticks", frontRightEncoder.getPosition());
         logger.log("Rear Left Encoder Ticks", rearLeftEncoder.getPosition());
         logger.log("Rear Right Encoder Ticks", rearRightEncoder.getPosition());
-
+        if (getCurrentCommand() != null) {
+            logger.log("current command", getCurrentCommand().getName());
+        }
     }
 
     public void drive(DriveInstruction di) {
         robotDrive.arcadeDrive(di.getFoward(), di.getRotation());
+    }
+
+    public void startAutonomous() {
+        inAuto = true;
+        robotDrive.setSafetyEnabled(false);
+        autoController.activate();
+    }
+
+    public void endAutonomous() {
+        inAuto = false;
+        robotDrive.setSafetyEnabled(true);
+    }
+
+    public PositionBuffer getPositionBuffer() {
+        return positionBuffer;
     }
 }

@@ -1,16 +1,16 @@
-package frc.robot.posev2;
+package frc.robot.pose;
 
-import frc.robot.RobotMap;
+import frc.robot.RobotConstants;
 
 public class RobotPoseManager {
 
     private EncoderValues encoders;
     private EncoderValues lastEncoderValues = new EncoderValues(0, 0, 0, 0);
     private NavXData navXData;
-    private VisionData vData = RobotMap.DIMENSIONS.DEFAULT_VISION_DATA;
+    private VisionData vData = RobotConstants.DIMENSIONS.DEFAULT_VISION_DATA;
     private WheelColorValue wColor;
 
-    private RobotPose pose = RobotMap.DIMENSIONS.START_POSE;
+    private RobotPose pose = RobotConstants.DIMENSIONS.START_POSE;
     private boolean navXWorking = true;
 
     public RobotPose getCurrentPose() {
