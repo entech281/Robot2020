@@ -3,11 +3,12 @@ package frc.robot.path;
 import java.util.ArrayList;
 import java.util.List;
 
+import frc.robot.RobotMap;
 import frc.robot.commands.FollowPositionPathCommand;
 
 public class PositionCalculator {
 
-    public static final double DISTANCE_BETWEEN_WHEELS = 24*1.08;
+    public static final double DISTANCE_BETWEEN_WHEELS = RobotMap.DIMENSIONS.ROBOT_WIDTH;
 
     private static double computeTurn(double degrees) {
         return (((DISTANCE_BETWEEN_WHEELS * Math.PI) / 360) * degrees);

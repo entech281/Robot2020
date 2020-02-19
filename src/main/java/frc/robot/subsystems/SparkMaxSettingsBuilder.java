@@ -2,7 +2,6 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANPIDController;
 import com.revrobotics.ControlType;
-import com.revrobotics.SparkMax;
 import com.revrobotics.CANPIDController.AccelStrategy;
 import com.revrobotics.CANSparkMax.IdleMode;
 
@@ -229,7 +228,6 @@ public class SparkMaxSettingsBuilder {
 
         @Override
         public Finish withClosedLoopError(int error) {
-            // TODO Auto-generated method stub
             settings.profile.allowableClosedLoopError = error;
             return this;
         }

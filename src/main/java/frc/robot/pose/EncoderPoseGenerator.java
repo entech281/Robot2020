@@ -25,7 +25,7 @@ public class EncoderPoseGenerator implements PoseGenerator{
     public EncoderPoseGenerator(SparkPositionControllerGroup group){
         this.sparkControllers = group;
         
-        this.logger = DataLoggerFactory.getLoggerFactory().createDataLogger("Encoder Pose Genorator");
+        this.logger = DataLoggerFactory.getLoggerFactory().createDataLogger("Encoder Pose Generator");
 
     }
 

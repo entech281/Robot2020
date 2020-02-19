@@ -20,8 +20,6 @@ import edu.wpi.first.wpilibj.SpeedControllerGroup;
 
 public class DriveSubsystem extends BaseSubsystem {
 
-    private static final int ENCODER_TOLERANCE = 50;
-
     DriveInstructionSource source;
     private boolean inAuto;
 
@@ -67,9 +65,14 @@ public class DriveSubsystem extends BaseSubsystem {
 
         robotDrive = new DifferentialDrive(leftSpeedControllerGroup, rightSpeedController);
 
-        SparkMaxSettings frontLeftSpeedSettings = SparkMaxSettingsBuilder.defaults().withCurrentLimits(35)
-                .coastInNeutral().withDirections(false, false).limitMotorOutputs(1.0, -1.0).noMotorStartupRamping()
-                .useSpeedControl().build();
+        SparkMaxSettings frontLeftSpeedSettings = SparkMaxSettingsBuilder.defaults()
+        .withCurrentLimits(35)
+                .coastInNeutral()
+                .withDirections(false, false)
+                .limitMotorOutputs(1.0, -1.0)
+                .noMotorStartupRamping()
+                .useSpeedControl()
+                .build();
 
         SparkMaxSettings speedSettings = SparkMaxSettingsBuilder.defaults()
                 .withCurrentLimits(35)
@@ -85,7 +88,7 @@ public class DriveSubsystem extends BaseSubsystem {
 
         SparkMaxSettings smartMotionSettings = SparkMaxSettingsBuilder.defaults()
                 .withCurrentLimits(35)
-                .coastInNeutral()
+                .brakeInNeutral()
                 .withDirections(false, false)
                 .limitMotorOutputs(1.0, -1.0)
                 .noMotorStartupRamping()
@@ -116,7 +119,7 @@ public class DriveSubsystem extends BaseSubsystem {
                 smartMotionSettings);
         positionBuffer = new PositionBuffer();
         autoController = new PositionDriveController(positionModeSparks, positionBuffer,
-                new EncoderInchesConverter(RobotMap.DIMENSIONS.MOTOR_REVOLUTIONS_PER_INCH));
+                new EncoderInchesConverter(1/RobotMap.DIMENSIONS.MOTOR_REVOLUTIONS_PER_INCH));
 
         poseGen = new EncoderPoseGenerator(posController);
         frontLeftEncoder = frontLeftMotor.getEncoder();

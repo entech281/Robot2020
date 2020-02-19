@@ -43,7 +43,7 @@ public class SparkPositionControllerGroup {
         rearRight.resetPosition();
     }
 
-    public void setDesiredPosition(int leftPose, int rightPose, boolean isRelative){
+    public void setDesiredPosition(double leftPose, double rightPose, boolean isRelative){
         if(isRelative){
             resetPosition();
         }

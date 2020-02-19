@@ -22,8 +22,8 @@ public class EncoderInchesConverter {
 		return (double) (encoderCounts) / encoderCountsPerInch;
 	}
 
-	public int toCounts(double inches) {
-		return (int) (encoderCountsPerInch * inches);
+	public double toCounts(double inches) {
+		return (encoderCountsPerInch * inches);
 	}
 
 }

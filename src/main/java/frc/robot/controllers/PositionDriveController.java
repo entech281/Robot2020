@@ -20,7 +20,7 @@ import frc.robot.subsystems.drive.FourSparkMaxWithSettings;
 public class PositionDriveController{
 
     // TODO: this should be computed from the spark settings
-    public static final double TOLERANCE_INCHES = RobotMap.AUTONOMOUS.ACCEPTABLE_ERROR/RobotMap.DIMENSIONS.MOTOR_REVOLUTIONS_PER_INCH;
+    public static final double TOLERANCE_INCHES = 3;
 
     private FourSparkMaxWithSettings sparks;
 	private SparkPositionControllerGroup positionControllerGroup;
@@ -35,7 +35,6 @@ public class PositionDriveController{
 		this.sparks = sparks;
 		this.encoderConverter = encoderConverter;
         this.positionSource = positionSource;
-        dataLogger.log("sparks", sparks);
 	}
 
 
@@ -93,9 +92,11 @@ public class PositionDriveController{
 			if ( positionSource.hasNextPosition()) {
 				Position p = positionSource.getCurrentPosition();
 				setCurrentCommand(p);
-				int encoderLeft = encoderConverter.toCounts(p.getLeftInches());
-                int encoderRight = encoderConverter.toCounts(p.getRightInches());
-                dataLogger.log("Position Controller Group", positionControllerGroup);
+				dataLogger.log("wanted inches", p.getLeftInches());
+				double encoderLeft = encoderConverter.toCounts(p.getLeftInches());
+				double encoderRight = encoderConverter.toCounts(p.getRightInches());
+				
+				dataLogger.log("encoderLeft", encoderLeft);
 				positionControllerGroup.setDesiredPosition(encoderLeft, encoderRight, p.isRelative());
 			}
 			else {

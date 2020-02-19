@@ -13,13 +13,11 @@ import frc.robot.commands.StartIntakeCommand;
 import frc.robot.commands.StopIntakeCommand;
 
 public class OperatorInterface implements DriveInstructionSource{
-    private Robot robot;
     private Joystick driveStick;
     private JoystickButtonManager manager;
     private DataLogger logger;
 
     public OperatorInterface(final Robot robot){
-        this.robot = robot;
         logger = DataLoggerFactory.getLoggerFactory().createDataLogger("OperatorInterface");
         this.driveStick = new Joystick(RobotMap.GAMEPAD.driverStick);
         this.manager = new JoystickButtonManager(driveStick);
