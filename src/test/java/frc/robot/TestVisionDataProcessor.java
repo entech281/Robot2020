@@ -5,9 +5,12 @@
  */
 package frc.robot;
 
+import frc.robot.posev2.VisionData;
+import frc.robot.utils.ByteConverter;
 import frc.robot.utils.VisionDataProcessor;
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 
 /**
@@ -16,31 +19,52 @@ import static org.junit.Assert.assertEquals;
  */
 public class TestVisionDataProcessor {
     String buffer;
-    VisionDataProcessor processor;
+    VisionDataProcessor processor = new VisionDataProcessor();
+    VisionData output;
+    double TOLERANCE = 0.001;
     
     @Test
-    public void testProcessor(){
-        String value = "False 63 45 34 56\n";
-        buffer = "False 63 45 34 56\n";
-        for(int i=0; i< 10000; i++){
-            buffer += buffer;
-            buffer = processor.removeFirstInput(buffer);
-            assertEquals(value, buffer);
+    public void testReaderFallingBehindMultipleInputs(){
+        String[] inputs = {"false 6", "3 45 56 45.3\n", "true 45 3", "6 31 43.5\n"};
+        for(String e: inputs){
+            processor.addInput(e);
         }
+        int lateralOffset = Math.abs(RobotMap.ROBOT_DEFAULTS.VISION.FRAME_WIDTH / 2 - 45);
+        output = processor.getCurrentVisionData();
+        assertTrue(output.targetFound());
+        assertEquals(output.getLateralOffset(), lateralOffset, TOLERANCE);
+        assertEquals(output.getVerticalOffset(), 36, TOLERANCE);
+        assertEquals(output.getTargetWidth(), 31, TOLERANCE);
     }
     
-    @Test
-    public void weirdEntryTestProcessor(){
-        String value = "False 63 45 34 56\n";
-        buffer = "False 6";
-        for(int i=0; i< 10000; i++){
-            buffer = processor.removeFirstInput(buffer);
-            if(i == 0){
-                buffer += "3 45 34 56\n";
-            } else{
-                buffer += value;
-                assertEquals(value, buffer);
-            }
+//    @Test
+    public void TestFallingBehindAndGettingAhead(){
+        Runtime runtime = Runtime.getRuntime();
+        
+        long startMemory = Runtime.getRuntime().totalMemory();
+        String[] inputs = {"false 6", "3 45 56 45.3\n", "true 45 3", "6 31 43.5\n"};
+        for(String e: inputs){
+            processor.addInput(e);
         }
+        int lateralOffset = Math.abs(RobotMap.ROBOT_DEFAULTS.VISION.FRAME_WIDTH / 2 - 45);
+        output = processor.getCurrentVisionData();
+        
+        processor.addInput("true 42");
+        output = processor.getCurrentVisionData();
+        assertTrue(output.targetFound());
+        assertEquals(output.getLateralOffset(), lateralOffset, TOLERANCE);
+        assertEquals(output.getVerticalOffset(), 36, TOLERANCE);
+        assertEquals(output.getTargetWidth(), 31, TOLERANCE);
+
+        processor.addInput(" 43 23 45.6\n");
+        lateralOffset = Math.abs(RobotMap.ROBOT_DEFAULTS.VISION.FRAME_WIDTH / 2 - 42);
+
+        output = processor.getCurrentVisionData();
+        assertTrue(output.targetFound());
+        assertEquals(output.getLateralOffset(), lateralOffset, TOLERANCE);
+        assertEquals(output.getVerticalOffset(), 43, TOLERANCE);
+        assertEquals(output.getTargetWidth(), 23, TOLERANCE);
+        long memory = runtime.totalMemory() - runtime.freeMemory();
+                
     }
 }

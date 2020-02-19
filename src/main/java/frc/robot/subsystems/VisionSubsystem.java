@@ -21,50 +21,25 @@ public class VisionSubsystem extends BaseSubsystem{
     private static final int BAUD_RATE = 115200;
     
     private SerialPort visionPort;
-    private Scanner scanner;
 
-    String retVal = "";
-    String buffer = "";
 
     private VisionData visionData;
-    private VisionDataProcessor formatter;
+    private VisionDataProcessor processor;
     
-    String[] outputData;
 
     @Override
     public void initialize() {
         visionPort = new SerialPort(BAUD_RATE, SerialPort.Port.kUSB);        
-        formatter = new VisionDataProcessor();
+        processor = new VisionDataProcessor();
     }
 
     @Override 
     public void customPeriodic(RobotPose rPose, FieldPose fPose){
-        logger.log("ASHDA", "asdas\n asda");
-        buffer += visionPort.readString();
-        scanner = new Scanner(new StringReader(buffer));
-        retVal = scanner.next();
-        buffer = formatter.removeFirstInput(buffer);
-        logger.log("OpemMV data", retVal);
+        processor.addInput(visionPort.readString());
+        visionData = processor.getCurrentVisionData();
     }
 
-    public void calculateVisionData(String readings){
-        outputData = readings.split(" ");
-        boolean visionTargetFound = Boolean.parseBoolean(outputData[0]);
 
-        double lateralOffset = -1;
-        double verticalOffset = -1;
-        double blobWidth = -1;
-
-        double frameRate = 0.0;
-
-        if(visionTargetFound){
-            lateralOffset = Math.abs(RobotMap.ROBOT_DEFAULTS.VISION.FRAME_WIDTH/2 - Integer.parseInt(outputData[1]));
-            verticalOffset = Double.parseDouble(outputData[2]);
-            blobWidth = Double.parseDouble(outputData[3]);
-            frameRate = Double.parseDouble(outputData[4]);
-        }
-        visionData = new VisionData(visionTargetFound, lateralOffset, verticalOffset, blobWidth);
-    }
 
     public VisionData getVisionData(){
         return visionData;
