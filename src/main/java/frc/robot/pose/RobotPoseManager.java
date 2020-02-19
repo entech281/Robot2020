@@ -19,7 +19,7 @@ public class RobotPoseManager {
 
     public void update() {
         //do all the maths to get a new pose
-        pose = new RobotPose(PoseMathematics.addPoses(pose, PoseMathematics.calculateRobotPositionChange(encoderDeltaLeft(), getEncodersRight())).getRobotPosition(), vData);
+        pose = new RobotPose(PoseMathematics.addPoses(pose.getRobotPosition(), PoseMathematics.calculateRobotPositionChange(encoderDeltaLeft(), getEncodersRight())), vData);
         if (navXWorking) {
             RobotPosition withNavXPosition = new RobotPosition(pose.getRobotPosition().getForward(), pose.getRobotPosition().getHorizontal(), navXData.getAngle());
             pose = new RobotPose(withNavXPosition, vData);
