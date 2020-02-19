@@ -62,6 +62,7 @@ public class SparkMaxSettings {
         pidController.setI(gains.i);
         pidController.setP(gains.p);
         pidController.setD(gains.d);
+        pidController.setIZone(0);
         pidController.setSmartMotionAccelStrategy(profile.trapezoStrategy, PID_SLOT);
         pidController.setSmartMotionAllowedClosedLoopError(profile.allowableClosedLoopError, PID_SLOT);
 

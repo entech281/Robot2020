@@ -6,6 +6,7 @@ import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.ControlType;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.commands.EntechCommandBase;
@@ -41,8 +42,8 @@ public class ShooterSubsystem extends BaseSubsystem {
     private final double HOOD_PID_I = 0;
     private final double HOOD_PID_D = 0;
 
-    private final double SHOOTER_PID_F = 50;
-    private final double SHOOTER_PID_P = 0;
+    private final double SHOOTER_PID_F = 0;
+    private final double SHOOTER_PID_P = 1e-4;
     private final double SHOOTER_PID_I = 0;
     private final double SHOOTER_PID_D = 0;
 
@@ -130,6 +131,7 @@ public class ShooterSubsystem extends BaseSubsystem {
 
         // Basic outline for shooter
         shooterMotorController = new SparkSpeedController(shootMotor, shooterSettings);
+        shooterMotorController.configure();
 
         hoodMotorController = new TalonPositionController(hoodMotor, hoodSettings);
         hoodMotorController.configure();
@@ -148,11 +150,13 @@ public class ShooterSubsystem extends BaseSubsystem {
         logger.log("Shooter subsystem command", this.getCurrentCommand());
         logger.log("Shooter Motor speed", this.SHOOT_SPEED);
         logger.log("Current Shooter Speed", shootMotor.getEncoder().getVelocity());
+        logger.log("Applied Voltage", shootMotor.getAppliedOutput());
+        logger.log("P", shootMotor.getPIDController().getP());
     }
 
     public void adjustShooterSpeed(double desiredSpeed) {
         this.SHOOT_SPEED = desiredSpeed;
-        shooterMotorController.setDesiredSpeed(this.SHOOT_SPEED);
+        shootMotor.getPIDController().setReference(this.SHOOT_SPEED, ControlType.kVelocity);
     }
     
     public void increaseRPM(){
