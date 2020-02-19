@@ -37,11 +37,9 @@ public class TestVisionDataProcessor {
         assertEquals(output.getTargetWidth(), 31, TOLERANCE);
     }
     
-//    @Test
+    @Test
     public void TestFallingBehindAndGettingAhead(){
-        Runtime runtime = Runtime.getRuntime();
-        
-        long startMemory = Runtime.getRuntime().totalMemory();
+        long startMemory = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
         String[] inputs = {"false 6", "3 45 56 45.3\n", "true 45 3", "6 31 43.5\n"};
         for(String e: inputs){
             processor.addInput(e);
@@ -64,7 +62,7 @@ public class TestVisionDataProcessor {
         assertEquals(output.getLateralOffset(), lateralOffset, TOLERANCE);
         assertEquals(output.getVerticalOffset(), 43, TOLERANCE);
         assertEquals(output.getTargetWidth(), 23, TOLERANCE);
-        long memory = runtime.totalMemory() - runtime.freeMemory();
-                
+        long endMemory = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
+        System.out.println(ByteConverter.convertBytesToMB(endMemory - startMemory));
     }
 }
