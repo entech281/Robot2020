@@ -1,7 +1,5 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
@@ -13,9 +11,6 @@ import frc.robot.commands.SingleShotCommand;
 import frc.robot.controllers.SparkMaxSettings;
 import frc.robot.controllers.SparkMaxSettingsBuilder;
 import frc.robot.controllers.SparkSpeedController;
-import frc.robot.controllers.TalonSpeedController;
-import frc.robot.pose.FieldPose;
-import frc.robot.pose.RobotPose;
 import edu.wpi.first.wpilibj2.command.Command;
 
 public class ClimbSubsystem extends BaseSubsystem {
@@ -97,7 +92,7 @@ public class ClimbSubsystem extends BaseSubsystem {
     }
 
     public void delay(double time) {
-        coord.delay(time);
+        Timer.delay(time);
     }
 
     public void engageClutchWithWinch() {

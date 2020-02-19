@@ -1,10 +1,6 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.Joystick;
-import frc.robot.Robot;
-import frc.robot.RobotConstants;
-import frc.robot.logger.DataLogger;
-import frc.robot.logger.DataLoggerFactory;
 import frc.robot.path.AutoPathFactory;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.SubsystemManager;

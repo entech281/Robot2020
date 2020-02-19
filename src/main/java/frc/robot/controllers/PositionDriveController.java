@@ -2,8 +2,6 @@ package frc.robot.controllers;
 
 import com.revrobotics.CANSparkMax;
 import frc.robot.RobotConstants;
-import frc.robot.controllers.SparkPositionController;
-import frc.robot.controllers.SparkPositionControllerGroup;
 import frc.robot.logger.DataLogger;
 import frc.robot.logger.DataLoggerFactory;
 import frc.robot.path.Position;

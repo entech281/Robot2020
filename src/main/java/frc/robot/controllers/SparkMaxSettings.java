@@ -1,26 +1,13 @@
 package frc.robot.controllers;
 
-import java.io.Serializable;
-
-import com.revrobotics.CANEncoder;
 import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANPIDController.AccelStrategy;
 import com.revrobotics.ControlType;
-import com.revrobotics.SparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-import org.apache.commons.lang3.SerializationUtils;
-
-
-
-
-public class SparkMaxSettings implements Serializable{
-	/**
-	 *
-	 */
-	private static final long serialVersionUID = 3221269797870162872L;
+public class SparkMaxSettings{
 	public static final int TIMEOUT_MS = 10;
 	public static final int PID_SLOT = 0;
 	public static final int PROFILE_SLOT = 0;
@@ -43,7 +30,17 @@ public class SparkMaxSettings implements Serializable{
 	
 
     public SparkMaxSettings copy(){
-		return SerializationUtils.clone(this);
+		SparkMaxSettings settings = new SparkMaxSettings();
+		settings.gains = gains;
+		settings.currentLimits = currentLimits;
+		settings.rampUp = rampUp;
+		settings.motorDirections = motorDirections;
+		settings.brakeMode = brakeMode;
+		settings.profile = profile;
+		settings.ctrlType = ctrlType;
+		settings.demand = demand;
+		settings.follow = follow;
+		return settings;
 	}
 	
     public void configureSparkMax(CANSparkMax spark){
@@ -109,47 +106,41 @@ public class SparkMaxSettings implements Serializable{
 		}
 	}
 
-	public static class Gains implements Serializable {
-		private static final long serialVersionUID = -1615614551300215877L;
+	public static class Gains  {
 		public double f = 0.0;
 		public double p = 0.0;
 		public double i = 0.0;
 		public double d = 0.0;
 	}
 
-	public static class MotionProfile implements Serializable {
-		private static final long serialVersionUID = -9034830588710443069L;
+	public static class MotionProfile {
 		public int cruiseVelocityRPM = 3200;
 		public AccelStrategy accelStrategy = AccelStrategy.kTrapezoidal;
 		public int allowableClosedLoopError = 20;
 		public int maxAccel = 20;
 	}
 
-	public static class CurrentLimits implements Serializable {
+	public static class CurrentLimits  {
 		public int smartLimit = 80;
 	}
 
-	public static class MotorOutputLimits implements Serializable {
-		private static final long serialVersionUID = -288486995864831923L;
+	public static class MotorOutputLimits  {
 		public double maxMotorOutput = 1.0;
 		public double minMotorOutput = -1.0;	
 	}
 
-	public static class MotorRampUp implements Serializable {
-		private static final long serialVersionUID = 7622395199499681872L;
+	public static class MotorRampUp  {
 		public double rampUpSecondsOpenLoop = 0.0;
 		public double rampUpSecondsClosedLoop = 0.0;
 		public double neutralDeadband = 0.001;
 	}
 
-	public static class FramePeriods implements Serializable {
-		private static final long serialVersionUID = 2845750610037826988L;
+	public static class FramePeriods  {
 		public int motionMagicMilliseconds = DEFAULT_FAST_FRAMERATE_MILLIS;
 		public int pidMilliseconds = DEFAULT_FAST_FRAMERATE_MILLIS;
 	}
 
-	public static class MotorDirections implements Serializable {
-		private static final long serialVersionUID = -331460067125013734L;
+	public static class MotorDirections  {
 		public boolean sensorPhase = false;
 		public boolean inverted = false;
 	}

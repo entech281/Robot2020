@@ -10,8 +10,6 @@ import frc.robot.commands.SingleShotCommand;
 import frc.robot.controllers.TalonSettings;
 import frc.robot.controllers.TalonSettingsBuilder;
 import frc.robot.controllers.TalonSpeedController;
-import frc.robot.pose.FieldPose;
-import frc.robot.pose.RobotPose;
 
 public class ElevatorSubsystem extends BaseSubsystem {
 
