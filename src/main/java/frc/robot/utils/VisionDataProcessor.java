@@ -9,7 +9,7 @@ import java.util.Scanner;
 
 public class VisionDataProcessor {
 
-    private String buffer = "";
+    private String buffer = "\n";
     private String retval = "False -1 -1 -1 -1";
 
     
