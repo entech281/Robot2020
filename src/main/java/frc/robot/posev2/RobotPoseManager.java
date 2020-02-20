@@ -7,10 +7,10 @@ public class RobotPoseManager {
     private EncoderValues encoders;
     private EncoderValues lastEncoderValues = new EncoderValues(0, 0, 0, 0);
     private NavXData navXData;
-    private VisionData vData = RobotMap.DIMENSIONS.DEFAULT_VISION_DATA;
+    private VisionData vData = RobotMap.ROBOT_DEFAULTS.VISION.DEFAULT_VISION_DATA;
     private WheelColorValue wColor;
 
-    private RobotPose pose = RobotMap.DIMENSIONS.START_POSE;
+    private RobotPose pose = RobotMap.ROBOT_DEFAULTS.START_POSE;
     private boolean navXWorking = true;
 
     public RobotPose getCurrentPose() {
