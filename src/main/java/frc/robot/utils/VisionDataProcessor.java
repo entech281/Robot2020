@@ -3,17 +3,23 @@ package frc.robot.utils;
 import frc.robot.RobotMap;
 import frc.robot.posev2.TargetLocation;
 import frc.robot.posev2.VisionData;
-import java.io.StringReader;
-import java.util.ArrayList;
-import java.util.Scanner;
+import java.util.*;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.LinkedBlockingDeque;
+
+// Template for data through serial port is
+// boolean(targetfound) int(x) int(y) int(targetwidth) double(framerate) -\n
 
 public class VisionDataProcessor {
 
-    private String buffer = "\n";
-    private String retval = "False -1 -1 -1 -1";
-
+    private String buffer = "";
+    private String retval;
+    private int visionDataMemory = 5;
+    
+    private FixedStack visionDataStack = new FixedStack(visionDataMemory);
     
     public VisionDataProcessor() {
+        visionDataStack.add(RobotMap.ROBOT_DEFAULTS.VISION.DEFAULT_VISION_DATA);
     }
 
     public TargetLocation compute(VisionData vData) {
@@ -27,14 +33,29 @@ public class VisionDataProcessor {
         buffer += readings;
     }
     
-    public VisionData getCurrentVisionData(){
-        int lastInd = buffer.lastIndexOf("\n");
-        int secLastInd = buffer.substring(0, lastInd - 1).lastIndexOf("\n");
-        if(lastInd != -1 && secLastInd != -1){
-            retval = buffer.substring(secLastInd + 1, lastInd);
+    private boolean completeData(String data){
+        if(data.length() == 0){
+            return false;
         }
-        buffer = buffer.substring(lastInd - 1);
-        return calculateVisionData(retval);
+        return data.substring(data.length() - 1).equals("-");
+    }
+    
+    private void parseBuffer(){
+        String[] dataEntriesBuffer = buffer.split("\n");
+        for(String data: dataEntriesBuffer){
+            if(!completeData(data)){
+                continue;
+            }
+            visionDataStack.add(calculateVisionData(data));
+        }
+        if(buffer.lastIndexOf("\n") != -1){
+            buffer = buffer.substring(buffer.lastIndexOf("\n"));
+        }
+    }
+    
+    public VisionData getCurrentVisionData(){
+        parseBuffer();
+        return visionDataStack.peek();
     }
      
     private VisionData calculateVisionData(String readings) {
@@ -55,4 +76,5 @@ public class VisionDataProcessor {
         }
         return new VisionData(visionTargetFound, lateralOffset, verticalOffset, blobWidth);
     }
+    
 }
