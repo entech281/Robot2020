@@ -55,7 +55,7 @@ public class SparkMaxSettings {
         spark.setOpenLoopRampRate(rampUp.rampUpSecondsOpenLoop);
         spark.setInverted(motorDirections.inverted);
         spark.setIdleMode(brakeMode);
-        spark.getEncoder().setPositionConversionFactor(spark.getEncoder().getCountsPerRevolution());
+//        spark.getEncoder().setPositionConversionFactor(spark.getEncoder().getCountsPerRevolution());
 
         pidController.setOutputRange(outputLimits.minMotorOutput, outputLimits.maxMotorOutput);
         pidController.setFF(gains.f);
