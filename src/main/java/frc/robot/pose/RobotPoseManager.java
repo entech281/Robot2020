@@ -7,10 +7,10 @@ public class RobotPoseManager {
     private EncoderValues encoders;
     private EncoderValues lastEncoderValues = new EncoderValues(0, 0, 0, 0);
     private NavXData navXData;
-    private VisionData vData = RobotConstants.DIMENSIONS.DEFAULT_VISION_DATA;
+    private VisionData vData = RobotConstants.ROBOT_DEFAULTS.VISION.DEFAULT_VISION_DATA;
     private WheelColorValue wColor;
 
-    private RobotPose pose = RobotConstants.DIMENSIONS.START_POSE;
+    private RobotPose pose = RobotConstants.ROBOT_DEFAULTS.START_POSE;
     private boolean navXWorking = true;
 
     public RobotPose getCurrentPose() {
@@ -19,7 +19,7 @@ public class RobotPoseManager {
 
     public void update() {
         //do all the maths to get a new pose
-        pose = PoseMathematics.addPoses(pose, PoseMathematics.calculateRobotPositionChange(encoderDeltaLeft(), getEncodersRight()));
+        pose = new RobotPose(PoseMathematics.addPoses(pose.getRobotPosition(), PoseMathematics.calculateRobotPositionChange(encoderDeltaLeft(), getEncodersRight())));
         if (navXWorking) {
             RobotPosition withNavXPosition = new RobotPosition(pose.getRobotPosition().getForward(), pose.getRobotPosition().getHorizontal(), navXData.getAngle());
             pose = new RobotPose(withNavXPosition, vData);

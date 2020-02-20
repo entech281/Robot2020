@@ -31,12 +31,29 @@ public class SparkMaxSettings{
 
     public SparkMaxSettings copy(){
 		SparkMaxSettings settings = new SparkMaxSettings();
-		settings.gains = gains;
-		settings.currentLimits = currentLimits;
-		settings.rampUp = rampUp;
-		settings.motorDirections = motorDirections;
+		settings.gains.d = gains.d;
+		settings.gains.f = gains.f;
+		settings.gains.i = gains.i;
+		settings.gains.p = gains.p;
+
+		settings.currentLimits.smartLimit = currentLimits.smartLimit;
+
+		settings.outputLimits.maxMotorOutput = outputLimits.maxMotorOutput;
+		settings.outputLimits.minMotorOutput = outputLimits.minMotorOutput;
+
+		settings.rampUp.neutralDeadband = rampUp.neutralDeadband;
+		settings.rampUp.rampUpSecondsClosedLoop = rampUp.rampUpSecondsClosedLoop;
+		settings.rampUp.rampUpSecondsOpenLoop = rampUp.rampUpSecondsOpenLoop;
+
+		settings.motorDirections.inverted = motorDirections.inverted;
+		settings.motorDirections.sensorPhase = motorDirections.sensorPhase;
+
 		settings.brakeMode = brakeMode;
-		settings.profile = profile;
+		settings.profile.accelStrategy = profile.accelStrategy;
+		settings.profile.allowableClosedLoopError = profile.allowableClosedLoopError;
+		settings.profile.cruiseVelocityRPM = profile.cruiseVelocityRPM;
+		settings.profile.maxAccel = profile.maxAccel;
+
 		settings.ctrlType = ctrlType;
 		settings.demand = demand;
 		settings.follow = follow;

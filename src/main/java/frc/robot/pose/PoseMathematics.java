@@ -14,7 +14,7 @@ public class PoseMathematics {
     }
 
     // X is positive to the right of the robot & y is positive forward
-    public static RobotPose calculateRobotPositionChange(double inchesLeft, double inchesRight) {
+    public static RobotPosition calculateRobotPositionChange(double inchesLeft, double inchesRight) {
         double deltaX;
         double deltaY;
         double deltaTheta;
@@ -39,22 +39,22 @@ public class PoseMathematics {
                 deltaTheta = theta;
             }
         }
-        return new RobotPose(new RobotPosition(deltaY, deltaX, deltaTheta * RADIANS_TO_DEGREES));
+        return new RobotPosition(deltaX, deltaY, deltaTheta * RADIANS_TO_DEGREES);
     }
 
     // This is not commutative (I.E addposes(pose1, pose2) != addposes(pose2,
     // pose1))
-    public static RobotPose addPoses(RobotPose pose1, RobotPose pose2) {
-        double theta = pose1.getRobotPosition().getTheta() + pose2.getRobotPosition().getTheta();
-        double horizontal = pose1.getRobotPosition().getHorizontal()
-                + Math.cos(pose1.getRobotPosition().getTheta() * DEGREES_TO_RADIANS) * pose2.getRobotPosition().getHorizontal()
-                + Math.cos(pose1.getRobotPosition().getTheta() * DEGREES_TO_RADIANS + Math.PI / 2) * pose2.getRobotPosition().getForward();
+    public static RobotPosition addPoses(RobotPosition pose1, RobotPosition pose2) {
+        double theta = pose1.getTheta() + pose2.getTheta();
+        double horizontal = pose1.getHorizontal()
+                + Math.cos(pose1.getTheta() * DEGREES_TO_RADIANS) * pose2.getHorizontal()
+                + Math.cos(pose1.getTheta() * DEGREES_TO_RADIANS + Math.PI / 2) * pose2.getForward();
 
-        double forward = pose1.getRobotPosition().getForward()
-                + Math.sin(pose1.getRobotPosition().getTheta() * DEGREES_TO_RADIANS) * pose2.getRobotPosition().getHorizontal()
-                + Math.sin(pose1.getRobotPosition().getTheta() * DEGREES_TO_RADIANS + Math.PI / 2) * pose2.getRobotPosition().getForward();
+        double forward = pose1.getForward()
+                + Math.sin(pose1.getTheta() * DEGREES_TO_RADIANS) * pose2.getHorizontal()
+                + Math.sin(pose1.getTheta() * DEGREES_TO_RADIANS + Math.PI / 2) * pose2.getForward();
 
-        return new RobotPose(new RobotPosition(forward, horizontal, theta));
+        return new RobotPosition(forward, horizontal, theta);
     }
 
 }
