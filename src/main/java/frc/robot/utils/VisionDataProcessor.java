@@ -1,8 +1,8 @@
 package frc.robot.utils;
 
-import frc.robot.RobotMap;
-import frc.robot.posev2.TargetLocation;
-import frc.robot.posev2.VisionData;
+import frc.robot.RobotConstants;
+import frc.robot.pose.TargetLocation;
+import frc.robot.pose.VisionData;
 import java.util.*;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.LinkedBlockingDeque;
@@ -19,7 +19,7 @@ public class VisionDataProcessor {
     private FixedStack visionDataStack = new FixedStack(visionDataMemory);
     
     public VisionDataProcessor() {
-        visionDataStack.add(RobotMap.ROBOT_DEFAULTS.VISION.DEFAULT_VISION_DATA);
+        visionDataStack.add(RobotConstants.ROBOT_DEFAULTS.VISION.DEFAULT_VISION_DATA);
     }
 
     public TargetLocation compute(VisionData vData) {
@@ -69,7 +69,7 @@ public class VisionDataProcessor {
         double frameRate = 0.0;
 
         if (visionTargetFound) {
-            lateralOffset = Math.abs(RobotMap.ROBOT_DEFAULTS.VISION.FRAME_WIDTH / 2 - Integer.parseInt(outputData[1]));
+            lateralOffset = Math.abs(RobotConstants.ROBOT_DEFAULTS.VISION.FRAME_WIDTH / 2 - Integer.parseInt(outputData[1]));
             verticalOffset = Double.parseDouble(outputData[2]);
             blobWidth = Double.parseDouble(outputData[3]);
             frameRate = Double.parseDouble(outputData[4]);

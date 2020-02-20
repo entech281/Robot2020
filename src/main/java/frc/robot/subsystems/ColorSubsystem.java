@@ -1,6 +1,6 @@
 package frc.robot.subsystems;
 
-import frc.robot.posev2.WheelColorValue;
+import frc.robot.pose.WheelColorValue;
 
 public class ColorSubsystem extends BaseSubsystem {
 

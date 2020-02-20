@@ -1,13 +1,13 @@
 package frc.robot;
 
-import frc.robot.posev2.*;
+import frc.robot.pose.*;
 
-public class RobotMap {
+public class RobotConstants {
 
-    public static final int NAVX_PORT = 0;
 
+    
     public interface CAN {
-
+        
         public static final int FRONT_LEFT_MOTOR = 3;
         public static final int FRONT_RIGHT_MOTOR = 1;
         public static final int REAR_LEFT_MOTOR = 4;
@@ -16,20 +16,20 @@ public class RobotMap {
         public static final int INTAKE_MOTOR = 6;
         public static final int PCM_ID = 10;
     }
-
+    
     public interface PNEUMATICS {
-
+        
         public static final int ATTACH_SOLENOID = 0;
         public static final int ENGAGE_WINCH = 1;
     }
-
+    
     public interface GAMEPAD {
-
+        
         public static final int DRIVER_JOYSTICK = 0;
     }
-
+    
     public interface BUTTONS {
-
+        
         public static final int INTAKE_BUTTON = 1;
         public static final int SHOOT_BUTTON = 2;
         public static final int RESET_BUTTON = 10;
@@ -47,14 +47,28 @@ public class RobotMap {
     
     public interface DIMENSIONS {
         // Must be in inches
-
+        
         public static final double ROBOT_WIDTH = 27.5;
         public static final double ROBOT_LENGTH = 32.5;
         public static final double DRIVE_GEAR_RATIO = 10.7;
-        public static final double ENCODER_TICKS_PER_MOTOR_REVOLUTION = 4096;
         public static final double WHEEL_DIAMETER_INCHES = 6;
-        public static final double ENCODER_TICKS_PER_INCH = ENCODER_TICKS_PER_MOTOR_REVOLUTION
-                * DRIVE_GEAR_RATIO
-                / (Math.PI * WHEEL_DIAMETER_INCHES);
+        public static final double MOTOR_REVOLUTIONS_PER_INCH = ( Math.PI * WHEEL_DIAMETER_INCHES)
+         / DRIVE_GEAR_RATIO;
+    }
+    
+    public interface PID{
+        public interface DRIVE{
+            public static final double P = 2e-4;
+            public static final double I = 0;
+            public static final double D = 0;
+            public static final double F = 0;
+        }
+    }
+    
+    public interface AUTONOMOUS{
+        public static final int MAX_VELOCITY = 2000;
+        public static final int MAX_ACCELLERATION = 1500;
+        public static final int ACCEPTABLE_ERROR = 0;
+        public static final double POSITION_TOLERANCE_INCHES = 0;
     }
 }

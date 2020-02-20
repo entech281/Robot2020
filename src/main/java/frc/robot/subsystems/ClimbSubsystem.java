@@ -1,31 +1,26 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Timer;
-import frc.robot.RobotMap;
+import frc.robot.RobotConstants;
 import frc.robot.commands.EntechCommandBase;
 import frc.robot.commands.SingleShotCommand;
 import frc.robot.controllers.SparkMaxSettings;
 import frc.robot.controllers.SparkMaxSettingsBuilder;
 import frc.robot.controllers.SparkSpeedController;
-import frc.robot.controllers.TalonSpeedController;
-import frc.robot.posev2.FieldPose;
-import frc.robot.posev2.RobotPose;
 import edu.wpi.first.wpilibj2.command.Command;
 
 public class ClimbSubsystem extends BaseSubsystem {
 
-    CANSparkMax winch = new CANSparkMax(RobotMap.CAN.INTAKE_MOTOR, MotorType.kBrushless);
+    CANSparkMax winch = new CANSparkMax(RobotConstants.CAN.INTAKE_MOTOR, MotorType.kBrushless);
     SparkSpeedController winchController;
 
-    private final Solenoid attachHookSolenoid = new Solenoid(RobotMap.CAN.PCM_ID, RobotMap.PNEUMATICS.ATTACH_SOLENOID);
-    private final Solenoid engageWinchSolenoid = new Solenoid(RobotMap.CAN.PCM_ID,
-            RobotMap.PNEUMATICS.ENGAGE_WINCH);
+    private final Solenoid attachHookSolenoid = new Solenoid(RobotConstants.CAN.PCM_ID, RobotConstants.PNEUMATICS.ATTACH_SOLENOID);
+    private final Solenoid engageWinchSolenoid = new Solenoid(RobotConstants.CAN.PCM_ID,
+            RobotConstants.PNEUMATICS.ENGAGE_WINCH);
 
     Timer coord = new Timer();
 
@@ -97,7 +92,7 @@ public class ClimbSubsystem extends BaseSubsystem {
     }
 
     public void delay(double time) {
-        coord.delay(time);
+        Timer.delay(time);
     }
 
     public void engageClutchWithWinch() {

@@ -5,7 +5,7 @@
  */
 package frc.robot;
 
-import frc.robot.posev2.VisionData;
+import frc.robot.pose.VisionData;
 import frc.robot.utils.ByteConverter;
 import frc.robot.utils.VisionDataProcessor;
 import org.junit.Test;
@@ -29,7 +29,7 @@ public class TestVisionDataProcessor {
         for(String e: inputs){
             processor.addInput(e);
         }
-        double lateralOffset = Math.abs(RobotMap.ROBOT_DEFAULTS.VISION.FRAME_WIDTH / 2 - 45);
+        double lateralOffset = Math.abs(RobotConstants.ROBOT_DEFAULTS.VISION.FRAME_WIDTH / 2 - 45);
         output = processor.getCurrentVisionData();
         assertTrue(output.targetFound());
         assertEquals(output.getLateralOffset(), lateralOffset, TOLERANCE);
@@ -44,7 +44,7 @@ public class TestVisionDataProcessor {
         for(String e: inputs){
             processor.addInput(e);
         }
-        double lateralOffset = Math.abs(RobotMap.ROBOT_DEFAULTS.VISION.FRAME_WIDTH / 2 - 45);
+        double lateralOffset = Math.abs(RobotConstants.ROBOT_DEFAULTS.VISION.FRAME_WIDTH / 2 - 45);
         output = processor.getCurrentVisionData();
         
         processor.addInput("true 42");
@@ -55,7 +55,7 @@ public class TestVisionDataProcessor {
         assertEquals(output.getTargetWidth(), 31, TOLERANCE);
 
         processor.addInput(" 43 23 45.6 -\n");
-        lateralOffset = Math.abs(RobotMap.ROBOT_DEFAULTS.VISION.FRAME_WIDTH / 2 - 42);
+        lateralOffset = Math.abs(RobotConstants.ROBOT_DEFAULTS.VISION.FRAME_WIDTH / 2 - 42);
 
         output = processor.getCurrentVisionData();
         assertTrue(output.targetFound());
