@@ -9,7 +9,7 @@ public class RobotPosition {
     public RobotPosition(double forward, double horizontal, double theta) {
         this.forward = forward;
         this.horizontal = horizontal;
-        this.theta = theta;
+        setTheta(theta);
     }
 
     public RobotPosition() {
@@ -28,5 +28,12 @@ public class RobotPosition {
 
     public double getTheta() {
         return theta;
+    }
+    
+    private void setTheta(double angle){
+        if (angle < 0) {
+            angle = 360 + angle;
+        }
+        this.theta = angle % 360;
     }
 }
