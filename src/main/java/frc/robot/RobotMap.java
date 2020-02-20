@@ -35,14 +35,21 @@ public class RobotMap {
         public static final int RESET_BUTTON = 10;
     }
 
+    public interface ROBOT_DEFAULTS{
+        public static final RobotPosition START_POSITION = new RobotPosition(0, 0, 0);
+        public static final RobotPose START_POSE = new RobotPose(START_POSITION, VISION.DEFAULT_VISION_DATA);
+        public interface VISION{
+            public static final VisionData DEFAULT_VISION_DATA = new VisionData(false, -1, -1, -1);
+            public static final int FRAME_WIDTH = 160;
+            public static final int FRAME_HEIGHT = 120;
+        } 
+    }
+    
     public interface DIMENSIONS {
         // Must be in inches
 
         public static final double ROBOT_WIDTH = 27.5;
         public static final double ROBOT_LENGTH = 32.5;
-        public static final RobotPosition START_POSITION = new RobotPosition(0, 0, 0);
-        public static final VisionData DEFAULT_VISION_DATA = new VisionData(-1, -1, -1);
-        public static final RobotPose START_POSE = new RobotPose(START_POSITION, DEFAULT_VISION_DATA);
         public static final double DRIVE_GEAR_RATIO = 10.7;
         public static final double ENCODER_TICKS_PER_MOTOR_REVOLUTION = 4096;
         public static final double WHEEL_DIAMETER_INCHES = 6;
