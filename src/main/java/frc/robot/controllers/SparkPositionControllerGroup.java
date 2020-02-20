@@ -1,16 +1,20 @@
 package frc.robot.controllers;
 
+import frc.robot.logger.DataLogger;
+import frc.robot.logger.DataLoggerFactory;
 import frc.robot.path.Position;
 import frc.robot.utils.EncoderInchesConverter;
 
 public class SparkPositionControllerGroup {
 
+    private DataLogger logger = DataLoggerFactory.getLoggerFactory().createDataLogger("SparkPositionControllerGroup");
+
     private SparkPositionController frontLeft;
     private SparkPositionController frontRight;
     private SparkPositionController rearLeft;
     private SparkPositionController rearRight;
-    public static final double FRONT_RIGHT_ADJUST = 1.0;
-    public static final double REAR_RIGHT_ADJUST = 1.0;
+    public static final double RIGHT_ADJUST = -1.0;
+    public static final double LEFT_ADJUST = 1.0;
 
     public SparkPositionControllerGroup(SparkPositionController fL, SparkPositionController fR, SparkPositionController rL, SparkPositionController rR) {
         this.frontLeft = fL;
@@ -45,10 +49,12 @@ public class SparkPositionControllerGroup {
             resetPosition();
         }
 
-        frontLeft.setDesiredPosition(leftPose);
-        rearLeft.setDesiredPosition(leftPose);
-        frontRight.setDesiredPosition(rightPose * FRONT_RIGHT_ADJUST);
-        rearRight.setDesiredPosition(rightPose * REAR_RIGHT_ADJUST);
+        frontLeft.setDesiredPosition(leftPose * LEFT_ADJUST);
+        rearLeft.setDesiredPosition(leftPose * LEFT_ADJUST);
+        frontRight.setDesiredPosition(rightPose * RIGHT_ADJUST);
+        rearRight.setDesiredPosition(rightPose * RIGHT_ADJUST);
+        logger.log("set position left", leftPose);
+        logger.log("set position right", rightPose);
     }
 
     public double getLeftCurrentPosition(EncoderInchesConverter converter) {

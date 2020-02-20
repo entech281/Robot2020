@@ -133,7 +133,7 @@ public class SparkMaxSettings{
 	public static class MotionProfile {
 		public int cruiseVelocityRPM = 3200;
 		public AccelStrategy accelStrategy = AccelStrategy.kTrapezoidal;
-		public int allowableClosedLoopError = 20;
+		public double allowableClosedLoopError = 20;
 		public int maxAccel = 20;
 	}
 

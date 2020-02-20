@@ -102,7 +102,7 @@ public class SparkMaxSettingsBuilder {
         }
 
         public interface AllowedError{
-            public Finish withClosedLoopError(int error);
+            public Finish withClosedLoopError(double acceptableError);
         }
     }
 
@@ -227,7 +227,7 @@ public class SparkMaxSettingsBuilder {
         }
 
         @Override
-        public Finish withClosedLoopError(int error) {
+        public Finish withClosedLoopError(double error) {
             settings.profile.allowableClosedLoopError = error;
             return this;
         }
