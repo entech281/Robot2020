@@ -62,5 +62,9 @@ public class Robot extends TimedRobot {
         CommandScheduler.getInstance().run();
     }
     
+    @Override
+    public void disabledInit() {
+        subsystemManager.getDriveSubsystem().setSpeedMode();
+    }
 
 }

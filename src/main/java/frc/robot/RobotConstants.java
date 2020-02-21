@@ -46,7 +46,7 @@ public class RobotConstants {
     public interface DIMENSIONS {
         // Must be in inches
         
-        public static final double ROBOT_WIDTH = 27.5;
+        public static final double ROBOT_WIDTH = 23;
         public static final double ROBOT_LENGTH = 32.5;
         public static final double DRIVE_GEAR_RATIO = 10.7;
         public static final double WHEEL_DIAMETER_INCHES = 6;
@@ -56,7 +56,7 @@ public class RobotConstants {
     
     public interface PID{
         public interface DRIVE{
-            public static final double P = 4e-4;
+            public static final double P = 8e-4;
             public static final double I = 0;
             public static final double D = 0;
             public static final double F = 0;
