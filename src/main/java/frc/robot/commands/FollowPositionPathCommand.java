@@ -33,7 +33,6 @@ public class FollowPositionPathCommand extends CommandBase{
     
     @Override
     public void initialize() {
-        driveSubsystem.startAutonomous();
         logger.log("Is Running", true);
         for (Position p : path) {
             driveSubsystem.getPositionBuffer().addPosition(p);

@@ -24,33 +24,19 @@ public class PositionDriveController{
 	private Position desiredPosition;
 	private PositionSource positionSource;
 	private int updateCount = 0;
-    private DataLogger dataLogger = DataLoggerFactory.getLoggerFactory().createDataLogger("Position Drive Controller");
+        private DataLogger dataLogger = DataLoggerFactory.getLoggerFactory().createDataLogger("Position Drive Controller");
 	private CANSparkMax frontRight, backRight, frontLeft, backLeft;
-	private SparkMaxSettings autoSettings;
 
-	public PositionDriveController(CANSparkMax frontRight, CANSparkMax backRight,CANSparkMax frontLeft, CANSparkMax backLeft, SparkMaxSettings settings, PositionSource positionSource,
+	public PositionDriveController(SparkPositionControllerGroup positionControllerGroup, PositionSource positionSource,
 			EncoderInchesConverter encoderConverter) {
 		this.encoderConverter = encoderConverter;
 		this.positionSource = positionSource;
 		
-		this.backLeft = backLeft;
-		this.backRight = backRight;
-		this.frontLeft = frontLeft;
-		this.frontRight = frontRight;
-
-		this.autoSettings = settings;
-	}
+                this.positionControllerGroup = positionControllerGroup;
+        }
 
 
 	public void activate() {
-
-		
-		positionControllerGroup = new SparkPositionControllerGroup(
-				new SparkPositionController(frontLeft, autoSettings),
-				new SparkPositionController(frontRight, autoSettings),
-				new SparkPositionController(backLeft, autoSettings),
-				new SparkPositionController(backRight, autoSettings));
-
 		positionControllerGroup.resetPosition();
 
 	}
@@ -88,8 +74,9 @@ public class PositionDriveController{
 			Position command = getCurrentCommand();
 			if ( command.isCloseTo(current, TOLERANCE_INCHES)) {
 			    positionSource.next();
-				setCurrentCommand(null);
-			}			
+			setCurrentCommand(null);
+			}
+                        dataLogger.log("commandPosition", getCurrentPosition());
 		}
 		else {
 			if ( positionSource.hasNextPosition()) {
@@ -102,16 +89,9 @@ public class PositionDriveController{
 				dataLogger.log("encoderLeft", encoderLeft);
 				positionControllerGroup.setDesiredPosition(encoderLeft, encoderRight, p.isRelative());
 			}
-			else {
-				
-			}
+                        dataLogger.log("commandPosition", "<IDLE>");
 		}		
-		if ( hasCurrentCommand() ) {
-			dataLogger.log("commandPosition", getCurrentCommand());
-		}
-		else {
-			dataLogger.log("commandPosition", "<IDLE>");
-		}		
+	
 		dataLogger.log("currentPosition", getCurrentPosition());
 		dataLogger.log("updateCount", updateCount++);
 		

@@ -46,7 +46,7 @@ public class DriveSubsystem extends BaseSubsystem {
     private DifferentialDrive robotDrive;
     
     private PositionDriveController autoController;
-    private SparkPositionControllerGroup posController;
+    private SparkPositionControllerGroup positionControllerGroup;
 
     private PositionBuffer positionBuffer = new PositionBuffer();
 
@@ -121,10 +121,8 @@ public class DriveSubsystem extends BaseSubsystem {
         rearLeftPositionController = new SparkPositionController(rearLeftSpark, smartMotionSettings);
         rearRightPositionController = new SparkPositionController(rearRightSpark, smartMotionSettings);
         
-        posController = new SparkPositionControllerGroup(frontLeftPositionController, frontRightPositionController,
-                rearLeftPositionController, rearRightPositionController);
-        autoController = new PositionDriveController(frontLeftSpark, frontRightSpark, 
-                rearLeftSpark, rearRightSpark, smartMotionSettings, positionBuffer,
+        positionControllerGroup = new SparkPositionControllerGroup(frontLeftPositionController, frontRightPositionController, rearLeftPositionController, rearRightPositionController);
+        autoController = new PositionDriveController(positionControllerGroup, positionBuffer,
                 new EncoderInchesConverter(1/ RobotConstants.DIMENSIONS.MOTOR_REVOLUTIONS_PER_INCH));
         reset();
     }
@@ -171,7 +169,8 @@ public class DriveSubsystem extends BaseSubsystem {
     public void startAutonomous() {
         inAuto = true;
         robotDrive.setSafetyEnabled(false);
-        autoController.activate();
+        setPositionMode();
+        
     }
 
     public void endAutonomous() {

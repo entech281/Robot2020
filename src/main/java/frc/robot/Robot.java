@@ -32,14 +32,9 @@ public class Robot extends TimedRobot {
         this.logger = DataLoggerFactory.getLoggerFactory().createDataLogger("Robot Main Loop");
         subsystemManager.initAll();
         oi = new OperatorInterface(subsystemManager);
-        autoCommand = new AutoCommand(subsystemManager.getShooterSubsystem());
+        autoCommand = new AutoCommand(subsystemManager);
     }
 
-    @Override
-    public void robotPeriodic() {
-        subsystemManager.periodicAll();
-        CommandScheduler.getInstance().run();
-    }
 
     @Override
     public void teleopInit() {
@@ -48,16 +43,21 @@ public class Robot extends TimedRobot {
 
     @Override
     public void teleopPeriodic() {
+        subsystemManager.periodicAll();
+        CommandScheduler.getInstance().run();
     }
 
     @Override
     public void autonomousInit() {
         subsystemManager.getDriveSubsystem().setPositionMode();
-        autoCommand.schedule();
+        autoCommand.schedule();        
+        subsystemManager.getDriveSubsystem().startAutonomous();
     }
 
     @Override
     public void autonomousPeriodic() {
+        subsystemManager.periodicAll();
+        CommandScheduler.getInstance().run();
     }
 
 }
