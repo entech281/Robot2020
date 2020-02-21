@@ -31,11 +31,11 @@ public class OperatorInterface {
                 .add();
 
         manager.addButton(5)
-                .whenPressed(subsystemManager.getShooterSubsystem().increaseShooterSpeed())
+                .whenPressed(subsystemManager.getShooterSubsystem().increaseRPM())
                 .add();
         
         manager.addButton(3)
-            .whenPressed(subsystemManager.getShooterSubsystem().decreaseShooterSpeed())
+            .whenPressed(subsystemManager.getShooterSubsystem().decreaseRPM())
             .add();
         
 //        DriveSubsystem drive = subsystemManager.getDriveSubsystem();

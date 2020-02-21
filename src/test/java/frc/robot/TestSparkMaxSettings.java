@@ -37,7 +37,7 @@ public class TestSparkMaxSettings {
         sparkSettings.gains.p = 1.3;
         sparkSettings.currentLimits.smartLimit = 50;
         sparkSettings.outputLimits.maxMotorOutput = 0.9;
-        sparkSettings.profile.trapezoStrategy = AccelStrategy.kSCurve;
+        sparkSettings.profile.accelStrategy = AccelStrategy.kTrapezoidal;
         sparkSettings.rampUp.neutralDeadband = 55;
 
         SparkMaxSettings copy = SparkMaxSettingsBuilder.copy(sparkSettings);
@@ -48,7 +48,7 @@ public class TestSparkMaxSettings {
         assertEquals(sparkSettings.gains.i, copy.gains.i, TOLERANCE);
         assertEquals(sparkSettings.currentLimits.smartLimit, copy.currentLimits.smartLimit);
         assertEquals(sparkSettings.outputLimits.maxMotorOutput, copy.outputLimits.maxMotorOutput, TOLERANCE);
-        assertEquals(sparkSettings.profile.trapezoStrategy, copy.profile.trapezoStrategy);
+        assertEquals(sparkSettings.profile.accelStrategy, copy.profile.accelStrategy);
         assertEquals(sparkSettings.rampUp.neutralDeadband, copy.rampUp.neutralDeadband, TOLERANCE);
 
     }

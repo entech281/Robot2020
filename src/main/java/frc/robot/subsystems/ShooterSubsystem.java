@@ -4,14 +4,12 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
 import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
-import com.revrobotics.CANEncoder;
-import com.revrobotics.CANPIDController;
+import com.revrobotics.CANPIDController.AccelStrategy;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.ControlType;
-import edu.wpi.first.wpilibj.Joystick;
+
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.commands.EntechCommandBase;
 import frc.robot.commands.SingleShotCommand;
@@ -21,15 +19,8 @@ import frc.robot.posev2.RobotPose;
 import frc.robot.posev2.ShooterConfiguration;
 
 public class ShooterSubsystem extends BaseSubsystem {
-    
-      private Joystick m_stick;
-  private static final int deviceID = 5;
-  private CANSparkMax m_motor;
-  private CANPIDController m_pidController;
-  private CANEncoder m_encoder;
-  public double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput, maxRPM;
 
-    private double SHOOT_SPEED = 4000;
+    private double SHOOT_SPEED = 1;
     private double HOOD_POSITION;
 
     //Trial and error determination
@@ -52,47 +43,59 @@ public class ShooterSubsystem extends BaseSubsystem {
     private final double HOOD_PID_P = 2.56 * 2;
     private final double HOOD_PID_I = 0;
     private final double HOOD_PID_D = 0;
-
-    private final double SHOOTER_PID_F = 0;
+    
     private final double SHOOTER_PID_P = 4e-4;
-    private final double SHOOTER_PID_I = 0;
+    private final double SHOOTER_PID_I = 32e-7;
     private final double SHOOTER_PID_D = 0;
-
-    private final double RPM = 4000;
+    private final double SHOOTER_PID_F = 0.000015;
+    private final double SHOOTER_MAXOUTPUT = 1;
+    private final double SHOOTER_MINOUTPUT = -1;
+    private final int CURRENT_LIMIT = 35;
+    private final double SHOOTER_MOTOR_RAMPUP = 0.5;
+    private final int SHOOTER_MAX_ACCEL = 100;
+    private final int SHOOTER_TOLERANCE = 5;
+    private final int SHOOTER_MAX_RPM = 5700;
+    
+    
+    private int RPM_SPEED = 4000;
+    
 
     public Command shootRPMSpeed() {
         return new SingleShotCommand(this) {
             @Override
             public void doCommand() {
-                adjustShooterSpeed(SHOOT_SPEED);
+                adjustShooterSpeed(RPM_SPEED);
+            }
+        }.withTimeout(EntechCommandBase.DEFAULT_TIMEOUT_SECONDS);
+    }
+
+    
+    public Command decreaseRPM() {
+        return new SingleShotCommand(this) {
+            @Override
+            public void doCommand() {
+                decreaseRPMSpeed();
             }
         }.withTimeout(EntechCommandBase.DEFAULT_TIMEOUT_SECONDS);
     }
     
-    public Command increaseShooterSpeed() {
-        return new SingleShotCommand(this){
+    public Command increaseRPM() {
+        return new SingleShotCommand(this) {
             @Override
-            public void doCommand(){
-                increaseRPM();
+            public void doCommand() {
+                increaseRPMSpeed();
             }
-        };
+        }.withTimeout(EntechCommandBase.DEFAULT_TIMEOUT_SECONDS);
     }
 
-    public Command decreaseShooterSpeed() {
-        return new SingleShotCommand(this){
-            @Override
-            public void doCommand(){
-                decreaseRPM();
-            }
-        };
-    }
-    
-    
+
+
     public Command stop() {
         return new SingleShotCommand(this) {
             @Override
             public void doCommand() {
                 adjustShooterSpeed(0);
+                RPM_SPEED = 0;
             }
         }.withTimeout(EntechCommandBase.DEFAULT_TIMEOUT_SECONDS);
     }
@@ -128,118 +131,60 @@ public class ShooterSubsystem extends BaseSubsystem {
         }.withTimeout(EntechCommandBase.DEFAULT_TIMEOUT_SECONDS);
     }
 
+    public void decreaseRPMSpeed(){
+        if(this.RPM_SPEED > 150){
+            this.RPM_SPEED -= 150;
+        }
+    }
+
+    public void increaseRPMSpeed(){
+        if(this.RPM_SPEED < this.SHOOTER_MAX_RPM - 150){
+            this.RPM_SPEED += 150;
+        }
+    }
+    
     @Override
     public void initialize() {
 
-    m_stick = new Joystick(0);
+        SparkMaxSettings shooterSettings = SparkMaxSettingsBuilder.defaults().withCurrentLimits(this.CURRENT_LIMIT)
+                .coastInNeutral().withDirections(false, false).limitMotorOutputs(this.SHOOTER_MAXOUTPUT, this.SHOOTER_MINOUTPUT)
+                .withMotorRampUpOnStart(this.SHOOTER_MOTOR_RAMPUP).useSmartMotionControl()
+                .withPositionGains(this.SHOOTER_PID_F, this.SHOOTER_PID_P, this.SHOOTER_PID_I, this.SHOOTER_PID_D)
+                .useAccelerationStrategy(AccelStrategy.kSCurve).withMaxVelocity(this.SHOOTER_MAX_RPM).withMaxAcceleration(this.SHOOTER_MAX_ACCEL).withClosedLoopError(this.SHOOTER_TOLERANCE).build();
+        
+        TalonSettings hoodSettings = TalonSettingsBuilder.defaults().withPrettySafeCurrentLimits().brakeInNeutral()
+                .withDirections(false, false).noMotorOutputLimits().noMotorStartupRamping().usePositionControl()
+                .withGains(HOOD_PID_F, HOOD_PID_P, HOOD_PID_I, HOOD_PID_D)
+                .withMotionProfile(HOOD_CRUISE_VELOCITY, HOOD_ACCELERATION, ALLOWABLE_ERROR).build();
 
-    // initialize motor
-    m_motor = new CANSparkMax(deviceID, MotorType.kBrushless);
+        // Basic outline for shooter
+        shooterMotorController = new SparkSpeedController(shootMotor, shooterSettings);
+        shooterMotorController.configure();
+        
+        hoodMotorController = new TalonPositionController(hoodMotor, hoodSettings);
+        hoodMotorController.configure();
+        hoodMotor.configForwardLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen,
+                0);
 
-    /**
-     * The RestoreFactoryDefaults method can be used to reset the configuration parameters
-     * in the SPARK MAX to their factory default state. If no argument is passed, these
-     * parameters will not persist between power cycles
-     */
-    m_motor.restoreFactoryDefaults();
+        hoodMotor.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen,
+                0);
 
-    /**
-     * In order to use PID functionality for a controller, a CANPIDController object
-     * is constructed by calling the getPIDController() method on an existing
-     * CANSparkMax object
-     */
-    m_pidController = m_motor.getPIDController();
-
-    // Encoder object created to display position values
-    m_encoder = m_motor.getEncoder();
-
-    // PID coefficients
-    kP = 6e-5; 
-    kI = 0;
-    kD = 0; 
-    kIz = 0; 
-    kFF = 0.000015; 
-    kMaxOutput = 1; 
-    kMinOutput = -1;
-    maxRPM = 5700;
-
-    // set PID coefficients
-    m_pidController.setP(kP);
-    m_pidController.setI(kI);
-    m_pidController.setD(kD);
-    m_pidController.setIZone(kIz);
-    m_pidController.setFF(kFF);
-    m_pidController.setOutputRange(kMinOutput, kMaxOutput);
-
-    // display PID coefficients on SmartDashboard
-    SmartDashboard.putNumber("P Gain", kP);
-    SmartDashboard.putNumber("I Gain", kI);
-    SmartDashboard.putNumber("D Gain", kD);
-    SmartDashboard.putNumber("I Zone", kIz);
-    SmartDashboard.putNumber("Feed Forward", kFF);
-    SmartDashboard.putNumber("Max Output", kMaxOutput);
-    SmartDashboard.putNumber("Min Output", kMinOutput);
+        hoodMotor.overrideLimitSwitchesEnable(true);
+        HOOD_POSITION = hoodMotorController.getActualPosition();
     }
 
     @Override
     public void customPeriodic(RobotPose rPose, FieldPose fPose) {
-double p = SmartDashboard.getNumber("P Gain", 0);
-    double i = SmartDashboard.getNumber("I Gain", 0);
-    double d = SmartDashboard.getNumber("D Gain", 0);
-    double iz = SmartDashboard.getNumber("I Zone", 0);
-    double ff = SmartDashboard.getNumber("Feed Forward", 0);
-    double max = SmartDashboard.getNumber("Max Output", 0);
-    double min = SmartDashboard.getNumber("Min Output", 0);
-
-    // if PID coefficients on SmartDashboard have changed, write new values to controller
-    if((p != kP)) { m_pidController.setP(p); kP = p; }
-    if((i != kI)) { m_pidController.setI(i); kI = i; }
-    if((d != kD)) { m_pidController.setD(d); kD = d; }
-    if((iz != kIz)) { m_pidController.setIZone(iz); kIz = iz; }
-    if((ff != kFF)) { m_pidController.setFF(ff); kFF = ff; }
-    if((max != kMaxOutput) || (min != kMinOutput)) { 
-      m_pidController.setOutputRange(min, max); 
-      kMinOutput = min; kMaxOutput = max; 
+        logger.log("Current Speed", shooterMotorController.getActualSpeed());
+        logger.log("Desired Speed", this.RPM_SPEED);
     }
-
-    /**
-     * PIDController objects are commanded to a set point using the 
-     * SetReference() method.
-     * 
-     * The first parameter is the value of the set point, whose units vary
-     * depending on the control type set in the second parameter.
-     * 
-     * The second parameter is the control type can be set to one of four 
-     * parameters:
-     *  com.revrobotics.ControlType.kDutyCycle
-     *  com.revrobotics.ControlType.kPosition
-     *  com.revrobotics.ControlType.kVelocity
-     *  com.revrobotics.ControlType.kVoltage
-     */
-    double setPoint = m_stick.getY()*maxRPM * 3;
-    m_pidController.setReference(setPoint, ControlType.kVelocity);
     
-    SmartDashboard.putNumber("SetPoint", setPoint);
-    SmartDashboard.putNumber("ProcessVariable", m_encoder.getVelocity());
-    }
+    
 
     public void adjustShooterSpeed(double desiredSpeed) {
-        this.SHOOT_SPEED = desiredSpeed;
-        shootMotor.getPIDController().setReference(this.SHOOT_SPEED, ControlType.kVelocity);
-    }
-    
-    public void increaseRPM(){
-        if(this.SHOOT_SPEED < 5700){
-            this.SHOOT_SPEED += 150;
-        }
+        shootMotor.getPIDController().setReference(-desiredSpeed, ControlType.kVelocity);
     }
 
-    public void decreaseRPM(){
-        if(this.SHOOT_SPEED > 3500){
-            this.SHOOT_SPEED -= 150;
-        }
-    }
-    
     public void adjustHoodPosition(double desiredPosition) {
         this.HOOD_POSITION = desiredPosition;
         hoodMotorController.setDesiredPosition(desiredPosition);
@@ -279,5 +224,6 @@ double p = SmartDashboard.getNumber("P Gain", 0);
         double desiredPosition = ((90 - configuration.getDesiredHoodAngle()) / 360) * ENCODER_CLICKS_PER_HOOD_MOTOR_REVOLUTION;
         adjustHoodPosition(desiredPosition);
     }
+
 
 }

@@ -16,7 +16,7 @@ public class SparkSpeedController extends BaseSparkController {
     }
 
     public void setDesiredSpeed(double desiredSpeed) {
-        this.getSettings().setMode(this.getSpark(), desiredSpeed);
+        this.getSpark().getPIDController().setReference(desiredSpeed, ControlType.kVelocity);
     }
 
     public SparkSpeedController(CANSparkMax spark, SparkMaxSettings settings) {
