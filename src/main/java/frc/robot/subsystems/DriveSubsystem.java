@@ -46,7 +46,6 @@ public class DriveSubsystem extends BaseSubsystem {
     private DifferentialDrive robotDrive;
     
     private PositionDriveController autoController;
-    private SparkPositionControllerGroup posController;
 
     private PositionBuffer positionBuffer = new PositionBuffer();
 
@@ -59,14 +58,6 @@ public class DriveSubsystem extends BaseSubsystem {
             .useSpeedControl()
             .build();
 
-    private SparkMaxSettings positionSettings = SparkMaxSettingsBuilder.defaults()
-            .withCurrentLimits(35)
-            .coastInNeutral()
-            .withDirections(false, false)
-            .noMotorOutputLimits()
-            .noMotorStartupRamping()
-            .useSpeedControl()
-            .build();
     private SparkMaxSettings smartMotionSettings = SparkMaxSettingsBuilder.defaults()
             .withCurrentLimits(35)
             .brakeInNeutral()
@@ -121,10 +112,8 @@ public class DriveSubsystem extends BaseSubsystem {
         rearLeftPositionController = new SparkPositionController(rearLeftSpark, smartMotionSettings);
         rearRightPositionController = new SparkPositionController(rearRightSpark, smartMotionSettings);
         
-        posController = new SparkPositionControllerGroup(frontLeftPositionController, frontRightPositionController,
-                rearLeftPositionController, rearRightPositionController);
-        autoController = new PositionDriveController(frontLeftSpark, frontRightSpark, 
-                rearLeftSpark, rearRightSpark, smartMotionSettings, positionBuffer,
+        autoController = new PositionDriveController(frontRightSpark, rearRightSpark, 
+                frontLeftSpark, rearLeftSpark, smartMotionSettings, positionBuffer,
                 new EncoderInchesConverter(1/ RobotConstants.DIMENSIONS.MOTOR_REVOLUTIONS_PER_INCH));
         reset();
     }
@@ -134,13 +123,6 @@ public class DriveSubsystem extends BaseSubsystem {
         speedSettings.configureSparkMax(frontRightSpark);
         speedSettings.configureSparkMax(rearLeftSpark);
         speedSettings.configureSparkMax(rearRightSpark);
-    }
-
-    public void setPositionMode() {
-        positionSettings.configureSparkMax(frontLeftSpark);
-        positionSettings.configureSparkMax(frontRightSpark);
-        positionSettings.configureSparkMax(rearLeftSpark);
-        positionSettings.configureSparkMax(rearRightSpark);
     }
 
     public EncoderValues getEncoderValues() {

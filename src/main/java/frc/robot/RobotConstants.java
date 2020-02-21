@@ -66,7 +66,7 @@ public class RobotConstants {
     public interface AUTONOMOUS{
         public static final int MAX_VELOCITY = 2000;
         public static final int MAX_ACCELLERATION = 1500;
-        public static final double ACCEPTABLE_ERROR = 0.05;
-        public static final double POSITION_TOLERANCE_INCHES = 1;
+        public static final int ACCEPTABLE_ERROR = 0;
+        public static final int POSITION_TOLERANCE_INCHES = 1;
     }
 }

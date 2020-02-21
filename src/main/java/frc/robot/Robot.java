@@ -37,27 +37,30 @@ public class Robot extends TimedRobot {
 
     @Override
     public void robotPeriodic() {
-        subsystemManager.periodicAll();
-        CommandScheduler.getInstance().run();
     }
 
     @Override
     public void teleopInit() {
+        autoCommand.cancel();
         subsystemManager.getDriveSubsystem().setSpeedMode();
     }
 
     @Override
     public void teleopPeriodic() {
+        subsystemManager.periodicAll();
+        CommandScheduler.getInstance().run();
     }
 
     @Override
     public void autonomousInit() {
-        subsystemManager.getDriveSubsystem().setPositionMode();
         autoCommand.schedule();
     }
 
     @Override
     public void autonomousPeriodic() {
+        subsystemManager.periodicAll();
+        CommandScheduler.getInstance().run();
     }
+    
 
 }

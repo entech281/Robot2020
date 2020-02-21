@@ -13,7 +13,7 @@ public class SparkPositionControllerGroup {
     private SparkPositionController frontRight;
     private SparkPositionController rearLeft;
     private SparkPositionController rearRight;
-    public static final double RIGHT_ADJUST = -1.0;
+    public static final double RIGHT_ADJUST = - 1.0;
     public static final double LEFT_ADJUST = 1.0;
 
     public SparkPositionControllerGroup(SparkPositionController fL, SparkPositionController fR, SparkPositionController rL, SparkPositionController rR) {
@@ -53,8 +53,8 @@ public class SparkPositionControllerGroup {
         rearLeft.setDesiredPosition(leftPose * LEFT_ADJUST);
         frontRight.setDesiredPosition(rightPose * RIGHT_ADJUST);
         rearRight.setDesiredPosition(rightPose * RIGHT_ADJUST);
-        logger.log("set position left", leftPose);
-        logger.log("set position right", rightPose);
+        logger.log("set position left", leftPose * LEFT_ADJUST);
+        logger.log("set position right", rightPose * RIGHT_ADJUST);
     }
 
     public double getLeftCurrentPosition(EncoderInchesConverter converter) {
@@ -67,10 +67,10 @@ public class SparkPositionControllerGroup {
         return right;
     }
 
-    public int computeLeftEncoderCounts() {
-        int total = 0;
+    public double computeLeftEncoderCounts() {
+        double total = 0;
         int count = 0;
-        Integer pos = frontLeft.getActualPosition();
+        Double pos = frontLeft.getActualPosition();
         if (pos != null && Math.abs(pos) > 0) {
             total += pos;
             count += 1;
@@ -88,10 +88,10 @@ public class SparkPositionControllerGroup {
 
     }
 
-    public int computeRightEncoderCounts() {
-        int total = 0;
+    public double computeRightEncoderCounts() {
+        double total = 0;
         int count = 0;
-        Integer pos = frontRight.getActualPosition();
+        Double pos = frontRight.getActualPosition();
         if (pos != null && Math.abs(pos) > 0) {
             total += pos;
             count += 1;
@@ -104,7 +104,7 @@ public class SparkPositionControllerGroup {
         if (count == 0) {
             return 0;
         } else {
-            return -total / count;
+            return - total / count;
         }
     }
 
