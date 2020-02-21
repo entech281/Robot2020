@@ -25,51 +25,8 @@ public class ColorPanelSubsystem extends BaseSubsystem{
          colorMatcher.addColorMatch(kRedTarget);
          colorMatcher.addColorMatch(kYellowTarget);  
     }
-    public void detectColor(){
-        /**
-         * The method GetColor() returns a normalized color value from the sensor and can be
-         * useful if outputting the color to an RGB LED or similar. To
-         * read the raw color, use GetRawColor().
-         * 
-         * The color sensor works best when within a few inches from an object in
-         * well lit conditions (the built in LED is a big help here!). The farther
-         * an object is the more light from the surroundings will bleed into the 
-         * measurements and make it difficult to accurately determine its color.
-         */
-        Color detectedColor = colorSensor.getColor();
-
-        /**
-         * Run the color match algorithm on our detected color
-         */
-        String colorString;
-        ColorMatchResult match =  colorMatcher.matchClosestColor(detectedColor);
-
-        if (match.color == kBlueTarget) {
-            colorString = "BLUE";
-        } else if (match.color == kRedTarget) {
-            colorString = "RED";
-        } else if (match.color == kGreenTarget) {
-            colorString = "GREEN";
-        } else if (match.color == kYellowTarget) {
-            colorString = "YELLOW";
-        } else {
-            colorString = "UNKNOWN";
-        }
-
-        /**
-         * Open Smart Dashboard 
-         * or Shuffleboard to see the color detected by the 
-         * sensor.
-         */
-        SmartDashboard.putNumber("RED", detectedColor.red);
-        SmartDashboard.putNumber("GREEN", detectedColor.green);
-        SmartDashboard.putNumber("BLUE", detectedColor.blue);
-        SmartDashboard.putNumber("Confidence", match.confidence);
-        SmartDashboard.putString("Detected Color", colorString);
-     
-        
-    }
-    public String returnColor() {
+    
+    public WheelColorValue getSensorColor() {
       /**
        * The method GetColor() returns a normalized color value from the sensor and can be
        * useful if outputting the color to an RGB LED or similar. To
@@ -85,19 +42,19 @@ public class ColorPanelSubsystem extends BaseSubsystem{
       /**
        * Run the color match algorithm on our detected color
        */
-      String colorString;
+      WheelColorValue color;
       ColorMatchResult match =  colorMatcher.matchClosestColor(detectedColor);
 
       if (match.color == kBlueTarget) {
-          colorString = "BLUE";
+          color = WheelColorValue.BLUE;
       } else if (match.color == kRedTarget) {
-          colorString = "RED";
+          color = WheelColorValue.RED;
       } else if (match.color == kGreenTarget) {
-          colorString = "GREEN";
+          color = WheelColorValue.GREEN;
       } else if (match.color == kYellowTarget) {
-          colorString = "YELLOW";
+          color = WheelColorValue.YELLOW;
       } else {
-          colorString = "UNKNOWN";
+          color = WheelColorValue.NULL;
       }
 
       /**
@@ -106,43 +63,47 @@ public class ColorPanelSubsystem extends BaseSubsystem{
        * sensor.
        */
    
-      return colorString;
+      return color;
+      
+
       
   }
 
 
-    public void fieldColor() {
+    public WheelColorValue getFieldColor() {
         String gameData;
+        WheelColorValue fieldColor;
 gameData = DriverStation.getInstance().getGameSpecificMessage();
 if(gameData.length() > 0)
 {
   switch (gameData.charAt(0))
   {
     case 'B' :
-      SmartDashboard.putBoolean("Blue",true);
+      fieldColor = WheelColorValue.BLUE;
       break;
     case 'G' :
     SmartDashboard.putBoolean("Green",true);
+      fieldColor = WheelColorValue.GREEN;
       break;
     case 'R' :
     SmartDashboard.putBoolean("Red",true);
+    fieldColor = WheelColorValue.RED;
       break;
     case 'Y' :
     SmartDashboard.putBoolean("Yellow",true);
-      break;
+    fieldColor = WheelColorValue.YELLOW;
+    break;
     default :
     SmartDashboard.putBoolean("Color",false);
-      break;
+    fieldColor = WheelColorValue.NULL;  
+    break;
   }
 } else {
   SmartDashboard.putBoolean("Color",false);
+  fieldColor = WheelColorValue.NULL;
 }
+return fieldColor;
     }
-    
-    
-    public void periodic (){
-        detectColor();
-        fieldColor();
-    }
+
     
 }
