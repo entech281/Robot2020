@@ -134,13 +134,11 @@ public class DriveSubsystem extends BaseSubsystem {
 
     @Override
     public void customPeriodic(RobotPose rp, FieldPose fp) {
-        if (inAuto) {
-            autoController.periodic();
-        }
         logger.log("Front Left Encoder Ticks", frontLeftEncoder.getPosition());
         logger.log("Front Right Encoder Ticks", frontRightEncoder.getPosition());
         logger.log("Rear Left Encoder Ticks", rearLeftEncoder.getPosition());
         logger.log("Rear Right Encoder Ticks", rearRightEncoder.getPosition());
+        logger.log("isSafetyEnabled", robotDrive.isSafetyEnabled());
         if (getCurrentCommand() != null) {
             logger.log("current command", getCurrentCommand().getName());
         }
@@ -153,7 +151,10 @@ public class DriveSubsystem extends BaseSubsystem {
     public void startAutonomous() {
         inAuto = true;
         robotDrive.setSafetyEnabled(false);
-        autoController.activate();
+    }
+
+    public PositionDriveController getAutoController(){
+        return autoController;
     }
 
     public void endAutonomous() {

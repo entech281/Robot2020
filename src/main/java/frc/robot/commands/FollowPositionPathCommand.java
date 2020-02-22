@@ -33,11 +33,20 @@ public class FollowPositionPathCommand extends CommandBase{
     
     @Override
     public void initialize() {
+        logger.log("initialized", true);
         driveSubsystem.startAutonomous();
         logger.log("Is Running", true);
-        for (Position p : path) {
+        for (Position p : this.path) {
             driveSubsystem.getPositionBuffer().addPosition(p);
         }
+        driveSubsystem.getAutoController().activate();
+    }
+
+    @Override
+    public void execute(){
+        driveSubsystem.getAutoController().periodic();
+        ++counter;
+        logger.log("Times Ran", counter);
     }
 
     @Override
@@ -48,8 +57,6 @@ public class FollowPositionPathCommand extends CommandBase{
 
     @Override
     public boolean isFinished() {
-        ++counter;
-        logger.log("Times Ran", counter);
         return ! driveSubsystem.getPositionBuffer().hasNextPosition() ;
     }
     

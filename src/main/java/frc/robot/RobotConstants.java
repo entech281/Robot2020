@@ -56,16 +56,16 @@ public class RobotConstants {
     
     public interface PID{
         public interface DRIVE{
-            public static final double P = 8e-4;
-            public static final double I = 0;
+            public static final double P = 5e-4;
+            public static final double I = 0;//2e-5;
             public static final double D = 0;
             public static final double F = 0;
         }
     }
     
     public interface AUTONOMOUS{
-        public static final int MAX_VELOCITY = 2000;
-        public static final int MAX_ACCELLERATION = 1500;
+        public static final int MAX_VELOCITY = 3000;
+        public static final int MAX_ACCELLERATION = 3000;
         public static final int ACCEPTABLE_ERROR = 0;
         public static final int POSITION_TOLERANCE_INCHES = 1;
     }
