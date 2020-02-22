@@ -22,7 +22,6 @@ public abstract class BaseSubsystem extends SubsystemBase {
     protected DataLogger logger;
 
     public BaseSubsystem() {
-        DataLoggerFactory.configureForMatch();
         this.logger = DataLoggerFactory.getLoggerFactory().createDataLogger(this.getName());
     }
 

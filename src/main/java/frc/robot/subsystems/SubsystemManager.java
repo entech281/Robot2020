@@ -10,7 +10,6 @@ public class SubsystemManager {
 
     boolean hasClimb = false;
     public SubsystemManager() {
-        DataLoggerFactory.configureForMatch();
     }
 
     public DriveSubsystem getDriveSubsystem() {
@@ -80,7 +79,9 @@ public class SubsystemManager {
     private void updatePoses() {
         robotPoseManager.updateEncoders(driveSubsystem.getEncoderValues());
         robotPoseManager.updateNavxAngle(navXSubsystem.updateNavXAngle());
+        robotPoseManager.updateVisionData(visionSubsystem.getVisionData());
         robotPoseManager.updateWheelColor(colorSubsystem.getRobotColorSensorReading());
+        robotPoseManager.update();
     }
 
 }

@@ -58,7 +58,7 @@ public class ShooterSubsystem extends BaseSubsystem {
     private final int SHOOTER_TOLERANCE = 5;
     private final int SHOOTER_MAX_RPM = 6000;
     private boolean autoAdjust = false;
-    private VisionDataProcessor processor;
+    private VisionDataProcessor processor = new VisionDataProcessor();
     
     private int RPM_SPEED = 5350;
     
@@ -210,9 +210,9 @@ public class ShooterSubsystem extends BaseSubsystem {
 
     @Override
     public void customPeriodic(RobotPose rPose, FieldPose fPose) {
+        logger.log("TargetLocation", rPose.getTargetLocation().getDistanceToTarget());
+        logger.log("Vision Data", rPose.getTargetVerticalOffset());
         if(autoAdjust){
-            logger.log("TargetLocation", rPose.getTargetLocation().getDistanceToTarget());
-            logger.log("Vision Data", rPose.getTargetVerticalOffset());
             ShooterConfiguration config = processor.calculateShooterConfiguration(rPose.getTargetLocation());
             setDesiredShooterConfiguration(config);
         }
@@ -270,6 +270,7 @@ public class ShooterSubsystem extends BaseSubsystem {
     public double getHoodPosition() {
         if(hasHoodMotor)
             return hoodMotorController.getActualPosition();
+        return 0.0;
     }
 
     public double getDesiredPositon() {

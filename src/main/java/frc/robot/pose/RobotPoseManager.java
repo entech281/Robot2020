@@ -1,17 +1,19 @@
 package frc.robot.pose;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.RobotConstants;
 
 public class RobotPoseManager {
 
-    private EncoderValues encoders;
+    private EncoderValues encoders = new EncoderValues(0, 0, 0, 0);
     private EncoderValues lastEncoderValues = new EncoderValues(0, 0, 0, 0);
-    private NavXData navXData;
+    private NavXData navXData = new NavXData(0, true);
     private VisionData vData = RobotConstants.ROBOT_DEFAULTS.VISION.DEFAULT_VISION_DATA;
     private WheelColorValue wColor;
 
     private RobotPose pose = RobotConstants.ROBOT_DEFAULTS.START_POSE;
     private boolean navXWorking = true;
+    private int count = 0;
 
     public RobotPose getCurrentPose() {
         return pose;
@@ -37,6 +39,8 @@ public class RobotPoseManager {
     }
 
     public void updateVisionData(VisionData newVisionData) {
+        count += 1;
+        SmartDashboard.putNumber("Number of visionUpdates", count);
         this.vData = newVisionData;
     }
 

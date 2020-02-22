@@ -6,6 +6,7 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.SerialPort;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.RobotConstants;
 import frc.robot.pose.*;
 import frc.robot.utils.VisionDataProcessor;
@@ -23,22 +24,23 @@ public class VisionSubsystem extends BaseSubsystem{
     private SerialPort visionPort;
 
 
-    private VisionData visionData;
+    private VisionData visionData = RobotConstants.ROBOT_DEFAULTS.VISION.DEFAULT_VISION_DATA;
     private VisionDataProcessor processor;
+    private int count = 0;
     
 
     @Override
     public void initialize() {
-//        logger.log("initialized", true);
-        visionPort = new SerialPort(BAUD_RATE, SerialPort.Port.kUSB);        
+        logger.log("initialized", true);
+        visionPort = new SerialPort(BAUD_RATE, SerialPort.Port.kUSB1);        
         processor = new VisionDataProcessor();
     }
 
     @Override 
     public void customPeriodic(RobotPose rPose, FieldPose fPose){
+        SmartDashboard.putNumber("Bytes recieved", visionPort.getBytesReceived());
         String reading  = visionPort.readString();
-        
-        logger.log("Incoming", reading.length());
+        SmartDashboard.putString("Incoming", reading);
         processor.addInput(reading);
         visionData = processor.getCurrentVisionData();
     }
@@ -46,6 +48,7 @@ public class VisionSubsystem extends BaseSubsystem{
 
 
     public VisionData getVisionData(){
+        logger.log("Offset", visionData.getVerticalOffset());
         return visionData;
     }
 
