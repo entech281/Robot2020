@@ -1,6 +1,5 @@
 package frc.robot.pose;
 
-import frc.robot.pose.WheelColorValue;
 import frc.robot.subsystems.ColorPanelSubsystem;
 
 public class ColorWheel {
@@ -88,6 +87,53 @@ public class ColorWheel {
             
         
         return numSections;
+    }
+    
+
+    public int smartNumSections(){
+        
+        int currentColor = getValue(getCurrentColor());
+        int targetColor = getValue(getTargetColor());
+        int numSections = 0 ;
+
+    if (getCurrentColor() == WheelColorValue.NULL){
+        
+        numSections=0;
+
+    }else if (getTargetColor() == WheelColorValue.NULL){
+        numSections=0;
+    }else if (getTargetColor() != WheelColorValue.NULL && getCurrentColor() != WheelColorValue.NULL){
+    numSections = targetColor-currentColor;
+    }
+    if (numSections == -3)  {
+        numSections =1;
+    }else if (numSections == 3) {
+        numSections = -1;
+    }else if (numSections == 2) {
+        numSections = -2;
+    }else {
+        numSections = 0;
+    }
+    return numSections;
+    }
+
+    private int getValue(WheelColorValue targetColor2) {
+        int colorValue;
+        
+     if(targetColor2 == WheelColorValue.BLUE) {
+         colorValue=1;
+     }else if (targetColor2 == WheelColorValue.YELLOW){
+         colorValue=2;
+     }else if (targetColor2 == WheelColorValue.RED) {
+         colorValue=3;
+     }else if (targetColor2 == WheelColorValue.GREEN) {
+         colorValue=4;
+     }else {
+         colorValue=0;
+     }
+        
+
+        return colorValue;
     }
 }
     

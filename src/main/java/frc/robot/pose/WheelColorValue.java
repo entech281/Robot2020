@@ -5,5 +5,7 @@ public enum WheelColorValue {
     YELLOW,
     RED,
     GREEN,
-    NULL
+    NULL;
+
+    
 }

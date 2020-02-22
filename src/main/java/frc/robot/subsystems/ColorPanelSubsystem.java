@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.util.Color;
 import frc.robot.pose.WheelColorValue;
 import edu.wpi.first.wpilibj.DriverStation;
 
+
 public class ColorPanelSubsystem extends BaseSubsystem{
     private final I2C.Port i2cPort = I2C.Port.kOnboard;
     private final ColorSensorV3  colorSensor = new ColorSensorV3(i2cPort);
@@ -64,7 +65,6 @@ public class ColorPanelSubsystem extends BaseSubsystem{
        */
    
       return color;
-      
 
       
   }
@@ -82,26 +82,22 @@ if(gameData.length() > 0)
       fieldColor = WheelColorValue.BLUE;
       break;
     case 'G' :
-    SmartDashboard.putBoolean("Green",true);
-      fieldColor = WheelColorValue.GREEN;
+    fieldColor = WheelColorValue.GREEN;
       break;
     case 'R' :
-    SmartDashboard.putBoolean("Red",true);
     fieldColor = WheelColorValue.RED;
       break;
     case 'Y' :
-    SmartDashboard.putBoolean("Yellow",true);
     fieldColor = WheelColorValue.YELLOW;
     break;
     default :
-    SmartDashboard.putBoolean("Color",false);
     fieldColor = WheelColorValue.NULL;  
     break;
   }
 } else {
-  SmartDashboard.putBoolean("Color",false);
   fieldColor = WheelColorValue.NULL;
 }
+logger.log("Field Target color", fieldColor);
 return fieldColor;
     }
 
