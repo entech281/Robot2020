@@ -6,6 +6,7 @@ import com.revrobotics.ColorMatch;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
+import frc.robot.pose.ColorWheel;
 import frc.robot.pose.WheelColorValue;
 import edu.wpi.first.wpilibj.DriverStation;
 

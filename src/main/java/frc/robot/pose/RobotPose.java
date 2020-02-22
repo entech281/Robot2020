@@ -8,20 +8,21 @@ public class RobotPose {
 
     private RobotPosition robotPosition;
     private VisionData visionData;
-    private WheelColorValue wheelColor;
+    private ColorWheel wheelColor;
     private TargetLocation targetLocation;
 
+    
     public RobotPose(RobotPosition robotPosition, VisionData vData) {
         this.robotPosition = robotPosition;
         visionData = vData;
-        wheelColor = null;
+      //  wheelColor = null;
         targetLocation = new VisionDataProcessor().compute(vData);
     }
 
     public RobotPose(RobotPosition robotPos) {
         robotPosition = robotPos;
         visionData = null;
-        wheelColor = null;
+      //  wheelColor = null;
         targetLocation = new VisionDataProcessor().compute(visionData);
     }
 
@@ -42,7 +43,7 @@ public class RobotPose {
     }
 
     public WheelColorValue getCurrentWheelColor() {
-        return wheelColor;
+        return wheelColor.getCurrentColor();
     }
 
     public TargetLocation getTargetLocation() {

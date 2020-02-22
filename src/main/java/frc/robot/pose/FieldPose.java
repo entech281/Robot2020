@@ -3,13 +3,17 @@ package frc.robot.pose;
 
 public class FieldPose {
 
-    private ColorWheel colorWheel = new ColorWheel();
+    private WheelColorValue colorWheel;
 
-    public FieldPose(ColorWheel colorWheel) {
-        this.colorWheel = colorWheel;
+    public FieldPose(WheelColorValue colorWheel2) {
+
+	}
+
+	public void updateFieldPose(WheelColorValue colorWheel2) {
+        this.colorWheel = colorWheel2;
     }
 
-    public ColorWheel getColorWheel() {
+	public WheelColorValue getColorWheel() {
         return colorWheel;
     }
 }

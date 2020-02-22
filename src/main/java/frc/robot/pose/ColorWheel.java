@@ -6,8 +6,7 @@ public class ColorWheel {
 
     private ColorPanelSubsystem colorPanel;
 
-//for all calculations, the assumption is made that we are spinning clockwise
-
+//for all calculations, a positive rotation value is clockwise and negative is counterclockwise
     public ColorWheel() {
 
     }
