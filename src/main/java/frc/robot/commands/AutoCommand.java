@@ -11,7 +11,7 @@ import frc.robot.subsystems.ShooterSubsystem;
 public class AutoCommand extends ParallelCommandGroup {
 
     public AutoCommand(ShooterSubsystem shoot, DriveSubsystem drive, IntakeSubsystem intake) {
-        addCommands(//new HoodHomingCommand(shoot), 
+        addCommands(
             new FollowPositionPathCommand(drive, AutoPathFactory.getExamplePath()), 
             intake.start()
         );

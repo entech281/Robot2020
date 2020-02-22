@@ -27,8 +27,6 @@ public class Robot extends TimedRobot {
     OperatorInterface oi;
     AutoCommand autoCommand;
 
-    private int counter;
-
     @Override
     public void robotInit() {
         this.logger = DataLoggerFactory.getLoggerFactory().createDataLogger("Robot Main Loop");
@@ -57,16 +55,12 @@ public class Robot extends TimedRobot {
     public void autonomousInit() {
         autoCommand = new AutoCommand(subsystemManager.getShooterSubsystem(),subsystemManager.getDriveSubsystem(),subsystemManager.getIntakeSubsystem());
         autoCommand.schedule();
-        //CommandScheduler.getInstance().schedule(autoCommand);
         logger.log("end auto init", true);
 
     }
 
     @Override
     public void autonomousPeriodic() {
-        ++counter;
-        logger.log("auto periodic times called", counter);
-        logger.log("in auto periodic", true);
         subsystemManager.periodicAll();
         CommandScheduler.getInstance().run();
     }
