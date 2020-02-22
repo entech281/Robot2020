@@ -4,6 +4,7 @@ import frc.robot.controllers.PositionDriveController;
 import frc.robot.controllers.SparkMaxSettings;
 import frc.robot.controllers.SparkMaxSettingsBuilder;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
 import frc.robot.DriveInstruction;
 import frc.robot.RobotConstants;
 import frc.robot.controllers.SparkPositionController;
@@ -181,5 +182,25 @@ public class DriveSubsystem extends BaseSubsystem {
 
     public PositionBuffer getPositionBuffer() {
         return positionBuffer;
+    }
+
+    public void tankDriveVolts(double leftVolts, double rightVolts) {
+        leftSpeedController.setVoltage(leftVolts);
+        rightSpeedController.setVoltage(-rightVolts);
+        logger.log("leftVolts", leftVolts);
+        logger.log("rightVolts", rightVolts);
+
+        robotDrive.feed();
+    }
+
+    public DifferentialDriveWheelSpeeds getWheelSpeeds(){
+        double leftSpeed = frontLeftEncoder.getVelocity()
+            * RobotConstants.DIMENSIONS.MOTOR_REVOLUTIONS_PER_INCH
+            * RobotConstants.RAMSETE.INCHES_TO_METERS;
+
+        double rightSpeed = frontRightEncoder.getVelocity()
+            * RobotConstants.DIMENSIONS.MOTOR_REVOLUTIONS_PER_INCH
+            * RobotConstants.RAMSETE.INCHES_TO_METERS;
+        return new DifferentialDriveWheelSpeeds(leftSpeed, rightSpeed);                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 
     }
 }

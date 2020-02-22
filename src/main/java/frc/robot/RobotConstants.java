@@ -1,5 +1,6 @@
 package frc.robot;
 
+import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
 import frc.robot.pose.*;
 
 public class RobotConstants {
@@ -70,5 +71,21 @@ public class RobotConstants {
         public static final int MAX_ACCELLERATION = 1500;
         public static final int ACCEPTABLE_ERROR = 0;
         public static final double POSITION_TOLERANCE_INCHES = 0;
+    }
+
+    public interface RAMSETE{
+        public static final double ksVolts = 0.147;
+        public static final double kvVoltSecondsPerMeter = 0.0707;
+        public static final double kaVoltSecondsSquaredPerMeter = 0.00971;
+    
+        public static final double kPDriveVel = 0.451;
+        public static final double INCHES_TO_METERS = 39.7;
+        public static final double kTrackwidthMeters = DIMENSIONS.ROBOT_WIDTH * INCHES_TO_METERS;
+        public static final DifferentialDriveKinematics kDriveKinematics =
+            new DifferentialDriveKinematics(kTrackwidthMeters);
+		public static final double kMaxAccelerationMetersPerSecondSquared = 1;
+		public static final double kRamseteB = 0;
+		public static final double kMaxSpeedMetersPerSecond =   1;
+		public static final double kRamseteZeta = 0;
     }
 }

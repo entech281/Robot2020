@@ -1,5 +1,6 @@
 package frc.robot.pose;
 
+import edu.wpi.first.wpilibj.geometry.Pose2d;
 import frc.robot.RobotConstants;
 
 public class RobotPoseManager {
@@ -52,6 +53,10 @@ public class RobotPoseManager {
     public double getEncodersRight() {
         return (this.encoders.getRightFront() + this.encoders.getRightRear()) / 2
                 - (this.lastEncoderValues.getRightFront() + this.lastEncoderValues.getRightRear()) / 2;
+    }
+
+    public Pose2d getWPIPose(){
+        return pose.getWPIRobotPose();
     }
 
 }
