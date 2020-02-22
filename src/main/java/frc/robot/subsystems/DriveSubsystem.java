@@ -24,8 +24,6 @@ import frc.robot.utils.EncoderInchesConverter;
 
 public class DriveSubsystem extends BaseSubsystem {
 
-    private boolean inAuto;
-
     private CANSparkMax frontLeftSpark;
     private CANSparkMax frontRightSpark;
     private CANSparkMax rearLeftSpark;
@@ -65,10 +63,10 @@ public class DriveSubsystem extends BaseSubsystem {
             .limitMotorOutputs(1.0, -1.0)
             .noMotorStartupRamping()
             .useSmartMotionControl()
-            .withPositionGains(RobotConstants.PID.DRIVE.F, 
-                RobotConstants.PID.DRIVE.P, 
-                RobotConstants.PID.DRIVE.I, 
-                RobotConstants.PID.DRIVE.D)
+            .withPositionGains(RobotConstants.PID.AUTO.F, 
+                RobotConstants.PID.AUTO.P, 
+                RobotConstants.PID.AUTO.I, 
+                RobotConstants.PID.AUTO.D)
             .useAccelerationStrategy(AccelStrategy.kTrapezoidal)
             .withMaxVelocity(RobotConstants.AUTONOMOUS.MAX_VELOCITY)
             .withMaxAcceleration(RobotConstants.AUTONOMOUS.MAX_ACCELLERATION)
@@ -149,7 +147,6 @@ public class DriveSubsystem extends BaseSubsystem {
     }
 
     public void startAutonomous() {
-        inAuto = true;
         robotDrive.setSafetyEnabled(false);
     }
 
@@ -158,7 +155,6 @@ public class DriveSubsystem extends BaseSubsystem {
     }
 
     public void endAutonomous() {
-        inAuto = false;
         robotDrive.setSafetyEnabled(true);
     }
 
