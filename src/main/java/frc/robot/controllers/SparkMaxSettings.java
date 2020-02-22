@@ -8,6 +8,7 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 public class SparkMaxSettings{
+	
 	public static final int TIMEOUT_MS = 10;
 	public static final int PID_SLOT = 0;
 	public static final int PROFILE_SLOT = 0;
@@ -59,7 +60,7 @@ public class SparkMaxSettings{
 		settings.follow = follow;
 		return settings;
 	}
-	
+
     public void configureSparkMax(CANSparkMax spark){
 		//Current Limits
 		spark.restoreFactoryDefaults();
@@ -85,7 +86,6 @@ public class SparkMaxSettings{
 		pidController.setSmartMotionMaxVelocity(profile.cruiseVelocityRPM, PID_SLOT);
 		pidController.setSmartMotionMinOutputVelocity(-profile.cruiseVelocityRPM, PID_SLOT);
 
-		spark.burnFlash();
 	}
 
 	/**
@@ -102,7 +102,6 @@ public class SparkMaxSettings{
 		} else {
 			pidController = spark.getPIDController();
 			pidController.setReference(value, this.ctrlType);
-
 		}
 	}
 
@@ -133,7 +132,7 @@ public class SparkMaxSettings{
 	public static class MotionProfile {
 		public int cruiseVelocityRPM = 3200;
 		public AccelStrategy accelStrategy = AccelStrategy.kTrapezoidal;
-		public int allowableClosedLoopError = 20;
+		public double allowableClosedLoopError = 20;
 		public int maxAccel = 20;
 	}
 
