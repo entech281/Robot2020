@@ -17,11 +17,10 @@ import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveVoltageConst
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.RobotConstants;
-import frc.robot.pose.RobotPoseManager;
 import frc.robot.subsystems.DriveSubsystem;
 
 public class RamseteAutoCommand {
-    public SequentialCommandGroup getExampleCommand(DriveSubsystem robotDrive, RobotPoseManager poseManager) {
+    public static SequentialCommandGroup getExampleCommand(DriveSubsystem robotDrive) {
         // Create a voltage constraint to ensure we don't accelerate too fast
         var autoVoltageConstraint =
         new DifferentialDriveVoltageConstraint(
@@ -57,17 +56,17 @@ public class RamseteAutoCommand {
 
 		RamseteCommand ramseteCommand = new RamseteCommand(
             exampleTrajectory,
-            poseManager::getWPIPose,
+            robotDrive::getCurrentWPIPose,
             new RamseteController(RobotConstants.RAMSETE.kRamseteB, RobotConstants.RAMSETE.kRamseteZeta),
             new SimpleMotorFeedforward(RobotConstants.RAMSETE.ksVolts,
                                 RobotConstants.RAMSETE.kvVoltSecondsPerMeter,
                                 RobotConstants.RAMSETE.kaVoltSecondsSquaredPerMeter),
             RobotConstants.RAMSETE.kDriveKinematics,
             robotDrive::getWheelSpeeds,
-            new PIDController(RobotConstants.RAMSETE.kPDriveVel, 0, 0),
-            new PIDController(RobotConstants.RAMSETE.kPDriveVel, 0, 0),
+            new PIDController(RobotConstants.PID.DRIVE.P, RobotConstants.PID.DRIVE.I, RobotConstants.PID.DRIVE.D),
+            new PIDController(RobotConstants.PID.DRIVE.P, RobotConstants.PID.DRIVE.I, RobotConstants.PID.DRIVE.D),
             // RamseteCommand passes volts to the callback
-            robotDrive::tankDriveVolts,
+            robotDrive::tankDriveVolts, 
             robotDrive
         );
 

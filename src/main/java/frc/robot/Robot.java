@@ -32,7 +32,7 @@ public class Robot extends TimedRobot {
         this.logger = DataLoggerFactory.getLoggerFactory().createDataLogger("Robot Main Loop");
         subsystemManager.initAll();
         oi = new OperatorInterface(subsystemManager);
-        autoCommand = new AutoCommand(subsystemManager.getShooterSubsystem());
+        autoCommand = new AutoCommand(subsystemManager.getShooterSubsystem(),subsystemManager.getDriveSubsystem());
     }
 
     @Override

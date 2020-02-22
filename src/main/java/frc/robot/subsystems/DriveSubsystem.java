@@ -4,6 +4,7 @@ import frc.robot.controllers.PositionDriveController;
 import frc.robot.controllers.SparkMaxSettings;
 import frc.robot.controllers.SparkMaxSettingsBuilder;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
 import frc.robot.DriveInstruction;
 import frc.robot.RobotConstants;
@@ -50,6 +51,7 @@ public class DriveSubsystem extends BaseSubsystem {
     private SparkPositionControllerGroup posController;
 
     private PositionBuffer positionBuffer = new PositionBuffer();
+    private Pose2d currentpose;
 
     private SparkMaxSettings speedSettings = SparkMaxSettingsBuilder.defaults()
             .withCurrentLimits(35)
@@ -153,9 +155,7 @@ public class DriveSubsystem extends BaseSubsystem {
 
     @Override
     public void customPeriodic(RobotPose rp, FieldPose fp) {
-        if (inAuto) {
-            autoController.periodic();
-        }
+        currentpose = rp.getWPIRobotPose();
         logger.log("Front Left Encoder Ticks", frontLeftEncoder.getPosition());
         logger.log("Front Right Encoder Ticks", frontRightEncoder.getPosition());
         logger.log("Rear Left Encoder Ticks", rearLeftEncoder.getPosition());
@@ -202,5 +202,9 @@ public class DriveSubsystem extends BaseSubsystem {
             * RobotConstants.DIMENSIONS.MOTOR_REVOLUTIONS_PER_INCH
             * RobotConstants.RAMSETE.INCHES_TO_METERS;
         return new DifferentialDriveWheelSpeeds(leftSpeed, rightSpeed);                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 
+    }
+
+    public Pose2d getCurrentWPIPose(){
+        return currentpose;
     }
 }

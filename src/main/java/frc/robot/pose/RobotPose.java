@@ -2,6 +2,7 @@ package frc.robot.pose;
 
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
+import frc.robot.RobotConstants;
 import frc.robot.utils.VisionDataProcessor;
 
 public class RobotPose {
@@ -30,7 +31,7 @@ public class RobotPose {
     }
 
     public Pose2d getWPIRobotPose() {
-        return new Pose2d(robotPosition.getForward(), robotPosition.getHorizontal(), new Rotation2d(robotPosition.getTheta()));
+        return new Pose2d(robotPosition.getForward()*RobotConstants.RAMSETE.INCHES_TO_METERS, robotPosition.getHorizontal()*RobotConstants.RAMSETE.INCHES_TO_METERS, new Rotation2d(robotPosition.getTheta()-180));
     }
 
     public double getTargetLateralOffset() {

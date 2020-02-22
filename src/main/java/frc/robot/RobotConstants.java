@@ -74,18 +74,22 @@ public class RobotConstants {
     }
 
     public interface RAMSETE{
+        public static final double INCHES_TO_METERS = 39.7;
         public static final double ksVolts = 0.147;
-        public static final double kvVoltSecondsPerMeter = 0.0707;
-        public static final double kaVoltSecondsSquaredPerMeter = 0.00971;
+        public static final double kvVoltSecondsPerMeter = 0.0707 / INCHES_TO_METERS;
+        public static final double kaVoltSecondsSquaredPerMeter = 0.00971
+        / INCHES_TO_METERS 
+        / INCHES_TO_METERS;
     
         public static final double kPDriveVel = 0.451;
-        public static final double INCHES_TO_METERS = 39.7;
         public static final double kTrackwidthMeters = DIMENSIONS.ROBOT_WIDTH * INCHES_TO_METERS;
         public static final DifferentialDriveKinematics kDriveKinematics =
             new DifferentialDriveKinematics(kTrackwidthMeters);
-		public static final double kMaxAccelerationMetersPerSecondSquared = 1;
-		public static final double kRamseteB = 0;
-		public static final double kMaxSpeedMetersPerSecond =   1;
+        public static final double kMaxAccelerationMetersPerSecondSquared = AUTONOMOUS.MAX_ACCELLERATION
+            * DIMENSIONS.MOTOR_REVOLUTIONS_PER_INCH
+            * INCHES_TO_METERS;
+		public static final double kRamseteB = 0.7;
+		public static final double kMaxSpeedMetersPerSecond = 1;
 		public static final double kRamseteZeta = 0;
     }
 }
