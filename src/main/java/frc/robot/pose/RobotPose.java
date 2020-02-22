@@ -1,67 +1,51 @@
 package frc.robot.pose;
 
-import java.util.Objects;
-
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
+import frc.robot.utils.VisionDataProcessor;
 
-public class RobotPose implements PositionReader {
+public class RobotPose {
 
-    private double theta;
-    private double horizontal;
-    private double forward;
+    private RobotPosition robotPosition;
+    private VisionData visionData;
+    private WheelColorValue wheelColor;
+    private TargetLocation targetLocation;
 
-    public RobotPose() {
+    public RobotPose(RobotPosition robotPosition, VisionData vData) {
+        this.robotPosition = robotPosition;
+        visionData = vData;
+        wheelColor = null;
+        targetLocation = new VisionDataProcessor().compute(vData);
     }
 
-    public RobotPose(double horizontal, double forward, double theta) {
-        this.horizontal = horizontal;
-        this.forward = forward;
-        setTheta(theta);
+    public RobotPose(RobotPosition robotPos) {
+        robotPosition = robotPos;
+        visionData = null;
+        wheelColor = null;
+        targetLocation = new VisionDataProcessor().compute(visionData);
     }
 
-    public double getTheta() {
-        return this.theta;
-    }
-
-    public void setTheta(double theta) {
-        if (theta < 0) {
-            theta = 360 + theta;
-        }
-        this.theta = theta % 360;
-    }
-
-    public double getForward() {
-        return this.forward;
-    }
-
-    public void setForward(double forward) {
-        this.forward = forward;
-    }
-
-    public double getHorizontal() {
-        return this.horizontal;
-    }
-
-    public void setHorizontal(double horizontal) {
-        this.horizontal = horizontal;
+    public RobotPosition getRobotPosition() {
+        return robotPosition;
     }
 
     public Pose2d getWPIRobotPose() {
-        return new Pose2d(forward, horizontal, new Rotation2d(theta));
+        return new Pose2d(robotPosition.getForward(), robotPosition.getHorizontal(), new Rotation2d(robotPosition.getTheta()));
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(theta, horizontal, forward);
+    public double getTargetLateralOffset() {
+        return visionData.getLateralOffset();
     }
 
-    @Override
-    public String toString() {
-        return "{"
-                + " theta='" + theta + "'\n"
-                + ", horizontal='" + horizontal + "'\n"
-                + ", forward='" + forward + "'\n"
-                + "}";
+    public double getTargetVerticalOffset() {
+        return visionData.getVerticalOffset();
+    }
+
+    public WheelColorValue getCurrentWheelColor() {
+        return wheelColor;
+    }
+
+    public TargetLocation getTargetLocation() {
+        return targetLocation;
     }
 }

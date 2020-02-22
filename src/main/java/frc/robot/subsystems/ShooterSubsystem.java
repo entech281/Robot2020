@@ -14,9 +14,9 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.commands.EntechCommandBase;
 import frc.robot.commands.SingleShotCommand;
 import frc.robot.controllers.*;
-import frc.robot.posev2.FieldPose;
-import frc.robot.posev2.RobotPose;
-import frc.robot.posev2.ShooterConfiguration;
+import frc.robot.pose.FieldPose;
+import frc.robot.pose.RobotPose;
+import frc.robot.pose.ShooterConfiguration;
 
 public class ShooterSubsystem extends BaseSubsystem {
 
@@ -43,6 +43,7 @@ public class ShooterSubsystem extends BaseSubsystem {
     private final double HOOD_PID_P = 2.56 * 2;
     private final double HOOD_PID_I = 0;
     private final double HOOD_PID_D = 0;
+    private final double HOOD_GEAR_RATIO = 4;
     
     private final double SHOOTER_PID_P = 10;
     private final double SHOOTER_PID_I = 4e-4;
@@ -64,7 +65,7 @@ public class ShooterSubsystem extends BaseSubsystem {
         return new SingleShotCommand(this) {
             @Override
             public void doCommand() {
-                adjustShooterSpeed(5350);
+                adjustShooterSpeed(RPM_SPEED);
             }
         }.withTimeout(EntechCommandBase.DEFAULT_TIMEOUT_SECONDS);
     }
@@ -108,10 +109,10 @@ public class ShooterSubsystem extends BaseSubsystem {
                 hoodMotorController.resetPosition();
                 hoodMotorController.setDesiredPosition(hoodMotorController.getActualPosition());
                 while (!isUpperLimitHit()) {
-//                    hoodMotor.set(ControlMode.PercentOutput, 0.3);
+                    hoodMotor.set(ControlMode.PercentOutput, 0.3);
                     logger.log("POSE", hoodMotorController.getActualPosition());
                 }
-//                hoodMotor.set(ControlMode.Position, hoodMotorController.getActualPosition());
+                hoodMotor.set(ControlMode.Position, hoodMotorController.getActualPosition());
             }
         }.withTimeout(EntechCommandBase.DEFAULT_TIMEOUT_SECONDS);
     }
@@ -220,7 +221,7 @@ public class ShooterSubsystem extends BaseSubsystem {
     }
 
     public void setDesiredShooterConfiguration(ShooterConfiguration configuration) {
-        double desiredPosition = ((90 - configuration.getDesiredHoodAngle()) / 360) * ENCODER_CLICKS_PER_HOOD_MOTOR_REVOLUTION;
+        double desiredPosition = ((90 - configuration.getDesiredHoodAngle()) / 360) * ENCODER_CLICKS_PER_HOOD_MOTOR_REVOLUTION * HOOD_GEAR_RATIO;
         adjustHoodPosition(desiredPosition);
     }
 

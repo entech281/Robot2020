@@ -37,7 +37,7 @@ public class TestSparkMaxSettings {
         sparkSettings.gains.p = 1.3;
         sparkSettings.currentLimits.smartLimit = 50;
         sparkSettings.outputLimits.maxMotorOutput = 0.9;
-        sparkSettings.profile.accelStrategy = AccelStrategy.kTrapezoidal;
+        sparkSettings.profile.accelStrategy = AccelStrategy.kSCurve;
         sparkSettings.rampUp.neutralDeadband = 55;
 
         SparkMaxSettings copy = SparkMaxSettingsBuilder.copy(sparkSettings);

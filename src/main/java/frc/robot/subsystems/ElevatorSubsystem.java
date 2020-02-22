@@ -4,20 +4,18 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.RobotMap;
+import frc.robot.RobotConstants;
 import frc.robot.commands.EntechCommandBase;
 import frc.robot.commands.SingleShotCommand;
 import frc.robot.controllers.TalonSettings;
 import frc.robot.controllers.TalonSettingsBuilder;
 import frc.robot.controllers.TalonSpeedController;
-import frc.robot.posev2.FieldPose;
-import frc.robot.posev2.RobotPose;
 
 public class ElevatorSubsystem extends BaseSubsystem {
 
     private double elevatorSpeed = 1;
 
-    private final WPI_TalonSRX elevatorMotor = new WPI_TalonSRX(RobotMap.CAN.INTAKE_MOTOR);
+    private final WPI_TalonSRX elevatorMotor = new WPI_TalonSRX(RobotConstants.CAN.INTAKE_MOTOR);
     private TalonSpeedController elevatorMotorController;
 
     private final int maxCurrent = 20;
