@@ -3,6 +3,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.Joystick;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.SubsystemManager;
+import frc.robot.commands.SnapToVisionTargetCommand;
 import frc.robot.commands.TankDriveCommand;
 
 public class OperatorInterface {
@@ -25,6 +26,8 @@ public class OperatorInterface {
                 .whenPressed(subsystemManager.getShooterSubsystem().shootMaxSpeed())
                 .whenReleased(subsystemManager.getShooterSubsystem().stop())
                 .add();
+        manager.addButton(5)
+                .whenPressed(new SnapToVisionTargetCommand(subMan.getDriveSubsystem(), subMan.getVision))
 
         DriveSubsystem drive = subsystemManager.getDriveSubsystem();
 

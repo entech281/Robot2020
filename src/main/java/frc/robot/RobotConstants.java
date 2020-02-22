@@ -55,7 +55,14 @@ public class RobotConstants {
     }
     
     public interface PID{
-        public interface DRIVE{
+        public interface AUTO{
+            public static final double P = 5e-4;
+            public static final double I = 0;//2e-5;
+            public static final double D = 0;
+            public static final double F = 0;
+        }
+
+        public interface TARGET_LOCK{
             public static final double P = 5e-4;
             public static final double I = 0;//2e-5;
             public static final double D = 0;
