@@ -1,6 +1,5 @@
 package frc.robot.utils;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.RobotConstants;
 import frc.robot.pose.TargetLocation;
 import frc.robot.pose.VisionData;
@@ -56,7 +55,6 @@ public class VisionDataProcessor {
         if(data.length() == 0){
             return false;
         }
-        SmartDashboard.putString("Last character", data.substring(data.length() - 2, data.length() - 1));
         return data.substring(data.length() - 2, data.length() - 1).equals("-");
     }
     
@@ -64,10 +62,8 @@ public class VisionDataProcessor {
         String[] dataEntriesBuffer = buffer.split("\n");
         for(String data: dataEntriesBuffer){
             if(!completeData(data)){
-                SmartDashboard.putString("Incomplete", data);
                 continue;
             }
-            SmartDashboard.putString("Valid complete data", data);
             visionDataStack.add(calculateVisionData(data));
         }
         if(buffer.lastIndexOf("\n") != -1){
@@ -96,7 +92,6 @@ public class VisionDataProcessor {
             blobWidth = Double.parseDouble(outputData[3]);
             frameRate = Double.parseDouble(outputData[4]);
         }
-        SmartDashboard.putStringArray("Output", outputData);
         return new VisionData(visionTargetFound, lateralOffset, verticalOffset, blobWidth);
     }
 }

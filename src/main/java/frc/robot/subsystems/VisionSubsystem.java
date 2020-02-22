@@ -38,9 +38,7 @@ public class VisionSubsystem extends BaseSubsystem{
 
     @Override 
     public void customPeriodic(RobotPose rPose, FieldPose fPose){
-        SmartDashboard.putNumber("Bytes recieved", visionPort.getBytesReceived());
         String reading  = visionPort.readString();
-        SmartDashboard.putString("Incoming", reading);
         processor.addInput(reading);
         visionData = processor.getCurrentVisionData();
     }
