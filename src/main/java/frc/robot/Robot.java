@@ -55,8 +55,6 @@ public class Robot extends TimedRobot {
     public void autonomousInit() {
         autoCommand = new AutoCommand(subsystemManager.getShooterSubsystem(),subsystemManager.getDriveSubsystem(),subsystemManager.getIntakeSubsystem());
         autoCommand.schedule();
-        logger.log("end auto init", true);
-
     }
 
     @Override
