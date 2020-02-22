@@ -60,39 +60,6 @@ public class SparkMaxSettings{
 		settings.follow = follow;
 		return settings;
 	}
-	/*@Override
-	public String ToString(){
-
-		return ""+
-			gains.d +""+
-			gains.f+""+
-			gains.i+""+
-			gains.p+""+
-	
-			currentLimits.smartLimit+""+
-	
-			outputLimits.maxMotorOutput+""+
-			outputLimits.minMotorOutput+""+
-	
-			rampUp.neutralDeadband;
-			rampUp.rampUpSecondsClosedLoop;
-			rampUp.rampUpSecondsOpenLoop;
-	
-			motorDirections.inverted;
-			motorDirections.sensorPhase;
-	
-			brakeMode;
-			profile.accelStrategy;
-			profile.allowableClosedLoopError;
-			profile.cruiseVelocityRPM;
-			profile.maxAccel;
-	
-			ctrlType;
-			demand;
-			follow;
-		"
-	}*/
-
 
     public void configureSparkMax(CANSparkMax spark){
 		//Current Limits
