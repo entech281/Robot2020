@@ -8,8 +8,8 @@ import frc.robot.pose.RobotPoseManager;
 
 public class SubsystemManager {
 
+    boolean hasClimb = false;
     public SubsystemManager() {
-        DataLoggerFactory.configureForMatch();
     }
 
     public DriveSubsystem getDriveSubsystem() {
@@ -43,6 +43,7 @@ public class SubsystemManager {
     private ClimbSubsystem climbSubsystem;
     private ElevatorSubsystem elevatorSubsystem;
     private ColorSubsystem colorSubsystem;
+    private VisionSubsystem visionSubsystem;
 
     private final RobotPoseManager robotPoseManager = new RobotPoseManager();
     private final FieldPoseManager fieldPoseManager = new FieldPoseManager();
@@ -54,11 +55,14 @@ public class SubsystemManager {
         intakeSubsystem = new IntakeSubsystem();
         navXSubsystem = new NavXSubsystem();
         shootSubsystem = new ShooterSubsystem();
-        climbSubsystem = new ClimbSubsystem();
+        if(hasClimb){
+            climbSubsystem = new ClimbSubsystem();
+        }
         elevatorSubsystem = new ElevatorSubsystem();
         colorSubsystem = new ColorSubsystem();
+        visionSubsystem = new VisionSubsystem();
 
-        Collections.addAll(allSubsystems, driveSubsystem, intakeSubsystem, navXSubsystem, shootSubsystem, climbSubsystem, elevatorSubsystem);
+        Collections.addAll(allSubsystems, driveSubsystem, intakeSubsystem, navXSubsystem, visionSubsystem, shootSubsystem);
 
         allSubsystems.forEach(subsystem -> subsystem.initialize());
 
@@ -75,7 +79,9 @@ public class SubsystemManager {
     private void updatePoses() {
         robotPoseManager.updateEncoders(driveSubsystem.getEncoderValues());
         robotPoseManager.updateNavxAngle(navXSubsystem.updateNavXAngle());
+        robotPoseManager.updateVisionData(visionSubsystem.getVisionData());
         robotPoseManager.updateWheelColor(colorSubsystem.getRobotColorSensorReading());
+        robotPoseManager.update();
     }
 
 }

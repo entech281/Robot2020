@@ -6,6 +6,7 @@
  /*----------------------------------------------------------------------------*/
 package frc.robot;
 
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.commands.AutoCommand;
@@ -29,14 +30,16 @@ public class Robot extends TimedRobot {
 
     @Override
     public void robotInit() {
+         DataLoggerFactory.configureForMatch();
         this.logger = DataLoggerFactory.getLoggerFactory().createDataLogger("Robot Main Loop");
         subsystemManager.initAll();
+        CameraServer.getInstance().startAutomaticCapture();
         oi = new OperatorInterface(subsystemManager);
     }
     
     @Override
     public void robotPeriodic() {
-    }
+ }
     
     @Override
     public void teleopInit() {
@@ -61,6 +64,7 @@ public class Robot extends TimedRobot {
     public void autonomousPeriodic() {
         subsystemManager.periodicAll();
         CommandScheduler.getInstance().run();
+
     }
     
     @Override

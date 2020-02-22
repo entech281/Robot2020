@@ -72,6 +72,7 @@ public class SparkMaxSettings{
 		spark.setClosedLoopRampRate(rampUp.rampUpSecondsClosedLoop);
 		spark.setOpenLoopRampRate(rampUp.rampUpSecondsOpenLoop);
 		spark.setInverted(motorDirections.inverted);
+                spark.setClosedLoopRampRate(rampUp.rampUpSecondsClosedLoop);
 		spark.setIdleMode(brakeMode);
 
 		

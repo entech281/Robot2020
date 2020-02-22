@@ -104,7 +104,6 @@ public class DriveSubsystem extends BaseSubsystem {
         rearRightEncoder = rearRightSpark.getEncoder();
 
         robotDrive = new DifferentialDrive(leftSpeedController, rightSpeedController);
-
         frontLeftPositionController = new SparkPositionController(frontLeftSpark, smartMotionSettings);
         frontRightPositionController = new SparkPositionController(frontRightSpark, smartMotionSettings);
         rearLeftPositionController = new SparkPositionController(rearLeftSpark, smartMotionSettings);
