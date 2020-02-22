@@ -35,29 +35,28 @@ public class Robot extends TimedRobot {
         subsystemManager.initAll();
         CameraServer.getInstance().startAutomaticCapture();
         oi = new OperatorInterface(subsystemManager);
-        autoCommand = new AutoCommand(subsystemManager.getShooterSubsystem());
     }
-
+    
     @Override
     public void robotPeriodic() {
-
-    }
-
+ }
+    
     @Override
     public void teleopInit() {
+        if (autoCommand!=null)
+            autoCommand.cancel();
         subsystemManager.getDriveSubsystem().setSpeedMode();
     }
-
+    
     @Override
     public void teleopPeriodic() {
-        logger.log("Entered", true);
         subsystemManager.periodicAll();
         CommandScheduler.getInstance().run();
     }
-
+    
     @Override
     public void autonomousInit() {
-        subsystemManager.getDriveSubsystem().setPositionMode();
+        autoCommand = new AutoCommand(subsystemManager.getShooterSubsystem(),subsystemManager.getDriveSubsystem(),subsystemManager.getIntakeSubsystem());
         autoCommand.schedule();
     }
 
@@ -65,6 +64,12 @@ public class Robot extends TimedRobot {
     public void autonomousPeriodic() {
         subsystemManager.periodicAll();
         CommandScheduler.getInstance().run();
+
+    }
+    
+    @Override
+    public void disabledInit() {
+        subsystemManager.getDriveSubsystem().setSpeedMode();
     }
 
 }

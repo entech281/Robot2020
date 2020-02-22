@@ -17,7 +17,7 @@ import frc.robot.utils.EncoderInchesConverter;
 public class PositionDriveController{
 
     // TODO: this should be computed from the spark settings
-    public static final double TOLERANCE_INCHES = 3;
+    public static final double TOLERANCE_INCHES = RobotConstants.AUTONOMOUS.POSITION_TOLERANCE_INCHES;
 
 	private SparkPositionControllerGroup positionControllerGroup;
 	private EncoderInchesConverter encoderConverter;
@@ -45,12 +45,12 @@ public class PositionDriveController{
 	public void activate() {
 
 		
-		positionControllerGroup = new SparkPositionControllerGroup(
+		positionControllerGroup = new SparkPositionControllerGroup( 
 				new SparkPositionController(frontLeft, autoSettings),
 				new SparkPositionController(frontRight, autoSettings),
 				new SparkPositionController(backLeft, autoSettings),
 				new SparkPositionController(backRight, autoSettings));
-
+		positionControllerGroup.configureAll();
 		positionControllerGroup.resetPosition();
 
 	}
