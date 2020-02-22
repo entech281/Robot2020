@@ -1,5 +1,6 @@
 package frc.robot.controllers;
 
+import frc.robot.path.Position;
 import frc.robot.utils.EncoderInchesConverter;
 
 public class SparkPositionControllerGroup {
@@ -39,7 +40,7 @@ public class SparkPositionControllerGroup {
         rearRight.resetPosition();
     }
 
-    public void setDesiredPosition(int leftPose, int rightPose, boolean isRelative) {
+    public void setDesiredPosition(double leftPose, double rightPose, boolean isRelative) {
         if (isRelative) {
             resetPosition();
         }
@@ -100,4 +101,8 @@ public class SparkPositionControllerGroup {
             return -total / count;
         }
     }
+
+    public Position getCurrentPosition(EncoderInchesConverter encoderConverter) {
+		return new Position(getLeftCurrentPosition(encoderConverter), getRightCurrentPosition(encoderConverter));
+	}
 }

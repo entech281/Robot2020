@@ -2,19 +2,13 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
-import com.fasterxml.jackson.databind.deser.DeserializationProblemHandler;
-
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.RobotMap;
+import frc.robot.RobotConstants;
 import frc.robot.commands.EntechCommandBase;
 import frc.robot.commands.SingleShotCommand;
 import frc.robot.controllers.TalonSettings;
 import frc.robot.controllers.TalonSettingsBuilder;
 import frc.robot.controllers.TalonSpeedController;
-import frc.robot.logger.DataLoggerFactory;
-import frc.robot.posev2.FieldPose;
-import frc.robot.posev2.RobotPose;
 
 public class IntakeSubsystem extends BaseSubsystem {
 
@@ -24,7 +18,7 @@ public class IntakeSubsystem extends BaseSubsystem {
     private double FULL_SPEED_BWD = -1;
     private double STOP_SPEED = 0;
 
-    private final WPI_TalonSRX intakeMotor = new WPI_TalonSRX(RobotMap.CAN.INTAKE_MOTOR);
+    private final WPI_TalonSRX intakeMotor = new WPI_TalonSRX(RobotConstants.CAN.INTAKE_MOTOR);
     private TalonSpeedController intakeMotorController;
 
     public Command start() {
