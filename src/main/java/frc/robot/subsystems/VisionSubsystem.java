@@ -29,13 +29,17 @@ public class VisionSubsystem extends BaseSubsystem{
 
     @Override
     public void initialize() {
+//        logger.log("initialized", true);
         visionPort = new SerialPort(BAUD_RATE, SerialPort.Port.kUSB);        
         processor = new VisionDataProcessor();
     }
 
     @Override 
     public void customPeriodic(RobotPose rPose, FieldPose fPose){
-        processor.addInput(visionPort.readString());
+        String reading  = visionPort.readString();
+        
+        logger.log("Incoming", reading.length());
+        processor.addInput(reading);
         visionData = processor.getCurrentVisionData();
     }
 

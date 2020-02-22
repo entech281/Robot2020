@@ -6,6 +6,7 @@
  /*----------------------------------------------------------------------------*/
 package frc.robot;
 
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.commands.AutoCommand;
@@ -31,33 +32,38 @@ public class Robot extends TimedRobot {
     public void robotInit() {
         this.logger = DataLoggerFactory.getLoggerFactory().createDataLogger("Robot Main Loop");
         subsystemManager.initAll();
+        CameraServer.getInstance().startAutomaticCapture();
         oi = new OperatorInterface(subsystemManager);
         autoCommand = new AutoCommand(subsystemManager.getShooterSubsystem());
     }
 
     @Override
     public void robotPeriodic() {
+
+    }
+
+    @Override
+    public void teleopInit() {
+        subsystemManager.getDriveSubsystem().setSpeedMode();
+    }
+
+    @Override
+    public void teleopPeriodic() {
+        logger.log("Entered", true);
         subsystemManager.periodicAll();
         CommandScheduler.getInstance().run();
     }
 
     @Override
-    public void teleopInit() {
-//        subsystemManager.getDriveSubsystem().setSpeedMode();
-    }
-
-    @Override
-    public void teleopPeriodic() {
-    }
-
-    @Override
     public void autonomousInit() {
-//        subsystemManager.getDriveSubsystem().setPositionMode();
+        subsystemManager.getDriveSubsystem().setPositionMode();
         autoCommand.schedule();
     }
 
     @Override
     public void autonomousPeriodic() {
+        subsystemManager.periodicAll();
+        CommandScheduler.getInstance().run();
     }
 
 }

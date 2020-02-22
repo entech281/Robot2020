@@ -17,6 +17,9 @@ import frc.robot.pose.TargetLocation;
 import frc.robot.pose.ShooterConfiguration;
 
 import frc.robot.RobotConstants;
+import frc.robot.logger.DataLogger;
+import frc.robot.logger.DataLoggerFactory;
+import frc.robot.pose.NavXData;
 
 
 public class VisionDataProcessor {
@@ -31,14 +34,13 @@ public class VisionDataProcessor {
         visionDataStack.add(RobotConstants.ROBOT_DEFAULTS.VISION.DEFAULT_VISION_DATA);
     }
 
-    public TargetLocation compute(VisionData vData) {
-        double distance = 0;
-        double angle = 0;
-        //Code here from empirical testing
+    public TargetLocation compute(VisionData vData, double angle) {
+        double distance = 98.2 -0.609*vData.getVerticalOffset() + 0.0508*Math.pow(vData.getVerticalOffset(), 2);
         return new TargetLocation(distance, angle);
     }
     //distance in inches
-    public ShooterConfiguration calculateShooterConfiguration(double distance){
+    public ShooterConfiguration calculateShooterConfiguration(TargetLocation location){
+        double distance = location.getDistanceToTarget();
         double speedRPM = 5350;
         double angle = 17.7 + 0.287*distance - 7.07e-4*Math.pow(distance, 2);
         
@@ -53,7 +55,7 @@ public class VisionDataProcessor {
         if(data.length() == 0){
             return false;
         }
-        return data.substring(data.length() - 1).equals("-");
+        return data.substring(data.length() - 1).equals("\n");
     }
     
     private void parseBuffer(){

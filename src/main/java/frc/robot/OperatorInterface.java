@@ -12,6 +12,7 @@ public class OperatorInterface {
     private Joystick driveStick;
     private JoystickButtonManager manager;
     private SubsystemManager subsystemManager;
+    private DriveSubsystem drive;
 
     public OperatorInterface(final SubsystemManager subMan) {
         this.subsystemManager = subMan;
@@ -32,23 +33,24 @@ public class OperatorInterface {
         manager.addButton(5)
                 .whenPressed(new FollowPositionPathCommand(subsystemManager.getDriveSubsystem(), AutoPathFactory.getExamplePath()))
                 .add();
-        DriveSubsystem drive = subsystemManager.getDriveSubsystem();
+        
+        drive = subsystemManager.getDriveSubsystem();
 
         manager.addButton(RobotConstants.BUTTONS.RESET_BUTTON)
                 .whenPressed(drive.reset())
                 .add();
         
-        manager.addButton(3)
-            .whenPressed(subsystemManager.getShooterSubsystem().decreaseRPM())
-            .add();
+        manager.addButton(10)
+                .whenPressed(subsystemManager.getShooterSubsystem().enableAutoShooting())
+                .whenReleased(subsystemManager.getShooterSubsystem().disableAutoShooting())
+                .add();
         
-//        DriveSubsystem drive = subsystemManager.getDriveSubsystem();
-
-//        manager.addButton(RobotMap.BUTTONS.RESET_BUTTON)
-//                .whenPressed(drive.reset())
-//                .add();
-
-//        drive.setDefaultCommand(new TankDriveCommand(drive, driveStick));
+        
+        manager.addButton(RobotConstants.BUTTONS.RESET_BUTTON)
+                .whenPressed(drive.reset())
+                .add();
+        
+        drive.setDefaultCommand(new TankDriveCommand(drive, driveStick));
 
     }
 
