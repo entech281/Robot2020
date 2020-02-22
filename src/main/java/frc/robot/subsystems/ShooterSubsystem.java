@@ -44,8 +44,8 @@ public class ShooterSubsystem extends BaseSubsystem {
     private final double HOOD_PID_I = 0;
     private final double HOOD_PID_D = 0;
     
-    private final double SHOOTER_PID_P = 4e-4;
-    private final double SHOOTER_PID_I = 32e-7;
+    private final double SHOOTER_PID_P = 10;
+    private final double SHOOTER_PID_I = 4e-4;
     private final double SHOOTER_PID_D = 0;
     private final double SHOOTER_PID_F = 0.000015;
     private final double SHOOTER_MAXOUTPUT = 1;
@@ -54,17 +54,17 @@ public class ShooterSubsystem extends BaseSubsystem {
     private final double SHOOTER_MOTOR_RAMPUP = 0.5;
     private final int SHOOTER_MAX_ACCEL = 100;
     private final int SHOOTER_TOLERANCE = 5;
-    private final int SHOOTER_MAX_RPM = 5700;
+    private final int SHOOTER_MAX_RPM = 6000;
     
     
-    private int RPM_SPEED = 4000;
+    private int RPM_SPEED = 5350;
     
 
     public Command shootRPMSpeed() {
         return new SingleShotCommand(this) {
             @Override
             public void doCommand() {
-                adjustShooterSpeed(RPM_SPEED);
+                adjustShooterSpeed(5350);
             }
         }.withTimeout(EntechCommandBase.DEFAULT_TIMEOUT_SECONDS);
     }
@@ -95,7 +95,7 @@ public class ShooterSubsystem extends BaseSubsystem {
             @Override
             public void doCommand() {
                 adjustShooterSpeed(0);
-                RPM_SPEED = 0;
+                shootMotor.stopMotor();
             }
         }.withTimeout(EntechCommandBase.DEFAULT_TIMEOUT_SECONDS);
     }
@@ -108,10 +108,10 @@ public class ShooterSubsystem extends BaseSubsystem {
                 hoodMotorController.resetPosition();
                 hoodMotorController.setDesiredPosition(hoodMotorController.getActualPosition());
                 while (!isUpperLimitHit()) {
-                    hoodMotor.set(ControlMode.PercentOutput, 0.3);
+//                    hoodMotor.set(ControlMode.PercentOutput, 0.3);
                     logger.log("POSE", hoodMotorController.getActualPosition());
                 }
-                hoodMotor.set(ControlMode.Position, hoodMotorController.getActualPosition());
+//                hoodMotor.set(ControlMode.Position, hoodMotorController.getActualPosition());
             }
         }.withTimeout(EntechCommandBase.DEFAULT_TIMEOUT_SECONDS);
     }
@@ -165,7 +165,6 @@ public class ShooterSubsystem extends BaseSubsystem {
         hoodMotorController.configure();
         hoodMotor.configForwardLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen,
                 0);
-
         hoodMotor.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen,
                 0);
 
@@ -182,7 +181,7 @@ public class ShooterSubsystem extends BaseSubsystem {
     
 
     public void adjustShooterSpeed(double desiredSpeed) {
-        shootMotor.getPIDController().setReference(-desiredSpeed, ControlType.kVelocity);
+        shooterMotorController.setDesiredSpeed(-1*desiredSpeed);
     }
 
     public void adjustHoodPosition(double desiredPosition) {

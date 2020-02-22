@@ -78,9 +78,9 @@ public class SparkMaxSettings{
 		pidController.setOutputRange(outputLimits.minMotorOutput, outputLimits.maxMotorOutput);
 		pidController.setFF(gains.f);
 		pidController.setI(gains.i);
-		pidController.setP(gains.p);
-        pidController.setD(gains.d);
-        pidController.setIZone(0);
+            	pidController.setP(gains.p);
+                pidController.setD(gains.d);
+                pidController.setIZone(0);
 		pidController.setSmartMotionAccelStrategy(profile.accelStrategy, PID_SLOT);
 		pidController.setSmartMotionAllowedClosedLoopError(profile.allowableClosedLoopError, PID_SLOT);
 		pidController.setSmartMotionMaxAccel(profile.maxAccel, PID_SLOT);
