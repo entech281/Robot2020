@@ -16,7 +16,7 @@ public class RobotPose {
         visionData = vData;
         wheelColor = null;
         targetLocation = new VisionDataProcessor().compute(vData, robotPosition.getTheta());
-        
+
     }
 
     public RobotPosition getRobotPosition() {

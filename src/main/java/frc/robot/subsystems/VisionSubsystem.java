@@ -17,35 +17,31 @@ import java.util.*;
  *
  * @author aryan
  */
-public class VisionSubsystem extends BaseSubsystem{
+public class VisionSubsystem extends BaseSubsystem {
 
     private static final int BAUD_RATE = 115200;
-    
-    private SerialPort visionPort;
 
+    private SerialPort visionPort;
 
     private VisionData visionData = RobotConstants.ROBOT_DEFAULTS.VISION.DEFAULT_VISION_DATA;
     private VisionDataProcessor processor;
     private int count = 0;
-    
 
     @Override
     public void initialize() {
         logger.log("initialized", true);
-        visionPort = new SerialPort(BAUD_RATE, SerialPort.Port.kUSB1);        
+        visionPort = new SerialPort(BAUD_RATE, SerialPort.Port.kUSB1);
         processor = new VisionDataProcessor();
     }
 
-    @Override 
-    public void customPeriodic(RobotPose rPose, FieldPose fPose){
-        String reading  = visionPort.readString();
+    @Override
+    public void customPeriodic(RobotPose rPose, FieldPose fPose) {
+        String reading = visionPort.readString();
         processor.addInput(reading);
         visionData = processor.getCurrentVisionData();
     }
 
-
-
-    public VisionData getVisionData(){
+    public VisionData getVisionData() {
         logger.log("Offset", visionData.getVerticalOffset());
         return visionData;
     }

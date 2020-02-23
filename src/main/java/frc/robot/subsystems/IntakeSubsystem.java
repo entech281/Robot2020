@@ -10,6 +10,8 @@ import frc.robot.controllers.TalonSettings;
 import frc.robot.controllers.TalonSettingsBuilder;
 import frc.robot.controllers.TalonSpeedController;
 
+import static frc.robot.RobotConstants.AVAILABILITY.*;
+
 public class IntakeSubsystem extends BaseSubsystem {
 
     private double CURRENT_INTAKE_SPEED = 1;
@@ -18,8 +20,7 @@ public class IntakeSubsystem extends BaseSubsystem {
     private double FULL_SPEED_BWD = -1;
     private double STOP_SPEED = 0;
 
-    private boolean hardwareAvailable = RobotConstants.AVAILABILITY.intake;
-    
+
     private WPI_TalonSRX intakeMotor;
     private TalonSpeedController intakeMotorController;
 
@@ -52,7 +53,7 @@ public class IntakeSubsystem extends BaseSubsystem {
 
     @Override
     public void initialize() {
-        if(hardwareAvailable){
+        if (intake) {
             TalonSettings motorSettings = TalonSettingsBuilder.defaults().withCurrentLimits(20, 15, 200).brakeInNeutral()
                     .withDirections(false, false).noMotorOutputLimits().noMotorStartupRamping().useSpeedControl().build();
 
@@ -64,9 +65,9 @@ public class IntakeSubsystem extends BaseSubsystem {
 
     public void setIntakeMotorSpeed(double desiredSpeed) {
         logger.log("Intake Motor speed", desiredSpeed);
-        if(hardwareAvailable){
-        this.CURRENT_INTAKE_SPEED = desiredSpeed;
-        intakeMotorController.setDesiredSpeed(this.CURRENT_INTAKE_SPEED);
+        if (intake) {
+            this.CURRENT_INTAKE_SPEED = desiredSpeed;
+            intakeMotorController.setDesiredSpeed(this.CURRENT_INTAKE_SPEED);
         }
     }
 

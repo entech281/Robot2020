@@ -12,7 +12,7 @@ import frc.robot.controllers.SparkMaxSettings;
 import frc.robot.controllers.SparkMaxSettingsBuilder;
 import frc.robot.controllers.SparkSpeedController;
 import edu.wpi.first.wpilibj2.command.Command;
-
+import static frc.robot.RobotConstants.AVAILABILITY.*;
 public class ClimbSubsystem extends BaseSubsystem {
 
     CANSparkMax winch;
@@ -22,8 +22,8 @@ public class ClimbSubsystem extends BaseSubsystem {
     private Solenoid engageWinchSolenoid;
 
     Timer coord = new Timer();
-    
-    private boolean hardwareAvailability = RobotConstants.AVAILABILITY.climber;
+
+
 
     public Command pullRobotUp() {
         return new SingleShotCommand(this) {
@@ -73,7 +73,7 @@ public class ClimbSubsystem extends BaseSubsystem {
 
     @Override
     public void initialize() {
-        if(hardwareAvailability){
+        if (climber) {
             SparkMaxSettings motorSettings = SparkMaxSettingsBuilder.defaults().withPrettySafeCurrentLimits()
                     .brakeInNeutral().withDirections(false, false).noMotorOutputLimits().noMotorStartupRamping()
                     .useSpeedControl().build();
@@ -83,7 +83,6 @@ public class ClimbSubsystem extends BaseSubsystem {
             winchController = new SparkSpeedController(winch, motorSettings);
             winchController.configure();
 
-
             // The solenoid that controls the hook needs to be disengaged where as the
             // clutch needs to be engaged until we raise hook
             attachHookSolenoid.set(false);
@@ -92,9 +91,9 @@ public class ClimbSubsystem extends BaseSubsystem {
     }
 
     public void raiseHook() {
-        if(hardwareAvailability){
-        engageWinchSolenoid.set(false);
-        attachHookSolenoid.set(true);
+        if (climber) {
+            engageWinchSolenoid.set(false);
+            attachHookSolenoid.set(true);
         }
     }
 
@@ -103,14 +102,14 @@ public class ClimbSubsystem extends BaseSubsystem {
     }
 
     public void engageClutchWithWinch() {
-        if(hardwareAvailability){
-        winchController.setDesiredSpeed(0.25);
-        engageWinchSolenoid.set(true);
+        if (climber) {
+            winchController.setDesiredSpeed(0.25);
+            engageWinchSolenoid.set(true);
         }
     }
 
     public void stopClimbing() {
-        if(hardwareAvailability){
+        if (climber) {
             winchController.setDesiredSpeed(0);
         }
     }

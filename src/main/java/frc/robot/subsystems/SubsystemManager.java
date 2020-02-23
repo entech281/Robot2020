@@ -9,6 +9,7 @@ import frc.robot.pose.RobotPoseManager;
 public class SubsystemManager {
 
     boolean hasClimb = false;
+
     public SubsystemManager() {
     }
 
@@ -55,7 +56,7 @@ public class SubsystemManager {
         intakeSubsystem = new IntakeSubsystem();
         navXSubsystem = new NavXSubsystem();
         shootSubsystem = new ShooterSubsystem();
-        if(hasClimb){
+        if (hasClimb) {
             climbSubsystem = new ClimbSubsystem();
         }
         elevatorSubsystem = new ElevatorSubsystem();

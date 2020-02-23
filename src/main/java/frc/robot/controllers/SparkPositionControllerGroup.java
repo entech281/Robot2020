@@ -13,7 +13,7 @@ public class SparkPositionControllerGroup {
     private SparkPositionController frontRight;
     private SparkPositionController rearLeft;
     private SparkPositionController rearRight;
-    public static final double RIGHT_ADJUST = - 1.0;
+    public static final double RIGHT_ADJUST = -1.0;
     public static final double LEFT_ADJUST = 1.0;
 
     public SparkPositionControllerGroup(SparkPositionController fL, SparkPositionController fR, SparkPositionController rL, SparkPositionController rR) {
@@ -104,11 +104,11 @@ public class SparkPositionControllerGroup {
         if (count == 0) {
             return 0;
         } else {
-            return - total / count;
+            return -total / count;
         }
     }
 
     public Position getCurrentPosition(EncoderInchesConverter encoderConverter) {
-		return new Position(getLeftCurrentPosition(encoderConverter), getRightCurrentPosition(encoderConverter));
-	}
+        return new Position(getLeftCurrentPosition(encoderConverter), getRightCurrentPosition(encoderConverter));
+    }
 }

@@ -33,27 +33,26 @@ public class OperatorInterface {
         manager.addButton(5)
                 .whenPressed(new FollowPositionPathCommand(subsystemManager.getDriveSubsystem(), AutoPathFactory.getExamplePath()))
                 .add();
-        
+
         drive = subsystemManager.getDriveSubsystem();
 
-        
         manager.addButton(RobotConstants.BUTTONS.RESET_BUTTON)
                 .whenPressed(drive.reset())
                 .add();
-        
+
         manager.addButton(10)
                 .whenPressed(subsystemManager.getShooterSubsystem().enableAutoShooting())
                 .whenReleased(subsystemManager.getShooterSubsystem().disableAutoShooting())
                 .add();
-        
+
         manager.addButton(7)
                 .whenPressed(new HoodHomingCommand(subsystemManager.getShooterSubsystem()))
                 .add();
-        
+
         manager.addButton(RobotConstants.BUTTONS.RESET_BUTTON)
                 .whenPressed(drive.reset())
                 .add();
-        
+
         drive.setDefaultCommand(new TankDriveCommand(drive, driveStick));
 
     }

@@ -11,6 +11,8 @@ import frc.robot.controllers.TalonSettings;
 import frc.robot.controllers.TalonSettingsBuilder;
 import frc.robot.controllers.TalonSpeedController;
 
+import static frc.robot.RobotConstants.AVAILABILITY.*;
+
 public class ElevatorSubsystem extends BaseSubsystem {
 
     private double elevatorSpeed = 1;
@@ -22,9 +24,7 @@ public class ElevatorSubsystem extends BaseSubsystem {
     private final int maxSustainedCurrent = 15;
     private final int maxCurrentTime = 200;
 
-    
-    private boolean hardwareAvailable = RobotConstants.AVAILABILITY.elevator;
-    
+
     public Command start() {
         return new SingleShotCommand(this) {
             @Override
@@ -45,7 +45,7 @@ public class ElevatorSubsystem extends BaseSubsystem {
 
     @Override
     public void initialize() {
-        if(hardwareAvailable){
+        if (elevator) {
             TalonSettings motorSettings = TalonSettingsBuilder.defaults()
                     .withCurrentLimits(maxCurrent, maxSustainedCurrent, maxCurrentTime).brakeInNeutral()
                     .withDirections(false, false).noMotorOutputLimits().noMotorStartupRamping().useSpeedControl().build();
@@ -58,7 +58,7 @@ public class ElevatorSubsystem extends BaseSubsystem {
     }
 
     public void setElevatorSpeed(double desiredSpeed) {
-        if(hardwareAvailable){
+        if (elevator) {
             logger.log("Intake Motor speed", desiredSpeed);
             this.elevatorSpeed = desiredSpeed;
             elevatorMotorController.setDesiredSpeed(this.elevatorSpeed);

@@ -16,7 +16,7 @@ public class RobotPosition {
     }
 
     private void setTheta(double theta) {
-        while(theta < 0){
+        while (theta < 0) {
             theta = 360 + theta;
         }
         this.theta = theta % 360;
@@ -40,7 +40,7 @@ public class RobotPosition {
         return theta;
     }
 
-	public Pose2d getWPIRobotPose() {
-		return new Pose2d(getForward(), getHorizontal(), new Rotation2d(getTheta()));
-	}
+    public Pose2d getWPIRobotPose() {
+        return new Pose2d(getForward(), getHorizontal(), new Rotation2d(getTheta()));
+    }
 }

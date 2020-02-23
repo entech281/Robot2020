@@ -11,6 +11,7 @@ import frc.robot.logger.DataLogger;
 import frc.robot.logger.DataLoggerFactory;
 import frc.robot.pose.FieldPose;
 import frc.robot.pose.RobotPose;
+import static frc.robot.RobotConstants.AVAILABILITY.*;
 
 /**
  * Add your docs here.
