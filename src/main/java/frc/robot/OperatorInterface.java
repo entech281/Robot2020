@@ -33,9 +33,9 @@ public class OperatorInterface {
                 .whenPressed(new SnapToVisionTargetCommand(subMan.getDriveSubsystem(), subMan.getVisionSubsystem()))
                 .add();
 
-        manager.addButton(5)
-                .whenPressed(new FollowPositionPathCommand(subsystemManager.getDriveSubsystem(), AutoPathFactory.getExamplePath()))
-                .add();
+//        manager.addButton(5)
+//                .whenPressed(new FollowPositionPathCommand(subsystemManager.getDriveSubsystem(), AutoPathFactory.getExamplePath()))
+//                .add();
         
         drive = subsystemManager.getDriveSubsystem();
 

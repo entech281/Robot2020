@@ -1,6 +1,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.controller.PIDController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.DriveInstruction;
 import frc.robot.RobotConstants;
 import frc.robot.subsystems.DriveSubsystem;
@@ -20,28 +21,34 @@ public class SnapToVisionTargetCommand extends EntechCommandBase {
         this.vision = vision;
         this.controller = new PIDController(RobotConstants.PID.TARGET_LOCK.P,
             RobotConstants.PID.TARGET_LOCK.I,
-            RobotConstants.PID.TARGET_LOCK.D,
-            RobotConstants.PID.TARGET_LOCK.F);
+            RobotConstants.PID.TARGET_LOCK.D);
     }
     @Override
     public void initialize(){
         controller.setSetpoint(0);
+        controller.setTolerance(1);
     }
 
     @Override
     public void execute(){
-        offset = vision.getVisionData().getLateralOffset();
-        double output = controller.calculate(offset);
-        logger.log("offset", offset);
-        logger.log("output", output);
-        output = Math.min(output, 1);
-        output = Math.max(output, -1);
-        drive.drive(new DriveInstruction(0, output));
+        if(vision.getVisionData().targetFound()){
+            offset = vision.getVisionData().getLateralOffset();
+            double output = controller.calculate(offset);
+            controller.calculate(offset, 0);
+            logger.log("offset", offset);
+            logger.log("output", output);
+            if(output > 0)
+                output = Math.min(output, 0.3);
+            if(output < 0)
+                output = Math.max(output, -0.3);
+            logger.log("Final output", output);
+            drive.drive(new DriveInstruction(0, output));
+        }
     }
 
     @Override
     public boolean isFinished(){
-        return Math.abs(offset) < 1;
+        return controller.atSetpoint() || !vision.getVisionData().targetFound();
     }
 
 }
