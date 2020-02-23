@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import edu.wpi.first.wpilibj.Timer;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.RobotConstants;
@@ -33,6 +34,15 @@ public class ElevatorSubsystem extends BaseSubsystem {
             }
         }.withTimeout(EntechCommandBase.DEFAULT_TIMEOUT_SECONDS);
     }
+    
+    public Command shiftBack(){
+        return new SingleShotCommand(this) {
+            @Override
+            public void doCommand() {
+                shiftBackForShooterRoom();
+            }
+        };
+    }
 
     public Command stop() {
         return new SingleShotCommand(this) {
@@ -55,6 +65,12 @@ public class ElevatorSubsystem extends BaseSubsystem {
             elevatorMotorController.configure();
             elevatorMotor.set(ControlMode.PercentOutput, 0);
         }
+    }
+    
+    public void shiftBackForShooterRoom(){
+        setElevatorSpeed(-0.2);
+        Timer.delay(0.2);
+        setElevatorSpeed(0);
     }
 
     public void setElevatorSpeed(double desiredSpeed) {
