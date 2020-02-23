@@ -30,7 +30,7 @@ public class VisionData {
         return targetWidth;
     }
 
-    public boolean targetFound(){
+    public boolean targetFound() {
         return targetFound;
     }
 }

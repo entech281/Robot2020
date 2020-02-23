@@ -68,7 +68,7 @@ public class TestPoseMathematics {
     @Test
     public void testPoseAddition7() {
         pose1 = new RobotPosition(0, 10, 270);
-         pose2 = new RobotPosition(0, 10, 90);
+        pose2 = new RobotPosition(0, 10, 90);
         pose3 = PoseMathematics.addPoses(pose1, pose2);
         pose4 = new RobotPosition(-10, 10, 0);
         assertEquals(pose4.getTheta(), pose3.getTheta(), 0.1);

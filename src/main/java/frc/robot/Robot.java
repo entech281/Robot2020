@@ -6,6 +6,9 @@
  /*----------------------------------------------------------------------------*/
 package frc.robot;
 
+import edu.wpi.cscore.MjpegServer;
+import edu.wpi.cscore.UsbCamera;
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.commands.AutoCommand;
@@ -29,31 +32,34 @@ public class Robot extends TimedRobot {
 
     @Override
     public void robotInit() {
+        DataLoggerFactory.configureForMatch();
         this.logger = DataLoggerFactory.getLoggerFactory().createDataLogger("Robot Main Loop");
         subsystemManager.initAll();
+
         oi = new OperatorInterface(subsystemManager);
     }
-    
+
     @Override
     public void robotPeriodic() {
     }
-    
+
     @Override
     public void teleopInit() {
-        if (autoCommand!=null)
+        if (autoCommand != null) {
             autoCommand.cancel();
+        }
         subsystemManager.getDriveSubsystem().setSpeedMode();
     }
-    
+
     @Override
     public void teleopPeriodic() {
         subsystemManager.periodicAll();
         CommandScheduler.getInstance().run();
     }
-    
+
     @Override
     public void autonomousInit() {
-        autoCommand = new AutoCommand(subsystemManager.getShooterSubsystem(),subsystemManager.getDriveSubsystem(),subsystemManager.getIntakeSubsystem());
+        autoCommand = new AutoCommand(subsystemManager.getShooterSubsystem(), subsystemManager.getDriveSubsystem(), subsystemManager.getIntakeSubsystem());
         autoCommand.schedule();
     }
 
@@ -61,8 +67,9 @@ public class Robot extends TimedRobot {
     public void autonomousPeriodic() {
         subsystemManager.periodicAll();
         CommandScheduler.getInstance().run();
+
     }
-    
+
     @Override
     public void disabledInit() {
         subsystemManager.getDriveSubsystem().setSpeedMode();

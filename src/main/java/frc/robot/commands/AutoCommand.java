@@ -12,8 +12,8 @@ public class AutoCommand extends ParallelCommandGroup {
 
     public AutoCommand(ShooterSubsystem shoot, DriveSubsystem drive, IntakeSubsystem intake) {
         addCommands(
-            new FollowPositionPathCommand(drive, AutoPathFactory.getExamplePath()), 
-            intake.start()
+                new FollowPositionPathCommand(drive, AutoPathFactory.getExamplePath()),
+                intake.start()
         );
     }
 }

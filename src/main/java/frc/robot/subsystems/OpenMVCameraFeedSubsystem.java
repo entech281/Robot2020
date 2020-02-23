@@ -54,7 +54,5 @@ public class OpenMVCameraFeedSubsystem extends BaseSubsystem{
         Mat m = Imgcodecs.imread(FILE_PATH);
         source.putFrame(m);
     }
-
-
     
 }

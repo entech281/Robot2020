@@ -11,8 +11,7 @@ public class TargetLocation {
     }
 
     public double getDistanceToTarget() {
-        return distance / Math.sin(angle);
-
+        return distance / Math.cos(angle * Math.PI / 180.0);
     }
 
 }
