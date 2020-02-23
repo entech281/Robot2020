@@ -30,7 +30,8 @@ public class OperatorInterface {
                 .whenReleased(subsystemManager.getShooterSubsystem().stop())
                 .add();
         manager.addButton(5)
-                .whenPressed(new SnapToVisionTargetCommand(subMan.getDriveSubsystem(), subMan.getVision))
+                .whenPressed(new SnapToVisionTargetCommand(subMan.getDriveSubsystem(), subMan.getVisionSubsystem()))
+                .add();
 
         manager.addButton(5)
                 .whenPressed(new FollowPositionPathCommand(subsystemManager.getDriveSubsystem(), AutoPathFactory.getExamplePath()))

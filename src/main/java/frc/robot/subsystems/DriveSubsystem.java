@@ -113,6 +113,7 @@ public class DriveSubsystem extends BaseSubsystem {
                 frontLeftSpark, rearLeftSpark, smartMotionSettings, positionBuffer,
                 new EncoderInchesConverter(1/ RobotConstants.DIMENSIONS.MOTOR_REVOLUTIONS_PER_INCH));
         reset();
+        robotDrive.setSafetyEnabled(false);
     }
 
     public void setSpeedMode() {
@@ -140,8 +141,10 @@ public class DriveSubsystem extends BaseSubsystem {
             logger.log("current command", getCurrentCommand().getName());
         }
     }
-
+    private int counter = 0;
     public void drive(DriveInstruction di) {
+        robotDrive.setSafetyEnabled(true);
+        logger.log("drive called ", counter++);
         robotDrive.arcadeDrive(di.getFoward(), di.getRotation());
     }
 

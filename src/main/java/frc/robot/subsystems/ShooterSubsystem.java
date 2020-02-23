@@ -63,7 +63,7 @@ public class ShooterSubsystem extends BaseSubsystem {
     private int RPM_SPEED = 5350;
     
     private boolean hasShootMotor = false;
-    private boolean hasHoodMotor = true;
+    private boolean hasHoodMotor = false;
     
 
     public Command shootRPMSpeed() {

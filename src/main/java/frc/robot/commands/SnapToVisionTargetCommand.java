@@ -12,6 +12,7 @@ public class SnapToVisionTargetCommand extends EntechCommandBase {
     private VisionSubsystem vision;
     private PIDController controller;
     private double offset;
+    
 
     public SnapToVisionTargetCommand(DriveSubsystem drive, VisionSubsystem vision) {
         super(drive);
@@ -31,6 +32,8 @@ public class SnapToVisionTargetCommand extends EntechCommandBase {
     public void execute(){
         offset = vision.getVisionData().getLateralOffset();
         double output = controller.calculate(offset);
+        logger.log("offset", offset);
+        logger.log("output", output);
         output = Math.min(output, 1);
         output = Math.max(output, -1);
         drive.drive(new DriveInstruction(0, output));

@@ -50,6 +50,7 @@ public class Robot extends TimedRobot {
     
     @Override
     public void teleopPeriodic() {
+        logger.log("started teleop", true);
         subsystemManager.periodicAll();
         CommandScheduler.getInstance().run();
     }

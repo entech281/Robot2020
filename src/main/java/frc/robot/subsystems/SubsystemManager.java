@@ -36,6 +36,10 @@ public class SubsystemManager {
         return shootSubsystem;
     }
 
+    public VisionSubsystem getVisionSubsystem(){
+        return visionSubsystem;
+    }
+
     private DriveSubsystem driveSubsystem;
     private IntakeSubsystem intakeSubsystem;
     private NavXSubsystem navXSubsystem;
