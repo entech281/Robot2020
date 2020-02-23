@@ -9,6 +9,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.RobotConstants;
 import static frc.robot.RobotConstants.AVAILABILITY.*;
 import frc.robot.RobotConstants.MOTORCONTROLLER_VALUES.HOOD_MOTOR;
 import frc.robot.RobotConstants.MOTORCONTROLLER_VALUES.SHOOTER_MOTOR;
@@ -35,35 +36,21 @@ public class ShooterSubsystem extends BaseSubsystem {
     private Timer scheduler = new Timer();
 
     private boolean autoAdjust = false;
+    private boolean preset1 = false; //Right up against target
+    private boolean preset2 = false; // 290 inches away
+    private boolean shootOn = false;
+    
     private VisionDataProcessor processor = new VisionDataProcessor();
 
     private int RPM_SPEED = 5350;
 
     private int HOME_OFFSET= 75;
 
-    public Command shootRPMSpeed() {
+    public Command turnOnShooter() {
         return new SingleShotCommand(this) {
             @Override
             public void doCommand() {
-                adjustShooterSpeed(RPM_SPEED);
-            }
-        }.withTimeout(EntechCommandBase.DEFAULT_TIMEOUT_SECONDS);
-    }
-
-    public Command decreaseRPM() {
-        return new SingleShotCommand(this) {
-            @Override
-            public void doCommand() {
-                decreaseRPMSpeed();
-            }
-        }.withTimeout(EntechCommandBase.DEFAULT_TIMEOUT_SECONDS);
-    }
-
-    public Command increaseRPM() {
-        return new SingleShotCommand(this) {
-            @Override
-            public void doCommand() {
-                increaseRPMSpeed();
+                shootOn = true;
             }
         }.withTimeout(EntechCommandBase.DEFAULT_TIMEOUT_SECONDS);
     }
@@ -72,7 +59,6 @@ public class ShooterSubsystem extends BaseSubsystem {
         return new SingleShotCommand(this) {
             @Override
             public void doCommand() {
-                adjustShooterSpeed(0);
                 shootMotor.stopMotor();
             }
         }.withTimeout(EntechCommandBase.DEFAULT_TIMEOUT_SECONDS);
@@ -92,6 +78,15 @@ public class ShooterSubsystem extends BaseSubsystem {
             @Override
             public void doCommand() {
                 disableAutoAdjust();
+            }
+        };
+    }
+    
+    public Command turnOffShooter(){
+        return new SingleShotCommand(this) {
+            @Override
+            public void doCommand() {
+                shootOn = false;
             }
         };
     }
@@ -180,14 +175,36 @@ public class ShooterSubsystem extends BaseSubsystem {
         }
     }
 
+    //Current structure of shooter is in auto it will be dictated purely by vision
+    //in manual it will be adjusted by alex and with the presets
     @Override
     public void customPeriodic(RobotPose rPose, FieldPose fPose) {
+        logging(rPose);
+        ShooterConfiguration config;
+        if(shootOn){
+            if (autoAdjust) {
+                config = processor.calculateShooterConfiguration(rPose.getTargetLocation());
+            } else {
+                if(preset1){
+                    config = processor.calculateShooterConfiguration(RobotConstants.SHOOT_PRESETS.PRESET_1);
+                }
+                else if(preset2){
+                    config = processor.calculateShooterConfiguration(RobotConstants.SHOOT_PRESETS.PRESET_2);     
+                }
+                else{
+                    double angle = 0.0; //Need to get information from operator panel
+                    config = new ShooterConfiguration(angle, 5350);
+                }
+            }
+            setDesiredShooterConfiguration(config);
+        } else {
+            shootMotor.stopMotor();
+        }
+    }
+    
+    private void logging(RobotPose rPose){
         logger.log("TargetLocation", rPose.getTargetLocation().getDistanceToTarget());
         logger.log("Vision Data", rPose.getTargetVerticalOffset());
-        if (autoAdjust) {
-            ShooterConfiguration config = processor.calculateShooterConfiguration(rPose.getTargetLocation());
-            setDesiredShooterConfiguration(config);
-        }
         if (shootMotorMounted) {
             logger.log("Current Speed", shooterMotorController.getActualSpeed());
         }
@@ -222,7 +239,7 @@ public class ShooterSubsystem extends BaseSubsystem {
     }
 
     public void shoot() {
-        // There is still uncertainty here
+        shootOn = true;
     }
 
     public double getShooterSpeed() {

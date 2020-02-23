@@ -1,6 +1,6 @@
 package frc.robot.pose;
 
-public class ShooterConfiguration {
+    public class ShooterConfiguration {
 
     private double angle;
     private double wheelSpeed;

@@ -4,6 +4,10 @@ import edu.wpi.first.wpilibj.Joystick;
 import frc.robot.commands.FollowPositionPathCommand;
 import frc.robot.commands.HoodHomingCommand;
 import frc.robot.commands.SnapToVisionTargetCommand;
+import frc.robot.commands.StartIntakeCommand;
+import frc.robot.commands.StartShooterCommand;
+import frc.robot.commands.StopIntakeCommand;
+import frc.robot.commands.StopShooterCommand;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.SubsystemManager;
 import frc.robot.commands.TankDriveCommand;
@@ -22,13 +26,13 @@ public class OperatorInterface {
         this.manager = new JoystickButtonManager(driveStick);
 
         manager.addButton(RobotConstants.BUTTONS.INTAKE_BUTTON)
-                .whenPressed(subsystemManager.getIntakeSubsystem().start())
-                .whenReleased(subsystemManager.getIntakeSubsystem().stop())
+                .whenPressed(new StartIntakeCommand(subsystemManager.getIntakeSubsystem(), subsystemManager.getElevatorSubsystem(), subsystemManager.getShooterSubsystem()))
+                .whenReleased(new StopIntakeCommand(subsystemManager.getIntakeSubsystem(), subsystemManager.getElevatorSubsystem()))
                 .add();
 
         manager.addButton(RobotConstants.BUTTONS.SHOOT_BUTTON)
-                .whenPressed(subsystemManager.getShooterSubsystem().shootRPMSpeed())
-                .whenReleased(subsystemManager.getShooterSubsystem().stop())
+                .whenPressed(new StartShooterCommand(subsystemManager.getShooterSubsystem(), subsystemManager.getElevatorSubsystem()))
+                .whenReleased(new StopShooterCommand(subsystemManager.getShooterSubsystem()))
                 .add();
 
         drive = subsystemManager.getDriveSubsystem();
