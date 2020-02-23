@@ -7,7 +7,7 @@ public class EncoderValues {
     private double leftFront = 0.0;
     private double leftRear = 0.0;
 
-    public static EncoderValues NO_ENCODER_VALUES = new EncoderValues(0, 0, 0, 0);
+    public static final EncoderValues NO_ENCODER_VALUES = new EncoderValues(0, 0, 0, 0);
 
     public EncoderValues(double leftFront, double leftRear, double rightFront, double rightRear) {
         this.leftFront = leftFront;

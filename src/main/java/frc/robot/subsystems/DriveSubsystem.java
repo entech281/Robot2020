@@ -66,10 +66,10 @@ public class DriveSubsystem extends BaseSubsystem {
             .limitMotorOutputs(1.0, -1.0)
             .noMotorStartupRamping()
             .useSmartMotionControl()
-            .withPositionGains(RobotConstants.PID.DRIVE.F,
-                    RobotConstants.PID.DRIVE.P,
-                    RobotConstants.PID.DRIVE.I,
-                    RobotConstants.PID.DRIVE.D)
+            .withPositionGains(RobotConstants.PID.AUTO.F,
+                    RobotConstants.PID.AUTO.P,
+                    RobotConstants.PID.AUTO.I,
+                    RobotConstants.PID.AUTO.D)
             .useAccelerationStrategy(AccelStrategy.kTrapezoidal)
             .withMaxVelocity(RobotConstants.AUTONOMOUS.MAX_VELOCITY)
             .withMaxAcceleration(RobotConstants.AUTONOMOUS.MAX_ACCELLERATION)

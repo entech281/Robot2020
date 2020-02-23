@@ -57,14 +57,20 @@ public class RobotConstants {
                 / DRIVE_GEAR_RATIO;
     }
 
-    public interface PID {
-
-        public interface DRIVE {
-
+    public interface PID{
+        public interface AUTO{
             public static final double P = 5e-4;
             public static final double I = 0;//2e-5;
             public static final double D = 0;
             public static final double F = 0;
+        }
+
+        public interface TARGET_LOCK{
+            public static final double P = 6e-2;
+            public static final double I = 0;//2e-5;
+            public static final double D = 0;
+            public static final double F = 0;
+            
         }
     }
 
@@ -84,7 +90,7 @@ public class RobotConstants {
         public static final boolean elevator = false;
         public static final boolean intake = false;
         public static final boolean shootMotorMounted = false;
-        public static final boolean hoodMotorMounted = true;
+        public static final boolean hoodMotorMounted = false;
     }
 
     public interface MOTORCONTROLLER_VALUES {

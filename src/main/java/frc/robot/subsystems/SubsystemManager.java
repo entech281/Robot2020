@@ -36,6 +36,10 @@ public class SubsystemManager {
     public ShooterSubsystem getShooterSubsystem() {
         return shootSubsystem;
     }
+    
+    public VisionSubsystem getVisionSubsystem(){
+        return visionSubsystem;
+    }
 
     private DriveSubsystem driveSubsystem;
     private IntakeSubsystem intakeSubsystem;
@@ -56,9 +60,7 @@ public class SubsystemManager {
         intakeSubsystem = new IntakeSubsystem();
         navXSubsystem = new NavXSubsystem();
         shootSubsystem = new ShooterSubsystem();
-        if (hasClimb) {
-            climbSubsystem = new ClimbSubsystem();
-        }
+        climbSubsystem = new ClimbSubsystem();
         elevatorSubsystem = new ElevatorSubsystem();
         colorSubsystem = new ColorSubsystem();
         visionSubsystem = new VisionSubsystem();
