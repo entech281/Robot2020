@@ -10,11 +10,13 @@ public class VisionDataProcessor {
     private String buffer = "";
     private String retval;
     private int visionDataMemory = 5;
+    private int num_consecutive_bad_data = 0;
+    private final int TOLERANCE_CONSECUTIVE_BAD_DATA = 3;
 
     private FixedStack visionDataStack = new FixedStack(visionDataMemory);
 
     public VisionDataProcessor() {
-        visionDataStack.add(RobotConstants.ROBOT_DEFAULTS.VISION.DEFAULT_VISION_DATA);
+        visionDataStack.add(VisionData.DEFAULT_VISION_DATA);
     }
 
     public TargetLocation compute(VisionData vData, double angle) {
@@ -32,6 +34,10 @@ public class VisionDataProcessor {
     }
 
     public void addInput(String readings) {
+        if(readings.length() < 2)
+            num_consecutive_bad_data += 1;
+        else
+            num_consecutive_bad_data = 0;
         buffer += readings;
     }
 
@@ -54,9 +60,16 @@ public class VisionDataProcessor {
             buffer = buffer.substring(buffer.lastIndexOf("\n"));
         }
     }
+    
+    private boolean noRecentDataAvailable(){
+        return num_consecutive_bad_data > TOLERANCE_CONSECUTIVE_BAD_DATA;
+    }
 
     public VisionData getCurrentVisionData() {
         parseBuffer();
+        if(noRecentDataAvailable()){
+            visionDataStack.add(VisionData.DEFAULT_VISION_DATA);
+        }
         return visionDataStack.peek();
     }
 

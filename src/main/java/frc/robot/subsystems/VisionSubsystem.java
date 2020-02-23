@@ -21,9 +21,11 @@ public class VisionSubsystem extends BaseSubsystem {
 
     private static final int BAUD_RATE = 115200;
 
+    
+    
     private SerialPort visionPort;
 
-    private VisionData visionData = RobotConstants.ROBOT_DEFAULTS.VISION.DEFAULT_VISION_DATA;
+    private VisionData visionData = VisionData.DEFAULT_VISION_DATA;
     private VisionDataProcessor processor;
     private int count = 0;
 
