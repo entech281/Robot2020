@@ -23,7 +23,7 @@ public class EncoderInchesConverter {
     }
 
     public double toCounts(double inches) {
-        return  (encoderCountsPerInch * inches);
+        return (encoderCountsPerInch * inches);
     }
 
 }

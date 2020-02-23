@@ -9,28 +9,30 @@ import frc.robot.logger.DataLoggerFactory;
 import frc.robot.path.Position;
 import frc.robot.path.PositionCalculator;
 
+public class FollowPositionPathCommand extends CommandBase {
 
-public class FollowPositionPathCommand extends CommandBase{
     int counter = 0;
     private DataLogger logger = DataLoggerFactory.getLoggerFactory().createDataLogger(this.getName());
 
-
     public DriveSubsystem driveSubsystem;
     public List<Position> path;
+
     public FollowPositionPathCommand(DriveSubsystem subsystem, List<Position> path) {
         this.driveSubsystem = subsystem;
         this.path = path;
         this.addRequirements(subsystem);
     }
+
     public FollowPositionPathCommand(DriveSubsystem subsystem, List<Position> path, double timeoutSeconds) {
         this.driveSubsystem = subsystem;
         this.path = path;
         this.addRequirements(subsystem);
-    }    
-    public FollowPositionPathCommand mirror() {
-        return new FollowPositionPathCommand(this.driveSubsystem,PositionCalculator.mirror(this.path));
     }
-    
+
+    public FollowPositionPathCommand mirror() {
+        return new FollowPositionPathCommand(this.driveSubsystem, PositionCalculator.mirror(this.path));
+    }
+
     @Override
     public void initialize() {
         logger.log("initialized", true);
@@ -43,21 +45,21 @@ public class FollowPositionPathCommand extends CommandBase{
     }
 
     @Override
-    public void execute(){
+    public void execute() {
         driveSubsystem.getAutoController().periodic();
         ++counter;
         logger.log("Times Ran", counter);
     }
 
     @Override
-    public void end(boolean interrupted){
+    public void end(boolean interrupted) {
         driveSubsystem.endAutonomous();
         logger.log("Is Running", false);
     }
 
     @Override
     public boolean isFinished() {
-        return ! driveSubsystem.getPositionBuffer().hasNextPosition() ;
+        return !driveSubsystem.getPositionBuffer().hasNextPosition();
     }
-    
+
 }

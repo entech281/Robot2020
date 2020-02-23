@@ -10,6 +10,8 @@ import frc.robot.controllers.TalonSettings;
 import frc.robot.controllers.TalonSettingsBuilder;
 import frc.robot.controllers.TalonSpeedController;
 
+import static frc.robot.RobotConstants.AVAILABILITY.*;
+
 public class IntakeSubsystem extends BaseSubsystem {
 
     private double CURRENT_INTAKE_SPEED = 1;
@@ -18,7 +20,8 @@ public class IntakeSubsystem extends BaseSubsystem {
     private double FULL_SPEED_BWD = -1;
     private double STOP_SPEED = 0;
 
-    private final WPI_TalonSRX intakeMotor = new WPI_TalonSRX(RobotConstants.CAN.INTAKE_MOTOR);
+
+    private WPI_TalonSRX intakeMotor;
     private TalonSpeedController intakeMotorController;
 
     public Command start() {
@@ -50,18 +53,22 @@ public class IntakeSubsystem extends BaseSubsystem {
 
     @Override
     public void initialize() {
-        TalonSettings motorSettings = TalonSettingsBuilder.defaults().withCurrentLimits(20, 15, 200).brakeInNeutral()
-                .withDirections(false, false).noMotorOutputLimits().noMotorStartupRamping().useSpeedControl().build();
+        if (intake) {
+            TalonSettings motorSettings = TalonSettingsBuilder.defaults().withCurrentLimits(20, 15, 200).brakeInNeutral()
+                    .withDirections(false, false).noMotorOutputLimits().noMotorStartupRamping().useSpeedControl().build();
 
-        intakeMotorController = new TalonSpeedController(intakeMotor, motorSettings);
-        intakeMotorController.configure();
-        intakeMotor.set(ControlMode.PercentOutput, 0);
+            intakeMotorController = new TalonSpeedController(intakeMotor, motorSettings);
+            intakeMotorController.configure();
+            intakeMotor.set(ControlMode.PercentOutput, 0);
+        }
     }
 
     public void setIntakeMotorSpeed(double desiredSpeed) {
         logger.log("Intake Motor speed", desiredSpeed);
-        this.CURRENT_INTAKE_SPEED = desiredSpeed;
-        intakeMotorController.setDesiredSpeed(this.CURRENT_INTAKE_SPEED);
+        if (intake) {
+            this.CURRENT_INTAKE_SPEED = desiredSpeed;
+            intakeMotorController.setDesiredSpeed(this.CURRENT_INTAKE_SPEED);
+        }
     }
 
 }
