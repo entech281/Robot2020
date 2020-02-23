@@ -69,4 +69,11 @@ public class RobotConstants {
         public static final int ACCEPTABLE_ERROR = 0;
         public static final int POSITION_TOLERANCE_INCHES = 1;
     }
+    
+    public interface OPENMV{
+        public static final int WIDTH=320;
+        public static final int HEIGHT=160;
+        public static final int FRAME_RATE = 20;
+        public static final String FILE_PATH = "/media/stream.jpg";
+    }
 }

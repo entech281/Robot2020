@@ -6,6 +6,7 @@ import frc.robot.logger.DataLoggerFactory;
 import frc.robot.pose.FieldPoseManager;
 import frc.robot.pose.RobotPoseManager;
 
+
 public class SubsystemManager {
 
     public SubsystemManager() {
@@ -43,6 +44,7 @@ public class SubsystemManager {
     private ClimbSubsystem climbSubsystem;
     private ElevatorSubsystem elevatorSubsystem;
     private ColorSubsystem colorSubsystem;
+    private OpenMVCameraFeedSubsystem openmvSubsystem;
 
     private final RobotPoseManager robotPoseManager = new RobotPoseManager();
     private final FieldPoseManager fieldPoseManager = new FieldPoseManager();
@@ -57,8 +59,9 @@ public class SubsystemManager {
         climbSubsystem = new ClimbSubsystem();
         elevatorSubsystem = new ElevatorSubsystem();
         colorSubsystem = new ColorSubsystem();
-
-        Collections.addAll(allSubsystems, driveSubsystem, intakeSubsystem, navXSubsystem, shootSubsystem, climbSubsystem, elevatorSubsystem);
+        openmvSubsystem = new OpenMVCameraFeedSubsystem(true);
+        Collections.addAll(allSubsystems, driveSubsystem, intakeSubsystem, navXSubsystem, 
+                shootSubsystem, climbSubsystem, elevatorSubsystem,openmvSubsystem);
 
         allSubsystems.forEach(subsystem -> subsystem.initialize());
 
