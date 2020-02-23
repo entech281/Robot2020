@@ -30,7 +30,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void robotInit() {
-         DataLoggerFactory.configureForMatch();
+        DataLoggerFactory.configureForMatch();
         this.logger = DataLoggerFactory.getLoggerFactory().createDataLogger("Robot Main Loop");
         subsystemManager.initAll();
         CameraServer.getInstance().startAutomaticCapture();

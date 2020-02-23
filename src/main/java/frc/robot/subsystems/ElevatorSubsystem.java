@@ -15,13 +15,16 @@ public class ElevatorSubsystem extends BaseSubsystem {
 
     private double elevatorSpeed = 1;
 
-    private final WPI_TalonSRX elevatorMotor = new WPI_TalonSRX(RobotConstants.CAN.INTAKE_MOTOR);
+    private WPI_TalonSRX elevatorMotor;
     private TalonSpeedController elevatorMotorController;
 
     private final int maxCurrent = 20;
     private final int maxSustainedCurrent = 15;
     private final int maxCurrentTime = 200;
 
+    
+    private boolean hardwareAvailable = RobotConstants.AVAILABILITY.elevator;
+    
     public Command start() {
         return new SingleShotCommand(this) {
             @Override
@@ -42,19 +45,24 @@ public class ElevatorSubsystem extends BaseSubsystem {
 
     @Override
     public void initialize() {
-        TalonSettings motorSettings = TalonSettingsBuilder.defaults()
-                .withCurrentLimits(maxCurrent, maxSustainedCurrent, maxCurrentTime).brakeInNeutral()
-                .withDirections(false, false).noMotorOutputLimits().noMotorStartupRamping().useSpeedControl().build();
+        if(hardwareAvailable){
+            TalonSettings motorSettings = TalonSettingsBuilder.defaults()
+                    .withCurrentLimits(maxCurrent, maxSustainedCurrent, maxCurrentTime).brakeInNeutral()
+                    .withDirections(false, false).noMotorOutputLimits().noMotorStartupRamping().useSpeedControl().build();
 
-        elevatorMotorController = new TalonSpeedController(elevatorMotor, motorSettings);
-        elevatorMotorController.configure();
-        elevatorMotor.set(ControlMode.PercentOutput, 0);
+            elevatorMotor = new WPI_TalonSRX(RobotConstants.CAN.INTAKE_MOTOR);
+            elevatorMotorController = new TalonSpeedController(elevatorMotor, motorSettings);
+            elevatorMotorController.configure();
+            elevatorMotor.set(ControlMode.PercentOutput, 0);
+        }
     }
 
     public void setElevatorSpeed(double desiredSpeed) {
-        logger.log("Intake Motor speed", desiredSpeed);
-        this.elevatorSpeed = desiredSpeed;
-        elevatorMotorController.setDesiredSpeed(this.elevatorSpeed);
+        if(hardwareAvailable){
+            logger.log("Intake Motor speed", desiredSpeed);
+            this.elevatorSpeed = desiredSpeed;
+            elevatorMotorController.setDesiredSpeed(this.elevatorSpeed);
+        }
     }
 
 }

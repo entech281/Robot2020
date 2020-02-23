@@ -2,6 +2,7 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.Joystick;
 import frc.robot.commands.FollowPositionPathCommand;
+import frc.robot.commands.HoodHomingCommand;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.SubsystemManager;
 import frc.robot.commands.TankDriveCommand;
@@ -45,6 +46,9 @@ public class OperatorInterface {
                 .whenReleased(subsystemManager.getShooterSubsystem().disableAutoShooting())
                 .add();
         
+        manager.addButton(7)
+                .whenPressed(new HoodHomingCommand(subsystemManager.getShooterSubsystem()))
+                .add();
         
         manager.addButton(RobotConstants.BUTTONS.RESET_BUTTON)
                 .whenPressed(drive.reset())

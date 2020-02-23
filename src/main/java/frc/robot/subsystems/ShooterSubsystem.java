@@ -11,6 +11,7 @@ import com.revrobotics.ControlType;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.RobotConstants;
 import frc.robot.commands.EntechCommandBase;
 import frc.robot.commands.SingleShotCommand;
 import frc.robot.controllers.*;
@@ -24,8 +25,6 @@ public class ShooterSubsystem extends BaseSubsystem {
     private double SHOOT_SPEED = 1;
     private double HOOD_POSITION;
 
-    //Trial and error determination
-    private double ENCODER_CLICKS_PER_HOOD_MOTOR_REVOLUTION = 2100;
 
     private CANSparkMax shootMotor;
     private SparkSpeedController shooterMotorController;
@@ -33,37 +32,17 @@ public class ShooterSubsystem extends BaseSubsystem {
     private WPI_TalonSRX hoodMotor;
     private TalonPositionController hoodMotorController;
 
-    private int HOOD_CRUISE_VELOCITY = 3200;
-    private int HOOD_ACCELERATION = 20;
-    private int ALLOWABLE_ERROR = 5;
 
     private boolean homingLimitSwitchHit = false;
     private Timer scheduler = new Timer();
-
-    private final double HOOD_PID_F = 4;
-    private final double HOOD_PID_P = 2.56 * 2;
-    private final double HOOD_PID_I = 0;
-    private final double HOOD_PID_D = 0;
-    private final double HOOD_GEAR_RATIO = 4;
     
-    private final double SHOOTER_PID_P = 10;
-    private final double SHOOTER_PID_I = 4e-4;
-    private final double SHOOTER_PID_D = 0;
-    private final double SHOOTER_PID_F = 0.000015;
-    private final double SHOOTER_MAXOUTPUT = 1;
-    private final double SHOOTER_MINOUTPUT = -1;
-    private final int CURRENT_LIMIT = 35;
-    private final double SHOOTER_MOTOR_RAMPUP = 0.5;
-    private final int SHOOTER_MAX_ACCEL = 100;
-    private final int SHOOTER_TOLERANCE = 5;
-    private final int SHOOTER_MAX_RPM = 6000;
     private boolean autoAdjust = false;
     private VisionDataProcessor processor = new VisionDataProcessor();
     
     private int RPM_SPEED = 5350;
     
-    private boolean hasShootMotor = false;
-    private boolean hasHoodMotor = true;
+    private boolean hasShootMotor = RobotConstants.AVAILABILITY.shootMotor;
+    private boolean hasHoodMotor = RobotConstants.AVAILABILITY.hoodMotor;
     
 
     public Command shootRPMSpeed() {
@@ -144,7 +123,7 @@ public class ShooterSubsystem extends BaseSubsystem {
         return new SingleShotCommand(this) {
             @Override
             public void doCommand() {
-                double desired = hoodMotorController.getActualPosition() - 150;
+                double desired = hoodMotorController.getActualPosition() - 75;
                 adjustHoodPosition(desired);
                 while (!(Math.abs(desired - hoodMotorController.getActualPosition()) <= 5)) {
 
@@ -162,7 +141,7 @@ public class ShooterSubsystem extends BaseSubsystem {
     }
 
     public void increaseRPMSpeed(){
-        if(this.RPM_SPEED < this.SHOOTER_MAX_RPM - 150){
+        if(this.RPM_SPEED < RobotConstants.MOTORCONTROLLER_VALUES.SHOOTER_MOTOR.SHOOTER_MAX_RPM - 150){
             this.RPM_SPEED += 150;
         }
     }
@@ -180,21 +159,21 @@ public class ShooterSubsystem extends BaseSubsystem {
 
         if(hasShootMotor){
             shootMotor = new CANSparkMax(5, MotorType.kBrushless);
-            SparkMaxSettings shooterSettings = SparkMaxSettingsBuilder.defaults().withCurrentLimits(this.CURRENT_LIMIT)
-                    .coastInNeutral().withDirections(false, false).limitMotorOutputs(this.SHOOTER_MAXOUTPUT, this.SHOOTER_MINOUTPUT)
-                    .withMotorRampUpOnStart(this.SHOOTER_MOTOR_RAMPUP).useSmartMotionControl()
-                    .withPositionGains(this.SHOOTER_PID_F, this.SHOOTER_PID_P, this.SHOOTER_PID_I, this.SHOOTER_PID_D)
-                    .useAccelerationStrategy(AccelStrategy.kSCurve).withMaxVelocity(this.SHOOTER_MAX_RPM).withMaxAcceleration(this.SHOOTER_MAX_ACCEL).withClosedLoopError(this.SHOOTER_TOLERANCE).build();
+            SparkMaxSettings shooterSettings = SparkMaxSettingsBuilder.defaults().withCurrentLimits(RobotConstants.MOTORCONTROLLER_VALUES.SHOOTER_MOTOR.CURRENT_LIMIT)
+                    .coastInNeutral().withDirections(false, false).limitMotorOutputs(RobotConstants.MOTORCONTROLLER_VALUES.SHOOTER_MOTOR.SHOOTER_MAXOUTPUT, RobotConstants.MOTORCONTROLLER_VALUES.SHOOTER_MOTOR.SHOOTER_MINOUTPUT)
+                    .withMotorRampUpOnStart(RobotConstants.MOTORCONTROLLER_VALUES.SHOOTER_MOTOR.SHOOTER_MOTOR_RAMPUP).useSmartMotionControl()
+                    .withPositionGains(RobotConstants.MOTORCONTROLLER_VALUES.SHOOTER_MOTOR.SHOOTER_PID_F, RobotConstants.MOTORCONTROLLER_VALUES.SHOOTER_MOTOR.SHOOTER_PID_P, RobotConstants.MOTORCONTROLLER_VALUES.SHOOTER_MOTOR.SHOOTER_PID_I, RobotConstants.MOTORCONTROLLER_VALUES.SHOOTER_MOTOR.SHOOTER_PID_D)
+                    .useAccelerationStrategy(AccelStrategy.kSCurve).withMaxVelocity(RobotConstants.MOTORCONTROLLER_VALUES.SHOOTER_MOTOR.SHOOTER_MAX_RPM).withMaxAcceleration(RobotConstants.MOTORCONTROLLER_VALUES.SHOOTER_MOTOR.SHOOTER_MAX_ACCEL).withClosedLoopError(RobotConstants.MOTORCONTROLLER_VALUES.SHOOTER_MOTOR.SHOOTER_TOLERANCE).build();
             shooterMotorController = new SparkSpeedController(shootMotor, shooterSettings);
             shooterMotorController.configure();
 
         }
         if(hasHoodMotor){
         hoodMotor = new WPI_TalonSRX(7);
-        TalonSettings hoodSettings = TalonSettingsBuilder.defaults().withPrettySafeCurrentLimits().brakeInNeutral()
+        TalonSettings hoodSettings = TalonSettingsBuilder.defaults().withCurrentLimits(1, 1, 1).brakeInNeutral()
                 .withDirections(false, false).noMotorOutputLimits().noMotorStartupRamping().usePositionControl()
-                .withGains(HOOD_PID_F, HOOD_PID_P, HOOD_PID_I, HOOD_PID_D)
-                .withMotionProfile(HOOD_CRUISE_VELOCITY, HOOD_ACCELERATION, ALLOWABLE_ERROR).build();
+                .withGains(RobotConstants.MOTORCONTROLLER_VALUES.HOOD_MOTOR.HOOD_PID_F, RobotConstants.MOTORCONTROLLER_VALUES.HOOD_MOTOR.HOOD_PID_P, RobotConstants.MOTORCONTROLLER_VALUES.HOOD_MOTOR.HOOD_PID_I, RobotConstants.MOTORCONTROLLER_VALUES.HOOD_MOTOR.HOOD_PID_D)
+                .withMotionProfile(RobotConstants.MOTORCONTROLLER_VALUES.HOOD_MOTOR.HOOD_CRUISE_VELOCITY, RobotConstants.MOTORCONTROLLER_VALUES.HOOD_MOTOR.HOOD_ACCELERATION, RobotConstants.MOTORCONTROLLER_VALUES.HOOD_MOTOR.ALLOWABLE_ERROR).build();
         
             hoodMotorController = new TalonPositionController(hoodMotor, hoodSettings);
             hoodMotorController.configure();
@@ -279,7 +258,7 @@ public class ShooterSubsystem extends BaseSubsystem {
 
     public void setDesiredShooterConfiguration(ShooterConfiguration configuration) {
         
-        double desiredPosition = ((90 - configuration.getDesiredHoodAngle()) / 360) * ENCODER_CLICKS_PER_HOOD_MOTOR_REVOLUTION * HOOD_GEAR_RATIO;
+        double desiredPosition = -((90 - configuration.getDesiredHoodAngle()) / 360) * RobotConstants.MOTORCONTROLLER_VALUES.HOOD_MOTOR.ENCODER_CLICKS_PER_HOOD_MOTOR_REVOLUTION * RobotConstants.MOTORCONTROLLER_VALUES.HOOD_MOTOR.HOOD_GEAR_RATIO;
         logger.log("Configuration angle", configuration.getDesiredHoodAngle());
         logger.log("encoder clicks", desiredPosition);
         if(hasHoodMotor)

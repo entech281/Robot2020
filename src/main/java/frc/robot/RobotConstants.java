@@ -69,4 +69,43 @@ public class RobotConstants {
         public static final int ACCEPTABLE_ERROR = 0;
         public static final int POSITION_TOLERANCE_INCHES = 1;
     }
+    
+    public interface AVAILABILITY{
+        public static final boolean climber = false;
+        public static final boolean colorSensor = false;
+        public static final boolean drive = true;
+        public static final boolean elevator = false;
+        public static final boolean intake = false;
+        public static final boolean shootMotor = false;
+        public static final boolean hoodMotor = true;
+    }
+    
+    public interface MOTORCONTROLLER_VALUES{
+        public interface SHOOTER_MOTOR{
+                public static final double SHOOTER_PID_P = 10;
+                public static final double SHOOTER_PID_I = 4e-4;
+                public static final double SHOOTER_PID_D = 0;
+                public static final double SHOOTER_PID_F = 0.000015;
+                public static final double SHOOTER_MAXOUTPUT = 1;
+                public static final double SHOOTER_MINOUTPUT = -1;
+                public static final int CURRENT_LIMIT = 35;
+                public static final double SHOOTER_MOTOR_RAMPUP = 0.5;
+                public static final int SHOOTER_MAX_ACCEL = 100;
+                public static final int SHOOTER_TOLERANCE = 5;
+                public static final int SHOOTER_MAX_RPM = 6000;
+        }
+        
+        public interface HOOD_MOTOR{
+                public int HOOD_CRUISE_VELOCITY = 1000;
+                public int HOOD_ACCELERATION = 20;
+                public int ALLOWABLE_ERROR = 5;
+                public double ENCODER_CLICKS_PER_HOOD_MOTOR_REVOLUTION = 2100;
+                public final double HOOD_PID_F = 4;
+                public final double HOOD_PID_P = 2.56 * 2;
+                public final double HOOD_PID_I = 0;
+                public final double HOOD_PID_D = 0;
+                public final double HOOD_GEAR_RATIO = 4;
+    
+        }
+    }
 }
