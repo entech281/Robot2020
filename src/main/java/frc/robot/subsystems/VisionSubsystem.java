@@ -41,10 +41,11 @@ public class VisionSubsystem extends BaseSubsystem {
         String reading = visionPort.readString();
         processor.addInput(reading);
         visionData = processor.getCurrentVisionData();
+        logger.log("Vertical offset", visionData.getVerticalOffset());
+        logger.log("Horizontal Offset", visionData.getLateralOffset());
     }
 
     public VisionData getVisionData() {
-        logger.log("Offset", visionData.getVerticalOffset());
         return visionData;
     }
 

@@ -22,6 +22,7 @@ import frc.robot.commands.SingleShotCommand;
 import frc.robot.pose.*;
 import frc.robot.utils.EncoderInchesConverter;
 import static frc.robot.RobotConstants.AVAILABILITY.*;
+import frc.robot.path.Position;
 
 public class DriveSubsystem extends BaseSubsystem {
 
@@ -66,10 +67,10 @@ public class DriveSubsystem extends BaseSubsystem {
             .limitMotorOutputs(1.0, -1.0)
             .noMotorStartupRamping()
             .useSmartMotionControl()
-            .withPositionGains(RobotConstants.PID.AUTO.F,
-                    RobotConstants.PID.AUTO.P,
-                    RobotConstants.PID.AUTO.I,
-                    RobotConstants.PID.AUTO.D)
+            .withPositionGains(RobotConstants.PID.AUTO_STRAIGHT.F,
+                    RobotConstants.PID.AUTO_STRAIGHT.P,
+                    RobotConstants.PID.AUTO_STRAIGHT.I,
+                    RobotConstants.PID.AUTO_STRAIGHT.D)
             .useAccelerationStrategy(AccelStrategy.kTrapezoidal)
             .withMaxVelocity(RobotConstants.AUTONOMOUS.MAX_VELOCITY)
             .withMaxAcceleration(RobotConstants.AUTONOMOUS.MAX_ACCELLERATION)
@@ -135,6 +136,15 @@ public class DriveSubsystem extends BaseSubsystem {
         }
     }
 
+        public void setPositionMode() {
+        if (drive) {
+            smartMotionSettings.configureSparkMax(frontLeftSpark);
+            smartMotionSettings.configureSparkMax(frontRightSpark);
+            smartMotionSettings.configureSparkMax(rearLeftSpark);
+            smartMotionSettings.configureSparkMax(rearRightSpark);
+        }
+    }
+    
     public EncoderValues getEncoderValues() {
         if (drive) {
             return new EncoderValues(frontLeftEncoder.getPosition(),
@@ -174,6 +184,11 @@ public class DriveSubsystem extends BaseSubsystem {
 
     public PositionDriveController getAutoController() {
         return autoController;
+    }
+    
+    public void driveToPosition(Position pose){
+        positionBuffer.addPosition(pose);
+        autoController.activate();
     }
 
     public void endAutonomous() {

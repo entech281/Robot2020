@@ -45,6 +45,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void teleopInit() {
+        subsystemManager.getNavXSubsystem().zeroYawOfNavX(false);
         if (autoCommand != null) {
             autoCommand.cancel();
         }
