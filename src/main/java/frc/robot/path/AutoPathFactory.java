@@ -1,6 +1,7 @@
 package frc.robot.path;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.commands.CommandGroupFactory;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.NavXSubsystem;
 import frc.robot.subsystems.SubsystemManager;
@@ -17,17 +18,27 @@ public class AutoPathFactory {
     public static List<Position> turn90(){
         return PositionCalculator.builder().forward(24).build();
     }
+
     
-    private DriveSubsystem drive;
-    private NavXSubsystem navX;
-    private VisionSubsystem vision;
-    public AutoPathFactory(SubsystemManager subsystemManager){
-        this.drive = subsystemManager.getDriveSubsystem();
-        this.navX = subsystemManager.getNavXSubsystem();
-        this.vision = subsystemManager.getVisionSubsystem();
+    private SubsystemManager subsystemManager;
+    private CommandGroupFactory commandFactory;
+    
+    public AutoPathFactory(SubsystemManager subsystemManager, CommandGroupFactory commandFactory){
+        this.subsystemManager = subsystemManager;
+        this.commandFactory = commandFactory;
     }
     
-    public Command[] autoPath1(){
-        return AutoPathBuilder.builder(drive, navX, vision).backward(75).right(90).forward(50).right(85).forward(109).backward(75).right(130).snapToTarget().build();
+    //Start middle shoot 3 balls and pick up 3 more
+    public Command[] middleSixBallAuto(){
+        return AutoPathBuilder.builder(subsystemManager, commandFactory).zeroYaw(false).backward(75).right(90).forward(50).right(85).forward(109).backward(75).right(130).snapToTarget().build();
     }
+    
+    public Command[] simplePath(){
+        return AutoPathBuilder.builder(subsystemManager, commandFactory).zeroYaw(false).snapToTargetStartShooter().delayForSeconds(0.5).fire().delayForSeconds(3).backward(45).build();
+    }
+
+    public Command[] leftEightBallAuto(){
+        return AutoPathBuilder.builder(subsystemManager, commandFactory).zeroYaw(true).forward(100).right(135).snapToTargetStartShooter().fire().delayForSeconds(2).nonRelativeTurn(180).forward(100).backward(100).right(135).snapToTargetStartShooter().fire().build();
+    }
+    
 }

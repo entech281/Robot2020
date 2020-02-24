@@ -10,6 +10,7 @@ import frc.robot.DriveInstruction;
 import frc.robot.RobotConstants;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
+import frc.robot.utils.PIDControlOutputProcessor;
 
 /**
  *
@@ -44,13 +45,7 @@ public class SnapToVisionTargetCommand extends EntechCommandBase {
             offset = vision.getVisionData().getLateralOffset();
             output = controller.calculate(offset);
             controller.calculate(offset, 0);
-            logger.log("offset", offset);
-            logger.log("output", output);
-            if(output > 0)
-                output = Math.min(output, 0.4);
-            if(output < 0)
-                output = Math.max(output, -0.4);
-            logger.log("Final output", output);
+            output = PIDControlOutputProcessor.constrain(output, 0.4);
             drive.drive(new DriveInstruction(0, output));
         }
     }

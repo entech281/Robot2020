@@ -10,6 +10,8 @@ import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.commands.SingleShotCommand;
 import frc.robot.pose.FieldPose;
 import frc.robot.pose.NavXData;
 import frc.robot.pose.RobotPose;
@@ -28,6 +30,8 @@ public class NavXSubsystem extends BaseSubsystem {
     public NavXSubsystem() {
         timer = new Timer();
     }
+    
+    
 
     @Override
     public void initialize() {
@@ -54,8 +58,15 @@ public class NavXSubsystem extends BaseSubsystem {
         logger.log("Angle reported by NavX", navX.getYaw());
     }
     
-    public void zeroYawOfNavX(){
-        navX.zeroYaw();
+    public Command zeroYawOfNavX(boolean inverted){
+        return new SingleShotCommand(this) {
+            @Override
+            public void doCommand() {
+                navX.zeroYaw();
+                if(inverted)
+                    navX.setAngleAdjustment(180);
+            }
+        };
     }
     
 

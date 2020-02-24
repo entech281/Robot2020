@@ -10,6 +10,8 @@ import frc.robot.DriveInstruction;
 import frc.robot.RobotConstants;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.NavXSubsystem;
+import frc.robot.utils.NavXDataProcessor;
+import frc.robot.utils.PIDControlOutputProcessor;
 
 /**
  *
@@ -41,7 +43,7 @@ public class SnapToYawCommand extends EntechCommandBase{
         setpoint = desiredYaw;
         if(relative){
             setpoint = navX.updateNavXAngle().getAngle() + setpoint;
-            setpoint = bringInRange(setpoint);
+            setpoint = NavXDataProcessor.bringInRange(setpoint);
         }
         controller.setSetpoint(setpoint);
         controller.setTolerance(2);
@@ -49,19 +51,7 @@ public class SnapToYawCommand extends EntechCommandBase{
     }
 
     
-    private boolean inRange(double angle){
-        return -180 <= angle && angle <= 180;
-    }
-    private double bringInRange(double angle){
-        while(!inRange(angle)){
-            if(angle < -180){
-                angle = 180 - Math.abs(-180 - angle);
-            } else {
-                angle = -180 + Math.abs(angle - 180);
-            }
-        }
-        return angle;
-    }
+    
     
     @Override
     public void execute() {
@@ -70,14 +60,7 @@ public class SnapToYawCommand extends EntechCommandBase{
         logger.log("Offset", controller.getPositionError());
         logger.log("NAV", navX.updateNavXAngle().getAngle());
 //        output *= 3;
-        if(output > 0){
-                output = Math.min(output, 0.6);
-//                output = Math.max(0.4, output);
-        }
-        if(output < 0){
-                output = Math.max(output, -0.6);
-//                output = Math.min(-0.4, output);
-        }
+        output = PIDControlOutputProcessor.constrain(output, 0.6);
         drive.drive(new DriveInstruction(0, output));
 
     }
