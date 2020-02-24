@@ -5,12 +5,14 @@
  */
 package frc.robot;
 
+import frc.robot.logger.DataLoggerFactory;
 import frc.robot.pose.VisionData;
 import frc.robot.utils.ByteConverter;
 import frc.robot.utils.VisionDataProcessor;
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import org.junit.Before;
 
 /**
  *
@@ -19,12 +21,18 @@ import static org.junit.Assert.assertTrue;
 public class TestVisionDataProcessor {
 
     String buffer;
-    VisionDataProcessor processor = new VisionDataProcessor();
     VisionData output;
     double TOLERANCE = 0.001;
 
+    @Before
+    public void setupLogging(){
+        DataLoggerFactory.configureForTesting();
+    }
+    
     @Test
     public void testReaderFallingBehindMultipleInputs() {
+        VisionDataProcessor processor = new VisionDataProcessor();
+        
         String[] inputs = {"true 6", "3 45 56 45.3 - \n", "true 45 3", "6 31 43.5 - \n"};
         for (String e : inputs) {
             processor.addInput(e);
@@ -39,6 +47,7 @@ public class TestVisionDataProcessor {
 
     @Test
     public void TestFallingBehindAndGettingAhead() {
+        VisionDataProcessor processor = new VisionDataProcessor();
         long startMemory = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
         String[] inputs = {"true 6", "3 45 56 45.3 - \n", "true 45 3", "6 31 43.5 - \n"};
         for (String e : inputs) {

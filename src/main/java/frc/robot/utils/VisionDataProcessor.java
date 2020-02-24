@@ -1,6 +1,8 @@
 package frc.robot.utils;
 
 import frc.robot.RobotConstants;
+import frc.robot.logger.DataLogger;
+import frc.robot.logger.DataLoggerFactory;
 import frc.robot.pose.ShooterConfiguration;
 import frc.robot.pose.TargetLocation;
 import frc.robot.pose.VisionData;
@@ -12,18 +14,24 @@ public class VisionDataProcessor {
     private int visionDataMemory = 5;
     private int num_consecutive_bad_data = 0;
     private final int TOLERANCE_CONSECUTIVE_BAD_DATA = 3;
-
+    private  DataLogger logger = DataLoggerFactory.getLoggerFactory().createDataLogger(this.getClass().getName());
     private FixedStack visionDataStack = new FixedStack(visionDataMemory);
-
+    private int updateCounter = 0;
     public VisionDataProcessor() {
         visionDataStack.add(VisionData.DEFAULT_VISION_DATA);
     }
 
     public TargetLocation compute(VisionData vData, double angle) {
+        
         double distance = 98.2 - 0.609 * vData.getVerticalOffset() + 0.0508 * Math.pow(vData.getVerticalOffset(), 2);
+        
         return new TargetLocation(distance, angle);
     }
 
+    private void recordUpdate(){
+        updateCounter++;
+        logger.log("updateCount",updateCounter);
+    }
     //distance in inches
     public ShooterConfiguration calculateShooterConfiguration(TargetLocation location) {
         double distance = location.getDistanceToTarget();
@@ -42,7 +50,7 @@ public class VisionDataProcessor {
     }
 
     private boolean completeData(String data) {
-        if (data.length() == 0) {
+        if (data.length() < 2) {
             return false;
         }
         return data.substring(data.length() - 2, data.length() - 1).equals("-");
@@ -67,6 +75,7 @@ public class VisionDataProcessor {
 
     public VisionData getCurrentVisionData() {
         parseBuffer();
+        recordUpdate();
         if(noRecentDataAvailable()){
             visionDataStack.add(VisionData.DEFAULT_VISION_DATA);
         }

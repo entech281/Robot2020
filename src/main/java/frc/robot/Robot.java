@@ -6,9 +6,6 @@
  /*----------------------------------------------------------------------------*/
 package frc.robot;
 
-import edu.wpi.cscore.MjpegServer;
-import edu.wpi.cscore.UsbCamera;
-import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.commands.AutoCommand;
@@ -25,6 +22,9 @@ import frc.robot.subsystems.SubsystemManager;
  */
 public class Robot extends TimedRobot {
 
+    static {
+        DataLoggerFactory.configureForMatch();
+    }
     private DataLogger logger;
     private SubsystemManager subsystemManager = new SubsystemManager();
     OperatorInterface oi;
@@ -32,11 +32,12 @@ public class Robot extends TimedRobot {
 
     @Override
     public void robotInit() {
-        DataLoggerFactory.configureForMatch();
+        
         this.logger = DataLoggerFactory.getLoggerFactory().createDataLogger("Robot Main Loop");
         subsystemManager.initAll();
 
         oi = new OperatorInterface(subsystemManager);
+
     }
 
     @Override

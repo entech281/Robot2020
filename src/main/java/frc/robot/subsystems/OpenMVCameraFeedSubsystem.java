@@ -2,6 +2,7 @@
 package frc.robot.subsystems;
 
 import edu.wpi.cscore.CvSource;
+import edu.wpi.cscore.MjpegServer;
 
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.Timer;
@@ -21,6 +22,7 @@ public class OpenMVCameraFeedSubsystem extends BaseSubsystem{
     private final Timer timer;
     public static final String SOURCE_NAME = "OpenMVCam";
     private boolean enabled;
+    private int counter = 0;
     public OpenMVCameraFeedSubsystem(boolean enabled){
         super();
         this.timer = new Timer();
@@ -30,10 +32,15 @@ public class OpenMVCameraFeedSubsystem extends BaseSubsystem{
     @Override
     public void initialize() {
         if ( enabled){
-            source = CameraServer.getInstance().putVideo(SOURCE_NAME, WIDTH, HEIGHT);
-            timer.start();            
+           source = CameraServer.getInstance().putVideo(SOURCE_NAME, WIDTH, HEIGHT);
+           MjpegServer server = CameraServer.getInstance().addServer(SOURCE_NAME, PORT);
+           server.setSource(source);
+           server.setFPS(FRAME_RATE);
+           server.setCompression(0);
+           server.setDefaultCompression(0);
+           server.setResolution(WIDTH, HEIGHT);
+           timer.start();            
         }
-
     }    
     
     @Override
@@ -50,9 +57,21 @@ public class OpenMVCameraFeedSubsystem extends BaseSubsystem{
         return 1.0 / FRAME_RATE;
     }
     
-    private void putFrameFromFile(){        
-        Mat m = Imgcodecs.imread(FILE_PATH);
-        source.putFrame(m);
+    private void putFrameFromFile(){  
+        try{
+            Mat m = Imgcodecs.imread(FILE_PATH);
+            if ( m != null && m.width() == WIDTH && m.height() == HEIGHT){
+                counter++;
+                source.putFrame(m); 
+            }
+            logger.log("FramesPut",counter);
+
+            
+        }
+        catch ( Throwable t){
+            logger.warn("Unhandled Error " + t.getMessage());
+        }
+
     }
     
 }

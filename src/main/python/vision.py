@@ -1,34 +1,43 @@
-# Grab JPG to disk
-#
-# Welcome to the OpenMV IDE! Click on the green run arrow button below to run the script!
+import sensor, image, time,pyb
 
-import sensor, image, time
-
-sensor.reset()                      # Reset and initialize the sensor.
-sensor.set_pixformat(sensor.RGB565) # Set pixel format to RGB565 (or GRAYSCALE)
-sensor.set_framesize(sensor.HQVGA)   # Set frame size to QVGA (320x240)
-
-sensor.set_quality(50)
-sensor.set_auto_exposure(False,200)
-sensor.skip_frames(time = 1000)     # Wait for settings take effect.
+FILE_NAME='stream.jpg'
+def draw_lines(x, y):
+    centerX = 80
+    centerY = 60
+    img.draw_line(x, y - 20, x, y + 20, color = (255, 0, 0), thickness = 2)
+    img.draw_line(x - 20, y, x + 20, y, color = (255, 0, 0), thickness = 2)
+    img.draw_line(centerX, centerY - 20, centerX, centerY + 20, color = (255, 255, 255), thickness = 1)
+    img.draw_line(centerX - 20, centerY, centerX + 20, centerY, color = (255, 255, 255), thickness = 1)
+sensor.reset()
+sensor.set_pixformat(sensor.RGB565)
+sensor.set_framesize(sensor.QQVGA)
+sensor.skip_frames(time = 2000)
+RANGES = [(9, 100, -128, -12, -47, 40)]
+RANGES2 = [ (0,100,-100,100,-100,100)]
+clock = time.clock()
 sensor.set_auto_whitebal(False)
 sensor.set_auto_gain(False)
-clock = time.clock()                # Create a clock object to track the FPS.
-last_frame = time.ticks()           # grab frames periodically
-#grab_rate_hz = 30
-#grab_delay_ms = 1000/grab_rate_hz
-grab_delay_ms = 20
+sensor.set_auto_exposure(False, exposure_us=2)
+last_frame=pyb.millis()
+FRAME_DELAY=125
 while(True):
-    clock.tick()                    # Update the FPS clock.
-    img = sensor.snapshot()         # Take a picture and return the image.
-
-                                    # to the IDE. The FPS should increase once disconnected.
-
-    if ( time.ticks() - last_frame ) > grab_delay_ms :
-        #img_writer = image.ImageWriter("/stream.jpg")
-        #img_writer.add_frame(img)
-        #img_writer.close()
-        img.save("/test.jpg")
-        print("Grab")
-        last_frame = time.ticks()
-    print(clock.fps())              # Note: OpenMV Cam runs about half as fast when connected
+    clock.tick()
+    img = sensor.snapshot()
+    target_found = False
+    x = -1
+    y = -1
+    width = -1
+    for b in img.find_blobs( RANGES ):
+      if b.compactness() < 0.5:
+          target_found = True
+          x = b.cx()
+          y = b.cy()
+          width = abs(b.x() - b.w())
+          height = abs(b.y() - b.h())
+          draw_lines(x, y)
+          img.draw_rectangle( b.rect(), color = (0, 0, 255), thickness = 1)
+    if ( pyb.millis() - last_frame ) > FRAME_DELAY:
+        img.save(FILE_NAME)
+        last_frame = pyb.millis()
+    output = str(target_found) + " " + str(x) + " " + str(y) + " " + str(width) + " " + str(clock.fps()) + " -"
+    print(output)
