@@ -1,16 +1,20 @@
 package frc.robot.controllers;
 
+import frc.robot.logger.DataLogger;
+import frc.robot.logger.DataLoggerFactory;
 import frc.robot.path.Position;
 import frc.robot.utils.EncoderInchesConverter;
 
 public class SparkPositionControllerGroup {
 
+    private DataLogger logger = DataLoggerFactory.getLoggerFactory().createDataLogger("SparkPositionControllerGroup");
+
     private SparkPositionController frontLeft;
     private SparkPositionController frontRight;
     private SparkPositionController rearLeft;
     private SparkPositionController rearRight;
-    public static final double FRONT_RIGHT_ADJUST = 1.0;
-    public static final double REAR_RIGHT_ADJUST = 1.0;
+    public static final double RIGHT_ADJUST = -1.0;
+    public static final double LEFT_ADJUST = 1.0;
 
     public SparkPositionControllerGroup(SparkPositionController fL, SparkPositionController fR, SparkPositionController rL, SparkPositionController rR) {
         this.frontLeft = fL;
@@ -45,10 +49,12 @@ public class SparkPositionControllerGroup {
             resetPosition();
         }
 
-        frontLeft.setDesiredPosition(leftPose);
-        rearLeft.setDesiredPosition(leftPose);
-        frontRight.setDesiredPosition(rightPose * FRONT_RIGHT_ADJUST);
-        rearRight.setDesiredPosition(rightPose * REAR_RIGHT_ADJUST);
+        frontLeft.setDesiredPosition(leftPose * LEFT_ADJUST);
+        rearLeft.setDesiredPosition(leftPose * LEFT_ADJUST);
+        frontRight.setDesiredPosition(rightPose * RIGHT_ADJUST);
+        rearRight.setDesiredPosition(rightPose * RIGHT_ADJUST);
+        logger.log("set position left", leftPose * LEFT_ADJUST);
+        logger.log("set position right", rightPose * RIGHT_ADJUST);
     }
 
     public double getLeftCurrentPosition(EncoderInchesConverter converter) {
@@ -61,10 +67,10 @@ public class SparkPositionControllerGroup {
         return right;
     }
 
-    public int computeLeftEncoderCounts() {
-        int total = 0;
+    public double computeLeftEncoderCounts() {
+        double total = 0;
         int count = 0;
-        Integer pos = frontLeft.getActualPosition();
+        Double pos = frontLeft.getActualPosition();
         if (pos != null && Math.abs(pos) > 0) {
             total += pos;
             count += 1;
@@ -82,10 +88,10 @@ public class SparkPositionControllerGroup {
 
     }
 
-    public int computeRightEncoderCounts() {
-        int total = 0;
+    public double computeRightEncoderCounts() {
+        double total = 0;
         int count = 0;
-        Integer pos = frontRight.getActualPosition();
+        Double pos = frontRight.getActualPosition();
         if (pos != null && Math.abs(pos) > 0) {
             total += pos;
             count += 1;
@@ -103,6 +109,6 @@ public class SparkPositionControllerGroup {
     }
 
     public Position getCurrentPosition(EncoderInchesConverter encoderConverter) {
-		return new Position(getLeftCurrentPosition(encoderConverter), getRightCurrentPosition(encoderConverter));
-	}
+        return new Position(getLeftCurrentPosition(encoderConverter), getRightCurrentPosition(encoderConverter));
+    }
 }

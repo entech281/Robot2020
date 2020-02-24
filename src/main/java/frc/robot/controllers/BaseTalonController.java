@@ -3,7 +3,6 @@ package frc.robot.controllers;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
-
 public abstract class BaseTalonController {
 
     private TalonSRX talon = null;

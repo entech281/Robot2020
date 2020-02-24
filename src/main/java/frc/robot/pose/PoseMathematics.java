@@ -2,7 +2,6 @@ package frc.robot.pose;
 
 import frc.robot.RobotConstants;
 
-
 public class PoseMathematics {
 
     private static double robotWidth = RobotConstants.DIMENSIONS.ROBOT_WIDTH;

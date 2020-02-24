@@ -63,8 +63,8 @@ public class RamseteAutoCommand {
                                 RobotConstants.RAMSETE.kaVoltSecondsSquaredPerMeter),
             RobotConstants.RAMSETE.kDriveKinematics,
             robotDrive::getWheelSpeeds,
-            new PIDController(RobotConstants.PID.DRIVE.P, RobotConstants.PID.DRIVE.I, RobotConstants.PID.DRIVE.D),
-            new PIDController(RobotConstants.PID.DRIVE.P, RobotConstants.PID.DRIVE.I, RobotConstants.PID.DRIVE.D),
+            new PIDController(RobotConstants.PID.AUTO.P, RobotConstants.PID.AUTO.I, RobotConstants.PID.AUTO.D),
+            new PIDController(RobotConstants.PID.AUTO.P, RobotConstants.PID.AUTO.I, RobotConstants.PID.AUTO.D),
             // RamseteCommand passes volts to the callback
             robotDrive::tankDriveVolts, 
             robotDrive
