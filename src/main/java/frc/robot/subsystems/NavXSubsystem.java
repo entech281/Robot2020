@@ -10,7 +10,9 @@ import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.Timer;
+import frc.robot.pose.FieldPose;
 import frc.robot.pose.NavXData;
+import frc.robot.pose.RobotPose;
 
 /**
  *
@@ -39,11 +41,22 @@ public class NavXSubsystem extends BaseSubsystem {
             }
         }
         navX.zeroYaw();
+        logger.log("Nav angle", navX.getYaw());
         logger.log("NavX Initialize Finish", false);
     }
 
     public NavXData updateNavXAngle() {
-        return new NavXData(navX.getAngle(), this.navXWorking);
+        return new NavXData(navX.getYaw(), this.navXWorking);
     }
+
+    @Override
+    public void customPeriodic(RobotPose rPose, FieldPose fPose) {
+        logger.log("Angle reported by NavX", navX.getYaw());
+    }
+    
+    public void zeroYawOfNavX(){
+        navX.zeroYaw();
+    }
+    
 
 }

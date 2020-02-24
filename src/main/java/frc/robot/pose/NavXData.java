@@ -11,6 +11,7 @@ public class NavXData {
         this.angle = angle;
         this.status = status;
     }
+    
 
     public double getAngle() {
         return angle;

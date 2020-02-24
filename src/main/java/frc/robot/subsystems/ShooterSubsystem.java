@@ -198,7 +198,8 @@ public class ShooterSubsystem extends BaseSubsystem {
             }
             setDesiredShooterConfiguration(config);
         } else {
-            shootMotor.stopMotor();
+            if(shootMotorMounted)
+                shootMotor.stopMotor();
         }
     }
     

@@ -11,7 +11,7 @@ public class VisionDataProcessor {
     private String retval;
     private int visionDataMemory = 5;
     private int num_consecutive_bad_data = 0;
-    private final int TOLERANCE_CONSECUTIVE_BAD_DATA = 3;
+    private final int TOLERANCE_CONSECUTIVE_BAD_DATA = 20;
 
     private FixedStack visionDataStack = new FixedStack(visionDataMemory);
 
@@ -42,7 +42,7 @@ public class VisionDataProcessor {
     }
 
     private boolean completeData(String data) {
-        if (data.length() == 0) {
+        if (data.length() < 2) {
             return false;
         }
         return data.substring(data.length() - 2, data.length() - 1).equals("-");

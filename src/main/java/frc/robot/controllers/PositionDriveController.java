@@ -93,23 +93,23 @@ public class PositionDriveController {
             if (positionSource.hasNextPosition()) {
                 Position p = positionSource.getCurrentPosition();
                 setCurrentCommand(p);
-                dataLogger.log("wanted inches", p.getLeftInches());
+                //dataLogger.log("wanted inches", p.getLeftInches());
                 double encoderLeft = encoderConverter.toCounts(p.getLeftInches());
                 double encoderRight = encoderConverter.toCounts(p.getRightInches());
 
-                dataLogger.log("encoderLeft", encoderLeft);
+                //dataLogger.log("encoderLeft", encoderLeft);
                 positionControllerGroup.setDesiredPosition(encoderLeft, encoderRight, p.isRelative());
             } else {
 
             }
         }
         if (hasCurrentCommand()) {
-            dataLogger.log("commandPosition", getCurrentCommand());
+            //dataLogger.log("commandPosition", getCurrentCommand());
         } else {
-            dataLogger.log("commandPosition", "<IDLE>");
+            //dataLogger.log("commandPosition", "<IDLE>");
         }
-        dataLogger.log("currentPosition", getCurrentPosition());
-        dataLogger.log("updateCount", updateCount++);
+        //dataLogger.log("currentPosition", getCurrentPosition());
+        //dataLogger.log("updateCount", updateCount++);
 
     }
 
@@ -121,15 +121,15 @@ public class PositionDriveController {
     }
 
     protected void displayControllerStatus(CANSparkMax spark, String name) {
-        dataLogger.log(name + ": errorMsg", spark.getLastError());
-        dataLogger.log(name + ": get", spark.get());
-        dataLogger.log(name + ": tvolts", spark.getBusVoltage());
-        dataLogger.log(name + ": current", spark.getOutputCurrent());
-        dataLogger.log(name + ": pos", spark.getEncoder().getPosition());
-        dataLogger.log(name + ": vel", spark.getEncoder().getVelocity());
-        dataLogger.log(name + ": appliedoutput", spark.getAppliedOutput());
-        dataLogger.log(name + ": max accel", spark.getPIDController().getSmartMotionMaxAccel(0));
-        dataLogger.log(name + ": max vel", spark.getPIDController().getSmartMotionMaxVelocity(0));
+        //dataLogger.log(name + ": errorMsg", spark.getLastError());
+        //dataLogger.log(name + ": get", spark.get());
+        //dataLogger.log(name + ": tvolts", spark.getBusVoltage());
+        //dataLogger.log(name + ": current", spark.getOutputCurrent());
+        //dataLogger.log(name + ": pos", spark.getEncoder().getPosition());
+        //dataLogger.log(name + ": vel", spark.getEncoder().getVelocity());
+        //dataLogger.log(name + ": appliedoutput", spark.getAppliedOutput());
+        //dataLogger.log(name + ": max accel", spark.getPIDController().getSmartMotionMaxAccel(0));
+        //dataLogger.log(name + ": max vel", spark.getPIDController().getSmartMotionMaxVelocity(0));
     }
 
 }

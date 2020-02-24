@@ -1,9 +1,12 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.Joystick;
+import frc.robot.commands.AutonomousPathCommand;
+import frc.robot.commands.DriveForwardSetDistance;
 import frc.robot.commands.FollowPositionPathCommand;
 import frc.robot.commands.HoodHomingCommand;
 import frc.robot.commands.SnapToVisionTargetCommand;
+import frc.robot.commands.SnapToYawCommand;
 import frc.robot.commands.StartIntakeCommand;
 import frc.robot.commands.StartShooterCommand;
 import frc.robot.commands.StopIntakeCommand;
@@ -30,12 +33,28 @@ public class OperatorInterface {
                 .whenReleased(new StopIntakeCommand(subsystemManager.getIntakeSubsystem(), subsystemManager.getElevatorSubsystem()))
                 .add();
 
-        manager.addButton(RobotConstants.BUTTONS.SHOOT_BUTTON)
+        manager.addButton(RobotConstants.BUTTONS.START_SHOOTER_BUTTON)
                 .whenPressed(new StartShooterCommand(subsystemManager.getShooterSubsystem(), subsystemManager.getElevatorSubsystem()))
                 .whenReleased(new StopShooterCommand(subsystemManager.getShooterSubsystem()))
                 .add();
+        
+        manager.addButton(RobotConstants.BUTTONS.FIRE_BUTTON)
+                .whenPressed(subsystemManager.getElevatorSubsystem().start())
+                .whenReleased(subsystemManager.getElevatorSubsystem().stop())
+                .add();
 
+
+        
         drive = subsystemManager.getDriveSubsystem();
+        
+        manager.addButton(4)
+                .whenPressed(new DriveForwardSetDistance(drive,48))
+                .add();
+        
+        manager.addButton(6)
+                .whenPressed(new SnapToYawCommand(subsystemManager.getNavXSubsystem(), subsystemManager.getDriveSubsystem(), -90, true))
+                .add();
+
 
         manager.addButton(RobotConstants.BUTTONS.RESET_BUTTON)
                 .whenPressed(drive.reset())
@@ -56,6 +75,10 @@ public class OperatorInterface {
         
         manager.addButton(3)
                 .whenPressed(new SnapToVisionTargetCommand(subsystemManager.getDriveSubsystem(), subsystemManager.getVisionSubsystem()))
+                .add();
+        
+        manager.addButton(12)
+                .whenPressed(new AutonomousPathCommand(new AutoPathFactory(subsystemManager).autoPath1()))
                 .add();
 
         drive.setDefaultCommand(new TankDriveCommand(drive, driveStick));

@@ -5,16 +5,19 @@
  */
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.subsystems.ElevatorSubsystem;
-import frc.robot.subsystems.ShooterSubsystem;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
  * @author aryan
  */
-public class StartShooterCommand extends SequentialCommandGroup  {
-    public StartShooterCommand(ShooterSubsystem shoot, ElevatorSubsystem elevator) {
-        addCommands(elevator.shiftBack(), shoot.turnOnShooter());
+public class AutonomousPathCommand extends SequentialCommandGroup{
+
+    public AutonomousPathCommand(Command[] commands){
+        addCommands(commands);
     }
+
 }
