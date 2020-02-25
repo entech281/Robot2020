@@ -65,7 +65,7 @@ public class DriveSubsystem extends BaseSubsystem {
             .brakeInNeutral()
             .withDirections(false, false)
             .limitMotorOutputs(1.0, -1.0)
-            .noMotorStartupRamping()
+            .withMotorRampUpOnStart(0.1)
             .useSmartMotionControl()
             .withPositionGains(RobotConstants.PID.AUTO_STRAIGHT.F,
                     RobotConstants.PID.AUTO_STRAIGHT.P,
