@@ -1,5 +1,6 @@
 package frc.robot.preferences;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
 public class SmartDashboardPathChooser{
@@ -11,6 +12,7 @@ public class SmartDashboardPathChooser{
         chooser.addOption("Shoot and back up", AutoOption.ShootAndBackUp);
         chooser.addOption("Middle 6 ball", AutoOption.MiddleSixBall);
         chooser.addOption("Right 7 ball", AutoOption.RightSevenBall);
+        SmartDashboard.putData("auto paths", chooser);
     }
 
     public AutoOption getSelected(){
