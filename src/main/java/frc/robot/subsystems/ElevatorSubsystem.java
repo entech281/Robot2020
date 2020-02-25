@@ -60,7 +60,7 @@ public class ElevatorSubsystem extends BaseSubsystem {
                     .withCurrentLimits(maxCurrent, maxSustainedCurrent, maxCurrentTime).brakeInNeutral()
                     .withDirections(false, false).noMotorOutputLimits().noMotorStartupRamping().useSpeedControl().build();
 
-            elevatorMotor = new WPI_TalonSRX(RobotConstants.CAN.INTAKE_MOTOR);
+            elevatorMotor = new WPI_TalonSRX(RobotConstants.CAN.ELEVATOR_MOTOR);
             elevatorMotorController = new TalonSpeedController(elevatorMotor, motorSettings);
             elevatorMotorController.configure();
             elevatorMotor.set(ControlMode.PercentOutput, 0);

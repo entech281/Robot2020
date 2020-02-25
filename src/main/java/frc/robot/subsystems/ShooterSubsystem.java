@@ -138,7 +138,7 @@ public class ShooterSubsystem extends BaseSubsystem {
     public void initialize() {
 
         if (shootMotorMounted) {
-            shootMotor = new CANSparkMax(5, MotorType.kBrushless);
+            shootMotor = new CANSparkMax(RobotConstants.CAN.SHOOTER_MOTOR, MotorType.kBrushless);
             SparkMaxSettings shooterSettings = SparkMaxSettingsBuilder.defaults().withCurrentLimits(SHOOTER_MOTOR.CURRENT_LIMIT)
                     .coastInNeutral().withDirections(false, false).limitMotorOutputs(SHOOTER_MOTOR.SHOOTER_MAXOUTPUT, SHOOTER_MOTOR.SHOOTER_MINOUTPUT)
                     .withMotorRampUpOnStart(SHOOTER_MOTOR.SHOOTER_MOTOR_RAMPUP).useSmartMotionControl()
@@ -149,7 +149,7 @@ public class ShooterSubsystem extends BaseSubsystem {
 
         }
         if (hoodMotorMounted) {
-            hoodMotor = new WPI_TalonSRX(7);
+            hoodMotor = new WPI_TalonSRX(RobotConstants.CAN.HOOD_MOTOR);
             TalonSettings hoodSettings = TalonSettingsBuilder.defaults().withCurrentLimits(1, 1, 1).brakeInNeutral()
                     .withDirections(false, false).noMotorOutputLimits().noMotorStartupRamping().usePositionControl()
                     .withGains(HOOD_MOTOR.HOOD_PID_F, HOOD_MOTOR.HOOD_PID_P, HOOD_MOTOR.HOOD_PID_I, HOOD_MOTOR.HOOD_PID_D)

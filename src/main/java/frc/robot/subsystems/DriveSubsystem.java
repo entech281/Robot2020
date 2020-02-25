@@ -154,7 +154,7 @@ public class DriveSubsystem extends BaseSubsystem {
                     frontRightEncoder.getPosition(),
                     rearRightEncoder.getPosition());
         }
-        return new EncoderValues(0, 0, 0, 0);
+        return EncoderValues.NO_ENCODER_VALUES;
     }
 
     @Override
