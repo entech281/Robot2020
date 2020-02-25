@@ -55,14 +55,6 @@ public class ShooterSubsystem extends BaseSubsystem {
         }.withTimeout(EntechCommandBase.DEFAULT_TIMEOUT_SECONDS);
     }
 
-    public Command stop() {
-        return new SingleShotCommand(this) {
-            @Override
-            public void doCommand() {
-                shootMotor.stopMotor();
-            }
-        }.withTimeout(EntechCommandBase.DEFAULT_TIMEOUT_SECONDS);
-    }
 
     public Command enableAutoShooting() {
         return new SingleShotCommand(this) {
@@ -198,9 +190,8 @@ public class ShooterSubsystem extends BaseSubsystem {
             }
             setDesiredShooterConfiguration(config);
         } else {
-            if(shootMotorMounted){
+            if(shootMotorMounted)
                 shootMotor.stopMotor();
-            }
         }
     }
     

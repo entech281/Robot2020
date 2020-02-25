@@ -30,8 +30,9 @@ public class RobotConstants {
     public interface BUTTONS {
 
         public static final int INTAKE_BUTTON = 1;
-        public static final int SHOOT_BUTTON = 2;
+        public static final int START_SHOOTER_BUTTON = 2;
         public static final int RESET_BUTTON = 10;
+        public static final int FIRE_BUTTON = 4;
     }
 
     public interface ROBOT_DEFAULTS {
@@ -50,8 +51,8 @@ public class RobotConstants {
     public interface DIMENSIONS {
         // Must be in inches
 
-        public static final double ROBOT_WIDTH = 23;
-        public static final double ROBOT_LENGTH = 32.5;
+        public static final double ROBOT_WIDTH = 23.5;
+        public static final double ROBOT_LENGTH = 25;
         public static final double DRIVE_GEAR_RATIO = 10.7;
         public static final double WHEEL_DIAMETER_INCHES = 6;
         public static final double MOTOR_REVOLUTIONS_PER_INCH = (Math.PI * WHEEL_DIAMETER_INCHES)
@@ -59,13 +60,20 @@ public class RobotConstants {
     }
 
     public interface PID{
-        public interface AUTO{
-            public static final double P = 2e-4;
+        public interface AUTO_STRAIGHT{
+            public static final double P = 1e-3;
             public static final double I = 0;//2e-5;
             public static final double D = 0;
             public static final double F = 0;
         }
-
+        
+        public interface AUTO_TURN{
+            public static final double P = 6e-2;
+            public static final double I = 0;//2e-5;
+            public static final double D = 0;
+            public static final double F = 0;
+        }
+        
         public interface TARGET_LOCK{
             public static final double P = 6e-2;
             public static final double I = 0;//2e-5;

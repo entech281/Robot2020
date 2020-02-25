@@ -16,6 +16,6 @@ import frc.robot.subsystems.ShooterSubsystem;
  */
 public class StartIntakeCommand extends ParallelCommandGroup{
     public StartIntakeCommand(IntakeSubsystem intake, ElevatorSubsystem elevator, ShooterSubsystem shoot){
-        addCommands(intake.start(), elevator.start(), shoot.stop());
+        addCommands(intake.start(), elevator.start(), shoot.turnOffShooter());
     }
 }
