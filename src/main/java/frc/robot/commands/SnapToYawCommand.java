@@ -8,6 +8,7 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj.controller.PIDController;
 import frc.robot.DriveInstruction;
 import frc.robot.RobotConstants;
+import frc.robot.pose.RobotPose;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.NavXSubsystem;
 import frc.robot.utils.NavXDataProcessor;
@@ -18,7 +19,6 @@ import frc.robot.utils.PIDControlOutputProcessor;
  * @author aryan
  */
 public class SnapToYawCommand extends EntechCommandBase{
-    private NavXSubsystem navX;
     private DriveSubsystem drive;
     private PIDController controller;
     private double offset;
@@ -26,12 +26,12 @@ public class SnapToYawCommand extends EntechCommandBase{
     private double setpoint;
     private boolean relative;
     private double desiredYaw;
-
+    private RobotPose rPose = RobotConstants.ROBOT_DEFAULTS.START_POSE;
     
-    public SnapToYawCommand(NavXSubsystem navXSubsystem, DriveSubsystem drive, double desiredAngle, boolean relative){
+    
+    public SnapToYawCommand(DriveSubsystem drive, double desiredAngle, boolean relative){
         super(drive);
         this.drive = drive;
-        this.navX = navXSubsystem;
         this.controller = new PIDController(RobotConstants.PID.AUTO_TURN.P, RobotConstants.PID.AUTO_TURN.I, RobotConstants.PID.AUTO_TURN.D);
         desiredYaw = desiredAngle;
         this.relative = relative;
@@ -41,8 +41,9 @@ public class SnapToYawCommand extends EntechCommandBase{
     public void initialize() {
         drive.setPositionMode();
         setpoint = desiredYaw;
+        rPose = drive.getLatestRobotPose();
         if(relative){
-            setpoint = navX.updateNavXAngle().getAngle() + setpoint;
+            setpoint = rPose.getRobotPosition().getTheta() + setpoint;
             setpoint = NavXDataProcessor.bringInRange(setpoint);
         }
         controller.setSetpoint(setpoint);
@@ -55,11 +56,11 @@ public class SnapToYawCommand extends EntechCommandBase{
     
     @Override
     public void execute() {
-        output = controller.calculate(navX.updateNavXAngle().getAngle());
+        rPose = drive.getLatestRobotPose();
+        output = controller.calculate(rPose.getRobotPosition().getTheta());
         logger.log("Setpoint", controller.getSetpoint());
         logger.log("Offset", controller.getPositionError());
-        logger.log("NAV", navX.updateNavXAngle().getAngle());
-//        output *= 3;
+        logger.log("NAV", rPose.getRobotPosition().getTheta());
         output = PIDControlOutputProcessor.constrain(output, 0.6);
         drive.drive(new DriveInstruction(0, output));
 

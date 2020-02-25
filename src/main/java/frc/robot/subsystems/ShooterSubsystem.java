@@ -176,7 +176,10 @@ public class ShooterSubsystem extends BaseSubsystem {
         ShooterConfiguration config;
         if(shootOn){
             if (autoAdjust) {
-                config = processor.calculateShooterConfiguration(rPose.getTargetLocation());
+                if(rPose.getVisionDataValidity()){
+                    config = processor.calculateShooterConfiguration(rPose.getTargetLocation());
+                    setDesiredShooterConfiguration(config);                    
+                }
             } else {
                 if(preset1){
                     config = processor.calculateShooterConfiguration(RobotConstants.SHOOT_PRESETS.PRESET_1);
@@ -188,8 +191,9 @@ public class ShooterSubsystem extends BaseSubsystem {
                     double angle = 0.0; //Need to get information from operator panel
                     config = new ShooterConfiguration(angle, 5350);
                 }
+                setDesiredShooterConfiguration(config);
             }
-            setDesiredShooterConfiguration(config);
+
         } else {
             if(shootMotorMounted)
                 shootMotor.stopMotor();
