@@ -225,7 +225,7 @@ public static class Builder implements BasicMoves{
         @Override
         public BasicMoves next() {
             Command[] parallelComm = new Command[parallelCommands.size()];
-            for(int i = parallelCommands.size() - 1; i >= 0; i++){
+            for(int i = parallelComm.length - 1; i >= 0; i-= 1){
                 parallelComm[i] = parallelCommands.remove(i);
             }
             commands.add(new ParallelCommandGroup(parallelComm));

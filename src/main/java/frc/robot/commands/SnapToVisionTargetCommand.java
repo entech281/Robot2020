@@ -22,7 +22,7 @@ public class SnapToVisionTargetCommand extends EntechCommandBase {
     private DriveSubsystem drive;
     private PIDController controller;
     private double offset;
-    private double output;
+    private double output = 0.0;
     private RobotPose rp = RobotConstants.ROBOT_DEFAULTS.START_POSE;
     
 
@@ -42,17 +42,21 @@ public class SnapToVisionTargetCommand extends EntechCommandBase {
     @Override
     public void execute(){
         rp = drive.getLatestRobotPose();
+        logger.log("Vision data", rp.getVisionDataValidity());
         if(rp.getVisionDataValidity()){
             offset = rp.getTargetLateralOffset();
+            logger.log("Offset", offset);
             output = controller.calculate(offset);
             output = PIDControlOutputProcessor.constrain(output, 0.4);
+            logger.log("Output", output);
             drive.drive(new DriveInstruction(0, output));
         }
+
     }
 
     @Override
     public boolean isFinished(){
-        return controller.atSetpoint() || rp.getVisionDataValidity();
+        return controller.atSetpoint() || !rp.getVisionDataValidity();
     }
 
 }

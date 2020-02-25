@@ -61,7 +61,7 @@ public class CommandGroupFactory {
                 .addCommand(subsystemManager.getElevatorSubsystem().stop())
                 .addCommand(subsystemManager.getShooterSubsystem().turnOffShooter())
                 .addCommand(subsystemManager.getShooterSubsystem().disableAutoShooting())
-                .addCommand(hoodHomingCommandGroup)
+                .addCommand(getHoodHomingCommandGroup())
                 .getSequentialCommandGroup();
     }
     

@@ -17,7 +17,7 @@ import java.util.ArrayList;
 public class EntechCommandGroup{
     ArrayList<Command> commands = new ArrayList<>();
     public EntechCommandGroup addCommand(Command comm){
-        commands.add(comm.withTimeout(EntechCommandBase.DEFAULT_TIMEOUT_SECONDS));
+        commands.add(comm);
         return this;
     }
     public SequentialCommandGroup getSequentialCommandGroup(){
