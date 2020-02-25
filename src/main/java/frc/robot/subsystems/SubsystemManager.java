@@ -1,8 +1,8 @@
 package frc.robot.subsystems;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Collections;
 
-import java.util.*;
-
-import frc.robot.logger.DataLoggerFactory;
 import frc.robot.pose.FieldPoseManager;
 import frc.robot.pose.RobotPoseManager;
 
@@ -85,6 +85,12 @@ public class SubsystemManager {
         robotPoseManager.updateVisionData(visionSubsystem.getVisionData());
         robotPoseManager.updateWheelColor(colorSubsystem.getRobotColorSensorReading());
         robotPoseManager.update();
+    }
+
+    public void zeroPosition(){
+        driveSubsystem.zeroEncoders();
+        navXSubsystem.zeroYaw();
+        updatePoses();
     }
 
 }

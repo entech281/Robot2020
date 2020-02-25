@@ -17,11 +17,15 @@ import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveVoltageConst
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.RobotConstants;
+import frc.robot.logger.DataLogger;
+import frc.robot.logger.DataLoggerFactory;
 import frc.robot.subsystems.DriveSubsystem;
 
 public class RamseteAutoCommand {
+    private static DataLogger logger = DataLoggerFactory.getLoggerFactory().createDataLogger("Ramsete Auto Command");
     public static SequentialCommandGroup getExampleCommand(DriveSubsystem robotDrive) {
         // Create a voltage constraint to ensure we don't accelerate too fast
+        logger.log("DriveSubsystem", robotDrive);
         var autoVoltageConstraint =
         new DifferentialDriveVoltageConstraint(
             new SimpleMotorFeedforward(RobotConstants.RAMSETE.ksVolts,

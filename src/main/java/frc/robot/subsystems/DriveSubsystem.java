@@ -9,7 +9,6 @@ import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
 import frc.robot.DriveInstruction;
 import frc.robot.RobotConstants;
 import frc.robot.controllers.SparkPositionController;
-import frc.robot.controllers.SparkPositionControllerGroup;
 import frc.robot.path.PositionBuffer;
 
 import com.revrobotics.CANEncoder;
@@ -26,8 +25,6 @@ import frc.robot.utils.EncoderInchesConverter;
 import static frc.robot.RobotConstants.AVAILABILITY.*;
 
 public class DriveSubsystem extends BaseSubsystem {
-
-    private boolean inAuto;
 
     private CANSparkMax frontLeftSpark;
     private CANSparkMax frontRightSpark;
@@ -151,6 +148,7 @@ public class DriveSubsystem extends BaseSubsystem {
     @Override
     public void customPeriodic(RobotPose rp, FieldPose fp) {
         if (drive) {
+            currentpose = rp.getWPIRobotPose();
             logger.log("Front Left Encoder Ticks", frontLeftEncoder.getPosition());
             logger.log("Front Right Encoder Ticks", frontRightEncoder.getPosition());
             logger.log("Rear Left Encoder Ticks", rearLeftEncoder.getPosition());
@@ -169,7 +167,6 @@ public class DriveSubsystem extends BaseSubsystem {
     }
 
     public void startAutonomous() {
-        inAuto = true;
         if (drive) {
             robotDrive.setSafetyEnabled(false);
         }
@@ -180,7 +177,6 @@ public class DriveSubsystem extends BaseSubsystem {
     }
 
     public void endAutonomous() {
-        inAuto = false;
         if (drive) {
             robotDrive.setSafetyEnabled(true);
         }
@@ -213,4 +209,11 @@ public class DriveSubsystem extends BaseSubsystem {
     public Pose2d getCurrentWPIPose(){
         return currentpose;
     }
+
+    public void zeroEncoders(){
+        frontLeftEncoder.setPosition(0);
+        frontRightEncoder.setPosition(0);
+        rearLeftEncoder.setPosition(0);
+        rearRightEncoder.setPosition(0);
+    };
 }

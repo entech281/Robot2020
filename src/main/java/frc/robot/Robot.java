@@ -37,6 +37,7 @@ public class Robot extends TimedRobot {
         subsystemManager.initAll();
 
         oi = new OperatorInterface(subsystemManager);
+        autoCommand = new AutoCommand(subsystemManager.getShooterSubsystem(), subsystemManager.getDriveSubsystem(), subsystemManager.getIntakeSubsystem());
     }
 
     @Override
@@ -45,9 +46,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void teleopInit() {
-        if (autoCommand != null) {
-            autoCommand.cancel();
-        }
+        autoCommand.cancel();
         subsystemManager.getDriveSubsystem().setSpeedMode();
     }
 
@@ -59,7 +58,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void autonomousInit() {
-        autoCommand = new AutoCommand(subsystemManager.getShooterSubsystem(), subsystemManager.getDriveSubsystem(), subsystemManager.getIntakeSubsystem());
+        subsystemManager.zeroPosition();
         autoCommand.schedule();
     }
 

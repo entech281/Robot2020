@@ -6,6 +6,7 @@
  /*----------------------------------------------------------------------------*/
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.CANifier.PinValues;
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.SPI;
@@ -46,4 +47,8 @@ public class NavXSubsystem extends BaseSubsystem {
         return new NavXData(navX.getAngle(), this.navXWorking);
     }
 
+
+    public void zeroYaw(){
+        navX.zeroYaw();
+    }
 }

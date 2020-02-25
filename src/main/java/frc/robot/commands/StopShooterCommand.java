@@ -14,6 +14,6 @@ import frc.robot.subsystems.ShooterSubsystem;
  */
 public class StopShooterCommand extends ParallelCommandGroup  {
     public StopShooterCommand(ShooterSubsystem shoot) {
-        addCommands(new HoodHomingCommand(shoot), shoot.turnOffShooter());
+        addCommands(new HoodHomingCommand(shoot));
     }
 }
