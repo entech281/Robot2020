@@ -1,9 +1,9 @@
 package frc.robot.preferences;
 
-import frc.robot.commands.EntechCommandGroup;
+import edu.wpi.first.wpilibj2.command.Command;
 
 public class AutoCommandFactory{
-    public static EntechCommandGroup getSelectedCommand(AutoOption selected){
+    public static Command getSelectedCommand(AutoOption selected){
         switch(selected){
             case MiddleSixBall:
                 break;
