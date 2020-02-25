@@ -51,12 +51,8 @@ public class SubsystemManager {
     private ShooterSubsystem shootSubsystem;
     private ClimbSubsystem climbSubsystem;
     private ElevatorSubsystem elevatorSubsystem;
-<<<<<<< HEAD
     private ColorPanelSubsystem colorSubsystem;
-=======
-    private ColorSubsystem colorSubsystem;
     private VisionSubsystem visionSubsystem;
->>>>>>> 587bf45349cd0c1da9944da328a83b6f4f07d9c8
 
     private final RobotPoseManager robotPoseManager = new RobotPoseManager();
     private final FieldPoseManager fieldPoseManager = new FieldPoseManager();
@@ -70,12 +66,8 @@ public class SubsystemManager {
         shootSubsystem = new ShooterSubsystem();
         climbSubsystem = new ClimbSubsystem();
         elevatorSubsystem = new ElevatorSubsystem();
-<<<<<<< HEAD
         colorSubsystem = new ColorPanelSubsystem();
-=======
-        colorSubsystem = new ColorSubsystem();
         visionSubsystem = new VisionSubsystem();
->>>>>>> 587bf45349cd0c1da9944da328a83b6f4f07d9c8
 
         Collections.addAll(allSubsystems, driveSubsystem, intakeSubsystem, navXSubsystem, visionSubsystem, shootSubsystem);
 
@@ -94,14 +86,10 @@ public class SubsystemManager {
     private void updatePoses() {
         robotPoseManager.updateEncoders(driveSubsystem.getEncoderValues());
         robotPoseManager.updateNavxAngle(navXSubsystem.updateNavXAngle());
-<<<<<<< HEAD
         robotPoseManager.updateWheelColor(colorSubsystem.getSensorColor());
         fieldPoseManager.updateFieldColor(colorSubsystem.getFieldColor());
-=======
         robotPoseManager.updateVisionData(visionSubsystem.getVisionData());
-        robotPoseManager.updateWheelColor(colorSubsystem.getRobotColorSensorReading());
         robotPoseManager.update();
->>>>>>> 587bf45349cd0c1da9944da328a83b6f4f07d9c8
     }
 
 }

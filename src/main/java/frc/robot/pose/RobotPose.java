@@ -15,21 +15,9 @@ public class RobotPose {
     public RobotPose(RobotPosition robotPosition, VisionData vData) {
         this.robotPosition = robotPosition;
         visionData = vData;
-<<<<<<< HEAD
-      //  wheelColor = null;
-        targetLocation = new VisionDataProcessor().compute(vData);
-    }
-
-    public RobotPose(RobotPosition robotPos) {
-        robotPosition = robotPos;
-        visionData = null;
-      //  wheelColor = null;
-        targetLocation = new VisionDataProcessor().compute(visionData);
-=======
         wheelColor = null;
         targetLocation = new VisionDataProcessor().compute(vData, robotPosition.getTheta());
 
->>>>>>> 587bf45349cd0c1da9944da328a83b6f4f07d9c8
     }
 
     public RobotPosition getRobotPosition() {
