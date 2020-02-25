@@ -41,6 +41,10 @@ public class SubsystemManager {
         return visionSubsystem;
     }
 
+    public FieldPoseManager getFieldPoseManager(){
+        return fieldPoseManager;
+    }
+
     private DriveSubsystem driveSubsystem;
     private IntakeSubsystem intakeSubsystem;
     private NavXSubsystem navXSubsystem;
