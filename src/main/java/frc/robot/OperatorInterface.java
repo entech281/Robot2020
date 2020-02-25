@@ -58,7 +58,7 @@ public class OperatorInterface {
                 .add();
         
         manager.addButton(6)
-                .whenPressed(new SnapToYawCommand(subsystemManager.getNavXSubsystem(), subsystemManager.getDriveSubsystem(), -90, true))
+                .whenPressed(new SnapToYawCommand(subsystemManager.getDriveSubsystem(), -90, true))
                 .add();
 
 
@@ -83,7 +83,7 @@ public class OperatorInterface {
                 .add();
         
         manager.addButton(3)
-                .whenPressed(new SnapToVisionTargetCommand(subsystemManager.getDriveSubsystem(), subsystemManager.getVisionSubsystem()))
+                .whenPressed(new SnapToVisionTargetCommand(subsystemManager.getDriveSubsystem()))
                 .add();
         
         manager.addButton(12)

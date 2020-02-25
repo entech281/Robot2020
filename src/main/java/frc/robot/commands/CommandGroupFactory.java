@@ -60,6 +60,7 @@ public class CommandGroupFactory {
         return new EntechCommandGroup()
                 .addCommand(subsystemManager.getElevatorSubsystem().stop())
                 .addCommand(subsystemManager.getShooterSubsystem().turnOffShooter())
+                .addCommand(subsystemManager.getShooterSubsystem().disableAutoShooting())
                 .addCommand(hoodHomingCommandGroup)
                 .getSequentialCommandGroup();
     }
@@ -76,7 +77,7 @@ public class CommandGroupFactory {
         return new EntechCommandGroup()
                 .addCommand(subsystemManager.getShooterSubsystem().enableAutoShooting())
                 .addCommand(startShooterCommandGroup)
-                .addCommand(new SnapToVisionTargetCommand(subsystemManager.getDriveSubsystem(), subsystemManager.getVisionSubsystem()))
+                .addCommand(new SnapToVisionTargetCommand(subsystemManager.getDriveSubsystem()))
                 .getSequentialCommandGroup();
     }
     
@@ -91,6 +92,18 @@ public class CommandGroupFactory {
         return new EntechCommandGroup()
                 .addCommand(subsystemManager.getShooterSubsystem().goToUpperLimit())
                 .addCommand(subsystemManager.getShooterSubsystem().returnToStartPos())
+                .getSequentialCommandGroup();
+    }
+    
+    public SequentialCommandGroup hoodHomeAndStartShooter(){
+        SequentialCommandGroup hoodHomingCommand = new EntechCommandGroup()
+                .addCommand(subsystemManager.getShooterSubsystem().goToUpperLimit())
+                .addCommand(subsystemManager.getShooterSubsystem().returnToStartPos())
+                .getSequentialCommandGroup();
+        
+        return new EntechCommandGroup()
+                .addCommand(subsystemManager.getShooterSubsystem().turnOnShooter())
+                .addCommand(hoodHomingCommand)
                 .getSequentialCommandGroup();
     }
     

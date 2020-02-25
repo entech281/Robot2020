@@ -16,7 +16,7 @@ import frc.robot.subsystems.VisionSubsystem;
  * @author aryan
  */
 public class SnapAndShootCommand extends ParallelCommandGroup{
-    public SnapAndShootCommand(DriveSubsystem drive, ElevatorSubsystem elevator, VisionSubsystem vision, ShooterSubsystem shoot){
-        addCommands(shoot.enableAutoShooting() , new StartShooterCommand(shoot, elevator), new SnapToVisionTargetCommand(drive, vision));        
+    public SnapAndShootCommand(DriveSubsystem drive, ElevatorSubsystem elevator, ShooterSubsystem shoot){
+        addCommands(shoot.enableAutoShooting() , new StartShooterCommand(shoot, elevator), new SnapToVisionTargetCommand(drive));        
     }
 }

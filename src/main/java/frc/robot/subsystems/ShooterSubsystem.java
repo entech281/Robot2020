@@ -138,7 +138,7 @@ public class ShooterSubsystem extends BaseSubsystem {
     public void initialize() {
 
         if (shootMotorMounted) {
-            shootMotor = new CANSparkMax(5, MotorType.kBrushless);
+            shootMotor = new CANSparkMax(RobotConstants.CAN.SHOOTER_MOTOR, MotorType.kBrushless);
             SparkMaxSettings shooterSettings = SparkMaxSettingsBuilder.defaults().withCurrentLimits(SHOOTER_MOTOR.CURRENT_LIMIT)
                     .coastInNeutral().withDirections(false, false).limitMotorOutputs(SHOOTER_MOTOR.SHOOTER_MAXOUTPUT, SHOOTER_MOTOR.SHOOTER_MINOUTPUT)
                     .withMotorRampUpOnStart(SHOOTER_MOTOR.SHOOTER_MOTOR_RAMPUP).useSmartMotionControl()
@@ -149,7 +149,7 @@ public class ShooterSubsystem extends BaseSubsystem {
 
         }
         if (hoodMotorMounted) {
-            hoodMotor = new WPI_TalonSRX(7);
+            hoodMotor = new WPI_TalonSRX(RobotConstants.CAN.HOOD_MOTOR);
             TalonSettings hoodSettings = TalonSettingsBuilder.defaults().withCurrentLimits(1, 1, 1).brakeInNeutral()
                     .withDirections(false, false).noMotorOutputLimits().noMotorStartupRamping().usePositionControl()
                     .withGains(HOOD_MOTOR.HOOD_PID_F, HOOD_MOTOR.HOOD_PID_P, HOOD_MOTOR.HOOD_PID_I, HOOD_MOTOR.HOOD_PID_D)
@@ -176,7 +176,10 @@ public class ShooterSubsystem extends BaseSubsystem {
         ShooterConfiguration config;
         if(shootOn){
             if (autoAdjust) {
-                config = processor.calculateShooterConfiguration(rPose.getTargetLocation());
+                if(rPose.getVisionDataValidity()){
+                    config = processor.calculateShooterConfiguration(rPose.getTargetLocation());
+                    setDesiredShooterConfiguration(config);                    
+                }
             } else {
                 if(preset1){
                     config = processor.calculateShooterConfiguration(RobotConstants.SHOOT_PRESETS.PRESET_1);
@@ -188,8 +191,9 @@ public class ShooterSubsystem extends BaseSubsystem {
                     double angle = 0.0; //Need to get information from operator panel
                     config = new ShooterConfiguration(angle, 5350);
                 }
+                setDesiredShooterConfiguration(config);
             }
-            setDesiredShooterConfiguration(config);
+
         } else {
             if(shootMotorMounted)
                 shootMotor.stopMotor();

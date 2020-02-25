@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.RobotConstants;
 import frc.robot.commands.EntechCommandBase;
@@ -25,11 +26,15 @@ public class IntakeSubsystem extends BaseSubsystem {
 
     private WPI_TalonSRX intakeMotor;
     private TalonSpeedController intakeMotorController;
+    
+    private Solenoid deployIntake1;
+    private Solenoid deployIntake2;
 
     public Command start() {
         return new SingleShotCommand(this) {
             @Override
             public void doCommand() {
+                deployIntakeArms();
                 setIntakeMotorSpeed(FULL_SPEED_FWD);
             }
         }.withTimeout(EntechCommandBase.DEFAULT_TIMEOUT_SECONDS);
@@ -39,6 +44,7 @@ public class IntakeSubsystem extends BaseSubsystem {
         return new SingleShotCommand(this) {
             @Override
             public void doCommand() {
+                raiseIntakeArms();
                 setIntakeMotorSpeed(STOP_SPEED);
             }
         }.withTimeout(EntechCommandBase.DEFAULT_TIMEOUT_SECONDS);
@@ -56,15 +62,33 @@ public class IntakeSubsystem extends BaseSubsystem {
     @Override
     public void initialize() {
         if (intake) {
+            
+            intakeMotor = new WPI_TalonSRX(RobotConstants.CAN.INTAKE_MOTOR);
             TalonSettings motorSettings = TalonSettingsBuilder.defaults().withCurrentLimits(20, 15, 200).brakeInNeutral()
                     .withDirections(false, false).noMotorOutputLimits().noMotorStartupRamping().useSpeedControl().build();
 
             intakeMotorController = new TalonSpeedController(intakeMotor, motorSettings);
             intakeMotorController.configure();
             intakeMotor.set(ControlMode.PercentOutput, 0);
+            
+            deployIntake1 = new Solenoid(RobotConstants.CAN.PCM_ID, RobotConstants.CAN.INTAKE_SOL_1);
+            deployIntake2 = new Solenoid(RobotConstants.CAN.PCM_ID, RobotConstants.CAN.INTAKE_SOL_2);
+            
+            deployIntake1.set(false);
+            deployIntake2.set(false);
         }
     }
 
+    public void deployIntakeArms(){
+        deployIntake1.set(true);
+        deployIntake2.set(true);
+    }
+
+    public void raiseIntakeArms(){
+        deployIntake1.set(false);
+        deployIntake2.set(false);
+    }
+    
     @Override
     public void customPeriodic(RobotPose rPose, FieldPose fPose) {
                 logger.log("Current command", getCurrentCommand());
