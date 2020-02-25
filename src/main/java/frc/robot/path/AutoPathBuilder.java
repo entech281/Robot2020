@@ -62,18 +62,17 @@ public class AutoPathBuilder {
     public static Command delay(double seconds){
         return new DelayCommand(seconds);
     }
-    
-    public static BasicMoves builder(SubsystemManager subsystemManager, CommandGroupFactory commandFactory) {
-        return new Builder(subsystemManager, commandFactory);
-    }
-    
     public static Command zeroNavXAngle(NavXSubsystem navX, boolean inverted){
         return navX.zeroYawOfNavX(inverted);
     }
     
+    public static BasicMoves builder(SubsystemManager subsystemManager, CommandGroupFactory commandFactory, boolean invertedStart) {
+        return new Builder(subsystemManager, commandFactory, invertedStart);
+    }
+    
     public interface BasicMoves {
         
-        BasicMoves zeroYaw(boolean inverted);
+        BasicMoves zeroYaw();
 
         BasicMoves right(double degrees);
 
@@ -105,14 +104,17 @@ public static class Builder implements BasicMoves{
         private ElevatorSubsystem elevator;
         private ShooterSubsystem shooter;
         private CommandGroupFactory commandFactory;
+        private boolean invertedStart;
 
-        public Builder(SubsystemManager subsystemManager, CommandGroupFactory commandFactory){
+        public Builder(SubsystemManager subsystemManager, CommandGroupFactory commandFactory, boolean inverted){
+            commands = new ArrayList<>();
             this.drive = subsystemManager.getDriveSubsystem();
             this.navXSubsystem = subsystemManager.getNavXSubsystem();
             this.visionSubsystem = subsystemManager.getVisionSubsystem();
             this.elevator = subsystemManager.getElevatorSubsystem();
             this.shooter = subsystemManager.getShooterSubsystem();
             this.commandFactory = commandFactory;
+            invertedStart = inverted;
         }
         @Override
         public Command[] build() {
@@ -125,7 +127,7 @@ public static class Builder implements BasicMoves{
 
         @Override
         public BasicMoves right(double degrees) {
-            commands.add(turnRight(drive, navXSubsystem, degrees));
+            commands.add(turnRight(drive, navXSubsystem, degrees).withTimeout(10));
             return this;
         }
         
@@ -133,56 +135,56 @@ public static class Builder implements BasicMoves{
 
         @Override
         public BasicMoves left(double degrees) {
-            commands.add(turnLeft(drive, navXSubsystem, degrees));
+            commands.add(turnLeft(drive, navXSubsystem, degrees).withTimeout(10));
             return this;
         }
 
         @Override
         public BasicMoves forward(double inches) {
-            commands.add(goForward(drive, inches));
+            commands.add(goForward(drive, inches).withTimeout(10));
             return this;
         }
 
         @Override
         public BasicMoves backward(double inches) {
-            commands.add(goBackward(drive, inches));
+            commands.add(goBackward(drive, inches).withTimeout(10));
             return this;
         }
         
         @Override
         public BasicMoves nonRelativeTurn(double direction){
-            commands.add(turnNonRelative(drive, navXSubsystem, direction));
+            commands.add(turnNonRelative(drive, navXSubsystem, direction).withTimeout(10));
             return this;
         }
 
         @Override
         public BasicMoves snapToTarget() {
-            commands.add(snapToTargetAlign(drive, visionSubsystem));
+            commands.add(snapToTargetAlign(drive, visionSubsystem).withTimeout(10));
             return this;
         }
 
         @Override
         public BasicMoves snapToTargetStartShooter() {
-            commands.add(commandFactory.getSnapToGoalAndStartShooter());
+            commands.add(commandFactory.getSnapToGoalAndStartShooter().withTimeout(10));
             return this;
             
         }
 
         @Override
         public BasicMoves fire() {
-            commands.add(fireBalls(elevator));
+            commands.add(fireBalls(elevator).withTimeout(10));
             return this;
         }
 
         @Override
-        public BasicMoves zeroYaw(boolean inverted) {
-            commands.add(zeroNavXAngle(navXSubsystem, inverted));
+        public BasicMoves zeroYaw() {
+            commands.add(zeroNavXAngle(navXSubsystem, invertedStart).withTimeout(10));
             return this;
         }
 
         @Override
         public BasicMoves delayForSeconds(double seconds) {
-            commands.add(delay(seconds));
+            commands.add(delay(seconds).withTimeout(10));
             return this;
         }
 

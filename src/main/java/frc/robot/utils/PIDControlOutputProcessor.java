@@ -12,10 +12,10 @@ package frc.robot.utils;
 public class PIDControlOutputProcessor {
     public static double constrain(double value, double threshold){
         if(value > 0){
-                value = Math.min(value, 0.6);
+                value = Math.min(value, threshold);
         }
         if(value < 0){
-                value = Math.max(value, -0.6);
+                value = Math.max(value, -threshold);
         }
         return value;
     }

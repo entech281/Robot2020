@@ -93,22 +93,22 @@ public class PositionDriveController {
             if (positionSource.hasNextPosition()) {
                 Position p = positionSource.getCurrentPosition();
                 setCurrentCommand(p);
-                //dataLogger.log("wanted inches", p.getLeftInches());
+                dataLogger.log("wanted inches", p.getLeftInches());
                 double encoderLeft = encoderConverter.toCounts(p.getLeftInches());
                 double encoderRight = encoderConverter.toCounts(p.getRightInches());
 
-                //dataLogger.log("encoderLeft", encoderLeft);
+                dataLogger.log("encoderLeft", encoderLeft);
                 positionControllerGroup.setDesiredPosition(encoderLeft, encoderRight, p.isRelative());
             } else {
 
             }
         }
         if (hasCurrentCommand()) {
-            //dataLogger.log("commandPosition", getCurrentCommand());
+            dataLogger.log("commandPosition", getCurrentCommand());
         } else {
             //dataLogger.log("commandPosition", "<IDLE>");
         }
-        //dataLogger.log("currentPosition", getCurrentPosition());
+        dataLogger.log("currentPosition", getCurrentPosition());
         //dataLogger.log("updateCount", updateCount++);
 
     }

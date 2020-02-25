@@ -15,6 +15,7 @@ import frc.robot.commands.SingleShotCommand;
 import frc.robot.pose.FieldPose;
 import frc.robot.pose.NavXData;
 import frc.robot.pose.RobotPose;
+import frc.robot.utils.NavXDataProcessor;
 
 /**
  *
@@ -26,9 +27,11 @@ public class NavXSubsystem extends BaseSubsystem {
     private Timer timer;
     private double TIMEOUT_CALIBRATION_SECONDS = 31;
     private boolean navXWorking = true;
+    private boolean inverted = false;
 
     public NavXSubsystem() {
         timer = new Timer();
+        inverted = false;
     }
     
     
@@ -50,23 +53,38 @@ public class NavXSubsystem extends BaseSubsystem {
     }
 
     public NavXData updateNavXAngle() {
-        return new NavXData(navX.getYaw(), this.navXWorking);
+        return new NavXData(calculateNavX(navX.getYaw()), this.navXWorking);
     }
 
+    public void enableOffset(){
+        inverted = true;
+    }
+    
     @Override
     public void customPeriodic(RobotPose rPose, FieldPose fPose) {
-        logger.log("Angle reported by NavX", navX.getYaw());
+        logger.log("Angle reported by NavX", calculateNavX(navX.getYaw()));
     }
     
     public Command zeroYawOfNavX(boolean inverted){
         return new SingleShotCommand(this) {
             @Override
             public void doCommand() {
-                navX.zeroYaw();
-                if(inverted)
-                    navX.setAngleAdjustment(180);
+                zeroYawMethod(inverted);
             }
         };
+    }
+    
+    public double calculateNavX(double angle){
+        if(inverted){
+            angle = NavXDataProcessor.bringInRange(angle + 180);
+        }
+        return angle;
+    }
+    
+    public void zeroYawMethod(boolean inverted){
+        navX.zeroYaw();
+        if(inverted)
+            enableOffset();
     }
     
 

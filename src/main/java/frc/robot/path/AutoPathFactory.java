@@ -28,17 +28,17 @@ public class AutoPathFactory {
         this.commandFactory = commandFactory;
     }
     
-    //Start middle shoot 3 balls and pick up 3 more
+    //Start middle shoot 3 balls and pick up 3 more (8 seconds)
     public Command[] middleSixBallAuto(){
-        return AutoPathBuilder.builder(subsystemManager, commandFactory).zeroYaw(false).backward(75).right(90).forward(50).right(85).forward(109).backward(75).right(130).snapToTarget().build();
+        return AutoPathBuilder.builder(subsystemManager, commandFactory, false).zeroYaw().backward(75).right(90).forward(50).right(90).forward(109).backward(75).right(155).snapToTarget().build();
     }
     
     public Command[] simplePath(){
-        return AutoPathBuilder.builder(subsystemManager, commandFactory).zeroYaw(false).snapToTargetStartShooter().delayForSeconds(0.5).fire().delayForSeconds(3).backward(45).build();
+        return AutoPathBuilder.builder(subsystemManager, commandFactory, false).zeroYaw().snapToTargetStartShooter().delayForSeconds(0.5).fire().delayForSeconds(3).backward(45).build();
     }
 
     public Command[] leftEightBallAuto(){
-        return AutoPathBuilder.builder(subsystemManager, commandFactory).zeroYaw(true).forward(100).right(135).snapToTargetStartShooter().fire().delayForSeconds(2).nonRelativeTurn(180).forward(100).backward(100).right(135).snapToTargetStartShooter().fire().build();
+        return AutoPathBuilder.builder(subsystemManager, commandFactory, true).zeroYaw().forward(140).right(155).snapToTargetStartShooter().fire().delayForSeconds(2).nonRelativeTurn(180).build();
     }
     
 }

@@ -87,7 +87,7 @@ public class OperatorInterface {
                 .add();
         
         manager.addButton(12)
-                .whenPressed(new AutonomousPathCommand(new AutoPathFactory(subsystemManager, commandFactory).middleSixBallAuto()))
+                .whenPressed(new AutonomousPathCommand(new AutoPathFactory(subsystemManager, commandFactory).leftEightBallAuto()))
                 .add();
 
         drive.setDefaultCommand(new TankDriveCommand(drive, driveStick));
