@@ -34,6 +34,7 @@ public class TestSparkMaxSettings {
         sparkSettings.brakeMode = IdleMode.kCoast;
         sparkSettings.gains.d = 1.0;
         sparkSettings.gains.i = 2.0;
+        sparkSettings.gains.p = 1.3;
         sparkSettings.currentLimits.smartLimit = 50;
         sparkSettings.outputLimits.maxMotorOutput = 0.9;
         sparkSettings.profile.accelStrategy = AccelStrategy.kSCurve;
@@ -43,6 +44,7 @@ public class TestSparkMaxSettings {
 
         assertEquals(sparkSettings.brakeMode, copy.brakeMode);
         assertEquals(sparkSettings.gains.d, copy.gains.d, TOLERANCE);
+        assertEquals(sparkSettings.gains.p, copy.gains.p, TOLERANCE);
         assertEquals(sparkSettings.gains.i, copy.gains.i, TOLERANCE);
         assertEquals(sparkSettings.currentLimits.smartLimit, copy.currentLimits.smartLimit);
         assertEquals(sparkSettings.outputLimits.maxMotorOutput, copy.outputLimits.maxMotorOutput, TOLERANCE);

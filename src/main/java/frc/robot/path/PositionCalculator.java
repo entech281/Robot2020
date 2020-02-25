@@ -35,6 +35,7 @@ public class PositionCalculator {
     }
 
     public interface BasicMoves {
+
         BasicMoves right(double degrees);
 
         BasicMoves left(double degrees);
@@ -57,8 +58,9 @@ public class PositionCalculator {
     public static FollowPositionPathCommand mirrorCommand(FollowPositionPathCommand f) {
         return new FollowPositionPathCommand(f.driveSubsystem, mirror(f.path));
     }
-    
+
     public static class Builder implements BasicMoves {
+
         private List<Position> commands = new ArrayList<>();
 
         @Override

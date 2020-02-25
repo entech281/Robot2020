@@ -10,6 +10,8 @@ public class VisionData {
     private double verticalOffset = 0.0;
     private double targetWidth = 0.0;
     private boolean targetFound = false;
+    public static final VisionData DEFAULT_VISION_DATA = new VisionData(false, -1, -1, -1);
+
 
     public VisionData(boolean targetFound, double lateralOffset, double verticalOffset, double targetWidth) {
         this.lateralOffset = lateralOffset;
@@ -30,7 +32,7 @@ public class VisionData {
         return targetWidth;
     }
 
-    public boolean targetFound(){
+    public boolean targetFound() {
         return targetFound;
     }
 }
