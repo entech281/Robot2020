@@ -172,6 +172,7 @@ public class ShooterSubsystem extends BaseSubsystem {
     @Override
     public void customPeriodic(RobotPose rPose, FieldPose fPose) {
         logging(rPose);
+        logger.log("Current command", getCurrentCommand());
         ShooterConfiguration config;
         if(shootOn){
             if (autoAdjust) {

@@ -44,7 +44,6 @@ public class SnapToVisionTargetCommand extends EntechCommandBase {
         if(vision.getVisionData().targetFound()){
             offset = vision.getVisionData().getLateralOffset();
             output = controller.calculate(offset);
-            controller.calculate(offset, 0);
             output = PIDControlOutputProcessor.constrain(output, 0.4);
             drive.drive(new DriveInstruction(0, output));
         }

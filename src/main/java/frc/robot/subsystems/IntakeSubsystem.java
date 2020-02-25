@@ -11,6 +11,8 @@ import frc.robot.controllers.TalonSettingsBuilder;
 import frc.robot.controllers.TalonSpeedController;
 
 import static frc.robot.RobotConstants.AVAILABILITY.*;
+import frc.robot.pose.FieldPose;
+import frc.robot.pose.RobotPose;
 
 public class IntakeSubsystem extends BaseSubsystem {
 
@@ -62,6 +64,12 @@ public class IntakeSubsystem extends BaseSubsystem {
             intakeMotor.set(ControlMode.PercentOutput, 0);
         }
     }
+
+    @Override
+    public void customPeriodic(RobotPose rPose, FieldPose fPose) {
+                logger.log("Current command", getCurrentCommand());
+    }
+    
 
     public void setIntakeMotorSpeed(double desiredSpeed) {
         logger.log("Intake Motor speed", desiredSpeed);

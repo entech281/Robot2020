@@ -60,15 +60,15 @@ public class RobotConstants {
 
     public interface PID{
         public interface AUTO_STRAIGHT{
-            public static final double P = 1e-3;
-            public static final double I = 0;//2e-5;
+            public static final double P = 1e-4;
+            public static final double I = 2e-7;
             public static final double D = 0;
             public static final double F = 0;
         }
         
         public interface AUTO_TURN{
-            public static final double P = 6e-2;
-            public static final double I = 0;//2e-5;
+            public static final double P = 3e-2;
+            public static final double I = 4e-7;//2e-5;
             public static final double D = 0;
             public static final double F = 0;
         }
@@ -84,10 +84,10 @@ public class RobotConstants {
 
     public interface AUTONOMOUS {
 
-        public static final int MAX_VELOCITY = 3000;
-        public static final int MAX_ACCELLERATION = 3000;
+        public static final int MAX_VELOCITY = 5000;//7500
+        public static final int MAX_ACCELLERATION = 5000;//30000
         public static final int ACCEPTABLE_ERROR = 0;
-        public static final int POSITION_TOLERANCE_INCHES = 1;
+        public static final int POSITION_TOLERANCE_INCHES = 2;
     }
 
     public interface AVAILABILITY {
