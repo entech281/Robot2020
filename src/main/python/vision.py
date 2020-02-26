@@ -20,7 +20,7 @@ RANGES2 = [ (0,100,-100,100,-100,100)]
 clock = time.clock()
 sensor.set_auto_whitebal(False)
 sensor.set_auto_gain(False)
-sensor.set_auto_exposure(False, exposure_us=10) # make smaller to go faster
+sensor.set_auto_exposure(False, exposure_us=100) # make smaller to go faster
 while(True):
     clock.tick()
     img = sensor.snapshot()
