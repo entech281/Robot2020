@@ -74,6 +74,27 @@ public class ShooterSubsystem extends BaseSubsystem {
         };
     }
     
+    public Command selectPreset1(){
+        return new SingleShotCommand(this) {
+            @Override
+            public void doCommand() {
+                if(!autoAdjust)
+                    preset1 = true;
+            }
+        };
+    }
+
+    public Command selectPreset2(){
+        return new SingleShotCommand(this) {
+            @Override
+            public void doCommand() {
+                if(!autoAdjust)
+                    preset2 = true;
+            }
+        };
+    }    
+    
+    
     public Command turnOffShooter(){
         return new SingleShotCommand(this) {
             @Override
@@ -113,6 +134,31 @@ public class ShooterSubsystem extends BaseSubsystem {
             }
         }.withTimeout(EntechCommandBase.DEFAULT_TIMEOUT_SECONDS);
     }
+    
+    public Command nudgeHoodForward(){
+        return new SingleShotCommand(this) {
+            @Override
+            public void doCommand(){
+                double desired = hoodMotorController.getActualPosition() - 50;
+                if(!autoAdjust){
+                    hoodMotorController.setDesiredPosition(desired);
+                }
+            }
+        };
+    }
+
+    public Command nudgeHoodBackward(){
+        return new SingleShotCommand(this) {
+            @Override
+            public void doCommand(){
+                double desired = hoodMotorController.getActualPosition() + 50;
+                if(!autoAdjust){
+                    hoodMotorController.setDesiredPosition(desired);
+                }
+            }
+        };
+    }
+    
 
     public void decreaseRPMSpeed() {
         if (this.RPM_SPEED > 150) {
@@ -183,15 +229,14 @@ public class ShooterSubsystem extends BaseSubsystem {
             } else {
                 if(preset1){
                     config = processor.calculateShooterConfiguration(RobotConstants.SHOOT_PRESETS.PRESET_1);
+                    setDesiredShooterConfiguration(config);
+                    preset1 = false;
                 }
                 else if(preset2){
-                    config = processor.calculateShooterConfiguration(RobotConstants.SHOOT_PRESETS.PRESET_2);     
+                    config = processor.calculateShooterConfiguration(RobotConstants.SHOOT_PRESETS.PRESET_2);
+                    setDesiredShooterConfiguration(config);
+                    preset2 = false;
                 }
-                else{
-                    double angle = 0.0; //Need to get information from operator panel
-                    config = new ShooterConfiguration(angle, 5350);
-                }
-                setDesiredShooterConfiguration(config);
             }
 
         } else {

@@ -28,14 +28,20 @@ public class RobotConstants {
     public interface GAMEPAD {
 
         public static final int DRIVER_JOYSTICK = 0;
+        public static final int OPERATOR_PANEL = 1;
     }
 
     public interface BUTTONS {
-
-        public static final int INTAKE_BUTTON = 1;
-        public static final int START_SHOOTER_BUTTON = 2;
-        public static final int RESET_BUTTON = 10;
-        public static final int FIRE_BUTTON = 4;
+        public static final int TURN_SHOOTER_ON = 8;
+        public static final int ENABLE_AUTO_HOOD = 9;
+        public static final int FIRE = 11;
+        public static final int DEPLOY_INTAKE = 13;
+        public static final int HOOD_FORWARD_ADJUST = 3;
+        public static final int HOOD_BACKWARD_ADJUST = 5;
+        public static final int SELECT_PRESET_1 = 10;
+        public static final int SELECT_PRESET_2 = 7;
+        public static final int SNAP_TO_TARGET = 2;
+        
     }
 
     public interface ROBOT_DEFAULTS {
