@@ -9,6 +9,7 @@ package frc.robot;
 import edu.wpi.cscore.MjpegServer;
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -35,9 +36,14 @@ public class Robot extends TimedRobot {
     private SmartDashboardPathChooser optionChooser;
     OperatorInterface oi;
     Command autoCommand;
+    private Compressor compressor;
 
     @Override
     public void robotInit() {
+        
+            compressor = new Compressor(RobotConstants.CAN.PCM_ID);
+            compressor.start();
+        
         DataLoggerFactory.configureForMatch();
         this.logger = DataLoggerFactory.getLoggerFactory().createDataLogger("Robot Main Loop");
         subsystemManager.initAll();
