@@ -32,17 +32,25 @@ public class VisionSubsystem extends BaseSubsystem {
     @Override
     public void initialize() {
         logger.log("initialized", true);
-        visionPort = new SerialPort(BAUD_RATE, SerialPort.Port.kUSB1);
+
+        try{
+            visionPort = new SerialPort(BAUD_RATE, SerialPort.Port.kUSB1);
+        } catch(Exception e) {
+            logger.warn("Couldn't connect to the Villain's Eye.");
+        }
         processor = new VisionDataProcessor();
     }
 
     @Override
     public void customPeriodic(RobotPose rPose, FieldPose fPose) {
-        String reading = visionPort.readString();
-        processor.addInput(reading);
-        visionData = processor.getCurrentVisionData();
-        logger.log("Vertical offset", visionData.getVerticalOffset());
-        logger.log("Horizontal Offset", visionData.getLateralOffset());
+        try {
+            String reading = visionPort.readString();
+            processor.addInput(reading);
+            visionData = processor.getCurrentVisionData();
+            logger.log("Vertical offset", visionData.getVerticalOffset());
+            logger.log("Horizontal Offset", visionData.getLateralOffset());
+            
+        } catch (Exception e) { }
     }
 
     public VisionData getVisionData() {

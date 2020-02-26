@@ -14,8 +14,24 @@ import frc.robot.controllers.TalonSpeedController;
 import static frc.robot.RobotConstants.AVAILABILITY.*;
 import frc.robot.pose.FieldPose;
 import frc.robot.pose.RobotPose;
+import com.revrobotics.ColorSensorV3;
+import com.revrobotics.ColorMatchResult;
+import com.revrobotics.ColorMatch;
+import edu.wpi.first.wpilibj.I2C;
+import edu.wpi.first.wpilibj.util.Color;
 
 public class IntakeSubsystem extends BaseSubsystem {
+    
+    private final ColorSensorV3  colorSensor = new ColorSensorV3(I2C.Port.kOnboard);
+    private final ColorMatch  colorMatcher = new ColorMatch();
+    private final Color YellowTarget = ColorMatch.makeColor(0.361, 0.524, 0.113);
+
+    private double COLOR_MATCH_THRESHOLD = 0.5;
+    private int PROXIMITY_THRESHOLD = 1024;
+
+    private boolean doneWaitingForNow = false;
+    private boolean shouldWait = false;
+    private double savedIntakeSpeed = 0;
 
     private double CURRENT_INTAKE_SPEED = 1;
 
@@ -76,6 +92,8 @@ public class IntakeSubsystem extends BaseSubsystem {
             
             deployIntake1.set(false);
             deployIntake2.set(false);
+
+            colorMatcher.addColorMatch(YellowTarget);
         }
     }
 
@@ -91,7 +109,11 @@ public class IntakeSubsystem extends BaseSubsystem {
     
     @Override
     public void customPeriodic(RobotPose rPose, FieldPose fPose) {
-                logger.log("Current command", getCurrentCommand());
+        logger.log("Current command", getCurrentCommand());
+        logger.log("Has Ball in Intake", isBallAtBeginningOfInput());
+        if(intake){
+            //if(s)
+        }
     }
     
 
@@ -103,4 +125,12 @@ public class IntakeSubsystem extends BaseSubsystem {
         }
     }
 
+    public boolean isBallAtBeginningOfInput(){
+        Color detected = colorSensor.getColor();
+        double yellowness = colorMatcher.matchClosestColor(detected).confidence;
+        int closeness = colorSensor.getProximity();
+        return yellowness > COLOR_MATCH_THRESHOLD && closeness > PROXIMITY_THRESHOLD;
+    }
+
+    
 }
