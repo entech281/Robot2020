@@ -13,9 +13,11 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.commands.AutoCommand;
+import frc.robot.commands.CommandGroupFactory;
 import frc.robot.commands.EntechCommandGroup;
 import frc.robot.logger.DataLogger;
 import frc.robot.logger.DataLoggerFactory;
+import frc.robot.path.AutoPathFactory;
 import frc.robot.preferences.AutoCommandFactory;
 import frc.robot.preferences.SmartDashboardPathChooser;
 import frc.robot.subsystems.SubsystemManager;
@@ -67,7 +69,12 @@ public class Robot extends TimedRobot {
 
     @Override
     public void autonomousInit() {
-        autoCommand = AutoCommandFactory.getSelectedCommand(optionChooser.getSelected());
+
+        
+        autoCommand = AutoCommandFactory.getSelectedCommand(optionChooser.getSelected(),
+            new AutoPathFactory(subsystemManager,
+                new CommandGroupFactory(subsystemManager)
+                ));
         CommandScheduler.getInstance().schedule(autoCommand);
     }
 
