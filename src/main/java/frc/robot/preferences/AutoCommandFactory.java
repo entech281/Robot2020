@@ -1,18 +1,20 @@
 package frc.robot.preferences;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.commands.AutonomousPathCommand;
+import frc.robot.path.AutoPathFactory;
 
 public class AutoCommandFactory{
-    public static Command getSelectedCommand(AutoOption selected){
+    public static Command getSelectedCommand(AutoOption selected, AutoPathFactory factory){
         switch(selected){
             case MiddleSixBall:
-                break;
+                return new AutonomousPathCommand(factory.middleSixBallAuto());
             case RightSevenBall:
-                break;
+                return new AutonomousPathCommand(factory.leftEightBallAuto());
             case ShootAndBackUp:
-                break;
+                return new AutonomousPathCommand(factory.simplePath());
         }
 
-        return null;//TODO fix this.
-    }
+        return null;
+    } 
 }
