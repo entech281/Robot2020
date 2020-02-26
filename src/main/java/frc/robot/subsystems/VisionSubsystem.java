@@ -50,7 +50,9 @@ public class VisionSubsystem extends BaseSubsystem {
             logger.log("Vertical offset", visionData.getVerticalOffset());
             logger.log("Horizontal Offset", visionData.getLateralOffset());
             
-        } catch (Exception e) { }
+        } catch (Exception e) {
+            logger.warn("");
+        }
     }
 
     public VisionData getVisionData() {

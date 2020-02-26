@@ -19,15 +19,20 @@ import com.revrobotics.ColorMatchResult;
 import com.revrobotics.ColorMatch;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.util.Color;
-
+ 
 public class IntakeSubsystem extends BaseSubsystem {
-    
+    /*pRoXIMITY data
+        8: undetectable
+        4: 65
+        3: 95
+        2: 130
+        1: 380
+        1/2:900
+    */
     private final ColorSensorV3  colorSensor = new ColorSensorV3(I2C.Port.kOnboard);
-    private final ColorMatch  colorMatcher = new ColorMatch();
-    private final Color YellowTarget = ColorMatch.makeColor(0.361, 0.524, 0.113);
 
     private double COLOR_MATCH_THRESHOLD = 0.5;
-    private int PROXIMITY_THRESHOLD = 1024;
+    private int PROXIMITY_THRESHOLD = 100;
 
     private boolean doneWaitingForNow = false;
     private boolean shouldWait = false;
@@ -92,8 +97,6 @@ public class IntakeSubsystem extends BaseSubsystem {
             
             deployIntake1.set(false);
             deployIntake2.set(false);
-
-            colorMatcher.addColorMatch(YellowTarget);
         }
     }
 
@@ -112,7 +115,9 @@ public class IntakeSubsystem extends BaseSubsystem {
         logger.log("Current command", getCurrentCommand());
         logger.log("Has Ball in Intake", isBallAtBeginningOfInput());
         if(intake){
-            //if(s)
+            if(shouldWait){
+
+            }
         }
     }
     
@@ -127,9 +132,9 @@ public class IntakeSubsystem extends BaseSubsystem {
 
     public boolean isBallAtBeginningOfInput(){
         Color detected = colorSensor.getColor();
-        double yellowness = colorMatcher.matchClosestColor(detected).confidence;
         int closeness = colorSensor.getProximity();
-        return yellowness > COLOR_MATCH_THRESHOLD && closeness > PROXIMITY_THRESHOLD;
+        logger.log("closeness", closeness);
+        return closeness > PROXIMITY_THRESHOLD;
     }
 
     
