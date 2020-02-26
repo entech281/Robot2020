@@ -20,7 +20,7 @@ public class VisionDataProcessor {
     }
 
     public TargetLocation compute(VisionData vData, double angle) {
-        double distance = 98.2 - 0.609 * vData.getVerticalOffset() + 0.0508 * Math.pow(vData.getVerticalOffset(), 2);
+        double distance = 108 - 0.505 * vData.getVerticalOffset() + 0.0799 * Math.pow(vData.getVerticalOffset(), 2);
         return new TargetLocation(distance, angle);
     }
 

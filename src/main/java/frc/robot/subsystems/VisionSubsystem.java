@@ -32,7 +32,11 @@ public class VisionSubsystem extends BaseSubsystem {
     @Override
     public void initialize() {
         logger.log("initialized", true);
+        try{
         visionPort = new SerialPort(BAUD_RATE, SerialPort.Port.kUSB1);
+        } catch(Exception e){
+            logger.log("Vision data initialization failed", "FAILED");
+        }
         processor = new VisionDataProcessor();
     }
 
