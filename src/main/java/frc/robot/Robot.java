@@ -41,7 +41,7 @@ public class Robot extends TimedRobot {
     @Override
     public void robotInit() {
         
-            compressor = new Compressor(RobotMap.CAN.PCM_ID);
+            compressor = new Compressor(RobotConstants.CAN.PCM_ID);
             compressor.start();
         
         DataLoggerFactory.configureForMatch();
