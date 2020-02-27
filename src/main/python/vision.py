@@ -21,7 +21,13 @@ clock = time.clock()
 sensor.set_auto_whitebal(False)
 sensor.set_auto_gain(False)
 sensor.set_auto_exposure(False, exposure_us=100) # make smaller to go faster
+
+def save( img, num_blobs, num_compact, counter):
+    img.save(f"img-{str(counter)}-{str(num_blobs)}-{str(num_compact)}.jpg")
+counter = 0
 while(True):
+    num_blobs = 0
+    num_compact = 0
     clock.tick()
     img = sensor.snapshot()
     target_found = False
@@ -37,5 +43,7 @@ while(True):
           height = abs(b.y() - b.h())
           draw_lines(x, y)
           img.draw_rectangle( b.rect(), color = (0, 0, 255), thickness = 3)
-    output = str(target_found) + " " + str(x) + " " + str(y) + " " + str(width) + " " + str(clock.fps()) + " -"
+    output = f"{str(target_found)} {str(x)} {str(y)} {str(width)} {str(clock.fps())} -"
+    if counter % 50 == 0:
+        save(img, num_blobs, num_compact, counter)
     print(output)
