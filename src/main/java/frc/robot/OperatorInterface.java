@@ -2,6 +2,7 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.Joystick;
 import frc.robot.commands.CommandGroupFactory;
+import frc.robot.commands.IntakeOnCommand;
 import frc.robot.commands.SnapToVisionTargetCommand;
 import frc.robot.commands.TankDriveCommand;
 import frc.robot.subsystems.DriveSubsystem;
@@ -62,6 +63,13 @@ public class OperatorInterface {
                 .whenPressed(new SnapToVisionTargetCommand(drive))
                 .add();
         
+        joystickManager.addButton(RobotConstants.BUTTONS.FIRE_JOYSTICK)
+                .whenPressed(subsystemManager.getIntakeSubsystem().fire());
+        
+        joystickManager.addButton(RobotConstants.BUTTONS.FIRE)
+                .whenPressed(subsystemManager.getIntakeSubsystem().fire());
+        
+        subsystemManager.getIntakeSubsystem().setDefaultCommand(new IntakeOnCommand(subsystemManager.getIntakeSubsystem()));
         
         drive.setDefaultCommand(new TankDriveCommand(drive, driveStick));
 

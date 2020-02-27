@@ -183,7 +183,7 @@ public class ShooterSubsystem extends BaseSubsystem {
     @Override
     public void initialize() {
 
-        if (shootMotorMounted) {
+        if (SHOOTER_MOTOR_MOUNTED) {
             shootMotor = new CANSparkMax(RobotConstants.CAN.SHOOTER_MOTOR, MotorType.kBrushless);
             SparkMaxSettings shooterSettings = SparkMaxSettingsBuilder.defaults().withCurrentLimits(SHOOTER_MOTOR.CURRENT_LIMIT)
                     .coastInNeutral().withDirections(false, false).limitMotorOutputs(SHOOTER_MOTOR.SHOOTER_MAXOUTPUT, SHOOTER_MOTOR.SHOOTER_MINOUTPUT)
@@ -194,7 +194,7 @@ public class ShooterSubsystem extends BaseSubsystem {
             shooterMotorController.configure();
 
         }
-        if (hoodMotorMounted) {
+        if (HOOD_MOTOR_MOUNTED) {
             hoodMotor = new WPI_TalonSRX(RobotConstants.CAN.HOOD_MOTOR);
             TalonSettings hoodSettings = TalonSettingsBuilder.defaults().withCurrentLimits(1, 1, 1).brakeInNeutral()
                     .withDirections(false, false).noMotorOutputLimits().noMotorStartupRamping().usePositionControl()
@@ -240,7 +240,7 @@ public class ShooterSubsystem extends BaseSubsystem {
             }
 
         } else {
-            if(shootMotorMounted)
+            if(SHOOTER_MOTOR_MOUNTED)
                 shootMotor.stopMotor();
         }
     }
@@ -248,34 +248,34 @@ public class ShooterSubsystem extends BaseSubsystem {
     private void logging(RobotPose rPose){
         logger.log("TargetLocation", rPose.getTargetLocation().getDistanceToTarget());
         logger.log("Vision Data", rPose.getTargetVerticalOffset());
-        if (shootMotorMounted) {
+        if (SHOOTER_MOTOR_MOUNTED) {
             logger.log("Current Speed", shooterMotorController.getActualSpeed());
         }
         logger.log("Desired Speed", this.RPM_SPEED);
     }
 
     public void adjustShooterSpeed(double desiredSpeed) {
-        if (shootMotorMounted) {
+        if (SHOOTER_MOTOR_MOUNTED) {
             shooterMotorController.setDesiredSpeed(-1 * desiredSpeed);
         }
     }
 
     public void adjustHoodPosition(double desiredPosition) {
         this.HOOD_POSITION = desiredPosition;
-        if (hoodMotorMounted) {
+        if (HOOD_MOTOR_MOUNTED) {
             hoodMotorController.setDesiredPosition(desiredPosition);
         }
     }
 
     public boolean isUpperLimitHit() {
-        if (hoodMotorMounted) {
+        if (HOOD_MOTOR_MOUNTED) {
             return hoodMotor.getSensorCollection().isFwdLimitSwitchClosed();
         }
         return true;
     }
 
     public boolean isLowerLimitHit() {
-        if (shootMotorMounted) {
+        if (SHOOTER_MOTOR_MOUNTED) {
             return hoodMotor.getSensorCollection().isRevLimitSwitchClosed();
         }
         return true;
@@ -286,7 +286,7 @@ public class ShooterSubsystem extends BaseSubsystem {
     }
 
     public double getShooterSpeed() {
-        if (shootMotorMounted) {
+        if (SHOOTER_MOTOR_MOUNTED) {
             return shootMotor.getEncoder().getVelocity();
         }
         return 0.0;
@@ -299,7 +299,7 @@ public class ShooterSubsystem extends BaseSubsystem {
     }
 
     public double getHoodPosition() {
-        if (hoodMotorMounted) {
+        if (HOOD_MOTOR_MOUNTED) {
             return hoodMotorController.getActualPosition();
         }
         return 0.0;
@@ -314,10 +314,10 @@ public class ShooterSubsystem extends BaseSubsystem {
         double desiredPosition = -(((90 - configuration.getDesiredHoodAngle()) / 360) * HOOD_MOTOR.ENCODER_CLICKS_PER_HOOD_MOTOR_REVOLUTION * HOOD_MOTOR.HOOD_GEAR_RATIO - HOME_OFFSET);
         logger.log("Configuration angle", configuration.getDesiredHoodAngle());
         logger.log("encoder clicks", desiredPosition);
-        if (hoodMotorMounted) {
+        if (HOOD_MOTOR_MOUNTED) {
             adjustHoodPosition(desiredPosition);
         }
-        if (shootMotorMounted) {
+        if (SHOOTER_MOTOR_MOUNTED) {
             adjustShooterSpeed(5350);
         }
     }

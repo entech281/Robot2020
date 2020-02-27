@@ -97,7 +97,7 @@ public class DriveSubsystem extends BaseSubsystem {
     
     @Override
     public void initialize() {
-        if (drive) {
+        if (DRIVE) {
             performInitialization();
         }
         reset();
@@ -130,7 +130,7 @@ public class DriveSubsystem extends BaseSubsystem {
     }
     
     public void setSpeedMode() {
-        if (drive) {
+        if (DRIVE) {
             speedSettings.configureSparkMax(frontLeftSpark);
             speedSettings.configureSparkMax(frontRightSpark);
             speedSettings.configureSparkMax(rearLeftSpark);
@@ -139,7 +139,7 @@ public class DriveSubsystem extends BaseSubsystem {
     }
 
         public void setPositionMode() {
-        if (drive) {
+        if (DRIVE) {
             smartMotionSettings.configureSparkMax(frontLeftSpark);
             smartMotionSettings.configureSparkMax(frontRightSpark);
             smartMotionSettings.configureSparkMax(rearLeftSpark);
@@ -148,7 +148,7 @@ public class DriveSubsystem extends BaseSubsystem {
     }
     
     public EncoderValues getEncoderValues() {
-        if (drive) {
+        if (DRIVE) {
             return new EncoderValues(frontLeftEncoder.getPosition(),
                     rearLeftEncoder.getPosition(),
                     frontRightEncoder.getPosition(),
@@ -159,7 +159,7 @@ public class DriveSubsystem extends BaseSubsystem {
 
     @Override
     public void customPeriodic(RobotPose rp, FieldPose fp) {
-        if (drive) {
+        if (DRIVE) {
             logger.log("Front Left Encoder Ticks", frontLeftEncoder.getPosition());
             logger.log("Front Right Encoder Ticks", frontRightEncoder.getPosition());
             logger.log("Rear Left Encoder Ticks", rearLeftEncoder.getPosition());
@@ -177,14 +177,14 @@ public class DriveSubsystem extends BaseSubsystem {
     }
 
     public void drive(DriveInstruction di) {
-        if (drive) {
+        if (DRIVE) {
             robotDrive.arcadeDrive(di.getFoward(), di.getRotation());
         }
     }
 
     public void startAutonomous() {
         inAuto = true;
-        if (drive) {
+        if (DRIVE) {
             robotDrive.setSafetyEnabled(false);
         }
     }
@@ -200,7 +200,7 @@ public class DriveSubsystem extends BaseSubsystem {
 
     public void endAutonomous() {
         inAuto = false;
-        if (drive) {
+        if (DRIVE) {
             robotDrive.setSafetyEnabled(true);
         }
     }
