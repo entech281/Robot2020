@@ -112,7 +112,7 @@ public class RobotConstants {
         public static final boolean elevator = true;
         public static final boolean intake = true;
         public static final boolean shootMotorMounted = true;
-        public static final boolean hoodMotorMounted = true;
+        public static final boolean hoodMotorMounted = true; 
     }
 
     public interface MOTORCONTROLLER_VALUES {
