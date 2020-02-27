@@ -20,7 +20,7 @@ public abstract class DataLogger {
         return name;
     }
 
-    public String computePath(String key) {
+    protected String computePath(String key) {
         return getName() + SEPARATOR + key;
     }
 
@@ -37,5 +37,17 @@ public abstract class DataLogger {
     public abstract void log(String key, long value);
 
     public abstract void log(String key, boolean value);
+
+    public abstract void driverinfo(String key, Object value);
+
+    public abstract void driverinfo(String key, double value);
+
+    public abstract void driverinfo(String key, int value);
+
+    public abstract void driverinfo(String key, String value);
+
+    public abstract void driverinfo(String key, long value);
+
+    public abstract void driverinfo(String key, boolean value);
 
 }
