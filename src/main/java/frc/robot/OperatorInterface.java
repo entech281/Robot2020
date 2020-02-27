@@ -36,16 +36,16 @@ public class OperatorInterface {
                 .add();
         
         operatorPanelManager.addButton(RobotConstants.BUTTONS.DEPLOY_INTAKE)
-                .whenPressed(commandFactory.getStartIntakeCommandGroup())
+                .whileHeld(commandFactory.getStartIntakeCommandGroup())
                 .whenReleased(commandFactory.getStopIntakeCommandGroup())
                 .add();
         
         operatorPanelManager.addButton(RobotConstants.BUTTONS.HOOD_FORWARD_ADJUST)
-                .whenPressed(subsystemManager.getShooterSubsystem().nudgeHoodForward())
+                .whileHeld(subsystemManager.getShooterSubsystem().nudgeHoodForward())
                 .add();
         
         operatorPanelManager.addButton(RobotConstants.BUTTONS.HOOD_BACKWARD_ADJUST)
-                .whenPressed(subsystemManager.getShooterSubsystem().nudgeHoodBackward())
+                .whileHeld(subsystemManager.getShooterSubsystem().nudgeHoodBackward())
                 .add();
                 
         operatorPanelManager.addButton(RobotConstants.BUTTONS.SELECT_PRESET_1)
