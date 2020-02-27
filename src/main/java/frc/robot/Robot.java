@@ -40,10 +40,10 @@ public class Robot extends TimedRobot {
 
     @Override
     public void robotInit() {
-        
-        compressor = new Compressor(RobotConstants.CAN.PCM_ID);
-        compressor.start();
-        
+        if(RobotConstants.AVAILABILITY.PNEUMATICS_MOUNTED){
+            compressor = new Compressor(RobotConstants.CAN.PCM_ID);
+            compressor.start();
+        }
         DataLoggerFactory.configureForMatch();
         this.logger = DataLoggerFactory.getLoggerFactory().createDataLogger("Robot Main Loop");
         subsystemManager.initAll();

@@ -35,6 +35,7 @@ public class RobotConstants {
         public static final int TURN_SHOOTER_ON = 8;
         public static final int ENABLE_AUTO_HOOD = 9;
         public static final int FIRE = 11;
+        public static final int FIRE_JOYSTICK = 1;
         public static final int DEPLOY_INTAKE = 13;
         public static final int HOOD_FORWARD_ADJUST = 3;
         public static final int HOOD_BACKWARD_ADJUST = 5;
@@ -102,13 +103,15 @@ public class RobotConstants {
 
     public interface AVAILABILITY {
 
-        public static final boolean climber = false;
-        public static final boolean colorSensor = false;
-        public static final boolean drive = true;
-        public static final boolean elevator = false;
-        public static final boolean intake = false;
-        public static final boolean shootMotorMounted = false;
-        public static final boolean hoodMotorMounted = false;
+        public static final boolean CLIMBER = false;
+        public static final boolean COLOR_SENSOR = false;
+        public static final boolean DRIVE = true;
+        public static final boolean ELEVATOR = true;
+        public static final boolean INTAKE = true;
+        public static final boolean SHOOTER_MOTOR_MOUNTED = true;
+        public static final boolean HOOD_MOTOR_MOUNTED = true;
+        public static final boolean PNEUMATICS_MOUNTED = false;
+        public static final boolean SENSOR_MOUNTED = false;
     }
 
     public interface MOTORCONTROLLER_VALUES {

@@ -73,7 +73,7 @@ public class ClimbSubsystem extends BaseSubsystem {
 
     @Override
     public void initialize() {
-        if (climber) {
+        if (CLIMBER) {
             SparkMaxSettings motorSettings = SparkMaxSettingsBuilder.defaults().withPrettySafeCurrentLimits()
                     .brakeInNeutral().withDirections(false, false).noMotorOutputLimits().noMotorStartupRamping()
                     .useSpeedControl().build();
@@ -91,7 +91,7 @@ public class ClimbSubsystem extends BaseSubsystem {
     }
 
     public void raiseHook() {
-        if (climber) {
+        if (CLIMBER) {
             engageWinchSolenoid.set(false);
             attachHookSolenoid.set(true);
         }
@@ -102,14 +102,14 @@ public class ClimbSubsystem extends BaseSubsystem {
     }
 
     public void engageClutchWithWinch() {
-        if (climber) {
+        if (CLIMBER) {
             winchController.setDesiredSpeed(0.25);
             engageWinchSolenoid.set(true);
         }
     }
 
     public void stopClimbing() {
-        if (climber) {
+        if (CLIMBER) {
             winchController.setDesiredSpeed(0);
         }
     }
