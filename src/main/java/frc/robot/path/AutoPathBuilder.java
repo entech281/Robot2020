@@ -52,8 +52,8 @@ public class AutoPathBuilder {
         return new SnapToVisionTargetCommand(drive);
     }
     
-    public static Command snapToTargetShoot(DriveSubsystem drive, ShooterSubsystem shooter){
-        return new SnapAndShootCommand(drive, shooter);
+    public static Command snapToTargetShoot(DriveSubsystem drive, ShooterSubsystem shooter, IntakeSubsystem intakeSubsystem){
+        return new SnapAndShootCommand(drive, shooter, intakeSubsystem);
     }
     
     public static Command fireBalls(IntakeSubsystem intake){

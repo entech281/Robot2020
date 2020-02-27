@@ -163,7 +163,21 @@ public class ShooterSubsystem extends BaseSubsystem {
         };
     }
     
-
+    public void adjustHoodForward(){
+        double desired = hoodMotorController.getActualPosition() - 50;
+        if(!autoAdjust){
+            hoodMotorController.setDesiredPosition(desired);
+        }        
+    }
+    
+    public void adjustHoodBackward(){
+        double desired = hoodMotorController.getActualPosition() - 50;
+        if(!autoAdjust){
+            hoodMotorController.setDesiredPosition(desired);
+        }        
+    }
+        
+    
     public void decreaseRPMSpeed() {
         if (this.RPM_SPEED > 150) {
             this.RPM_SPEED -= 150;
@@ -326,7 +340,7 @@ public class ShooterSubsystem extends BaseSubsystem {
             adjustHoodPosition(desiredPosition);
         }
         if (shootMotorMounted) {
-            adjustShooterSpeed(5350);
+            adjustShooterSpeed(500);
         }
     }
 

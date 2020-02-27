@@ -5,7 +5,7 @@ import frc.robot.pose.*;
 public class RobotConstants {
 
     public interface DIGITIAL_INPUT{
-        public static final int BALL_SENSOR = 1;
+        public static final int BALL_SENSOR = 0;
     }
 
     public interface CAN {
@@ -18,9 +18,9 @@ public class RobotConstants {
         public static final int HOOD_MOTOR = 5;
         public static final int INTAKE_MOTOR = 6;
         public static final int ELEVATOR_MOTOR = 8;
-        public static final int PCM_ID = 10;
-        public static final int INTAKE_SOL_1 = 11;
-        public static final int INTAKE_SOL_2 = 12;
+        public static final int PCM_ID = 0;
+        public static final int FORWARD = 6;
+        public static final int REVERSE = 7;
     }
 
     public interface PNEUMATICS {
@@ -46,6 +46,7 @@ public class RobotConstants {
         public static final int SELECT_PRESET_1 = 10;
         public static final int SELECT_PRESET_2 = 7;
         public static final int SNAP_TO_TARGET = 2;
+        public static final int OUTAKE = 7;
         
     }
 
@@ -114,8 +115,8 @@ public class RobotConstants {
         public static final boolean intake = true;
         public static final boolean shootMotorMounted = true;
         public static final boolean hoodMotorMounted = true;
-        public static final boolean PNEUMATICS_MOUNTED = false;
-        public static final boolean BALL_SENSOR = false;
+        public static final boolean PNEUMATICS_MOUNTED = true;
+        public static final boolean BALL_SENSOR = true;
 
     }
 
@@ -123,7 +124,7 @@ public class RobotConstants {
 
         public interface SHOOTER_MOTOR {
 
-            public static final double SHOOTER_PID_P = 10;
+            public static final double SHOOTER_PID_P = 12;
             public static final double SHOOTER_PID_I = 4e-4;
             public static final double SHOOTER_PID_D = 0;
             public static final double SHOOTER_PID_F = 0.000015;
