@@ -116,8 +116,9 @@ public class IntakeSubsystem extends BaseSubsystem {
             elevatorMotorController.configure();
             elevatorMotor.set(ControlMode.PercentOutput, 0);
         }
-
-        beam = new DigitalInput(RobotConstants.DIGITIAL_INPUT.BALL_SENSOR);
+        if(BALL_SENSOR){
+            beam = new DigitalInput(RobotConstants.DIGITIAL_INPUT.BALL_SENSOR);
+        }
     }
 
     public void deployIntakeArms(){
@@ -152,7 +153,9 @@ public class IntakeSubsystem extends BaseSubsystem {
     }
 
     public boolean isBeamBroken(){
-        return beam.get();
+        if(BALL_SENSOR){
+            return beam.get();
+        } else return false;
     }
 
 }
