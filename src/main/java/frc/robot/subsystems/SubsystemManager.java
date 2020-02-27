@@ -63,7 +63,7 @@ public class SubsystemManager {
         colorSubsystem = new ColorSubsystem();
         visionSubsystem = new VisionSubsystem();
 
-        Collections.addAll(allSubsystems, driveSubsystem, intakeSubsystem, navXSubsystem, visionSubsystem, shootSubsystem, elevatorSubsystem);
+        Collections.addAll(allSubsystems, driveSubsystem, intakeSubsystem, navXSubsystem, visionSubsystem, shootSubsystem);
 
         allSubsystems.forEach(subsystem -> subsystem.initialize());
 

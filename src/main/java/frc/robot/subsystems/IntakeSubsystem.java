@@ -67,6 +67,7 @@ public class IntakeSubsystem extends BaseSubsystem {
         }.withTimeout(EntechCommandBase.DEFAULT_TIMEOUT_SECONDS);
     }
 
+    
     public Command reverse() {
         return new SingleShotCommand(this) {
             @Override

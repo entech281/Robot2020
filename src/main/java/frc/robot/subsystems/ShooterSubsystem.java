@@ -130,7 +130,7 @@ public class ShooterSubsystem extends BaseSubsystem {
             public void doCommand() {
                 double desired = hoodMotorController.getActualPosition() - HOME_OFFSET;
                 adjustHoodPosition(desired);
-                while (!(Math.abs(desired - hoodMotorController.getActualPosition()) <= 5)) {
+                while (!(Math.abs(desired - hoodMotorController.getActualPosition()) <= 15)) {
 
                 }
                 hoodMotorController.setDesiredPosition(0);
