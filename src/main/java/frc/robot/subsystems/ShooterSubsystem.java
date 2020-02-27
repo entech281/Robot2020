@@ -171,7 +171,7 @@ public class ShooterSubsystem extends BaseSubsystem {
     }
     
     public void adjustHoodBackward(){
-        double desired = hoodMotorController.getActualPosition() - 50;
+        double desired = hoodMotorController.getActualPosition() + 50;
         if(!autoAdjust){
             hoodMotorController.setDesiredPosition(desired);
         }        

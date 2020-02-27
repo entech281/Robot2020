@@ -140,7 +140,7 @@ public class RobotConstants {
         public interface HOOD_MOTOR {
 
             public int HOOD_CRUISE_VELOCITY = 1000;
-            public int HOOD_ACCELERATION = 20;
+            public int HOOD_ACCELERATION = 1000;
             public int ALLOWABLE_ERROR = 5;
             public double ENCODER_CLICKS_PER_HOOD_MOTOR_REVOLUTION = 2100;
             public final double HOOD_PID_F = 4;
