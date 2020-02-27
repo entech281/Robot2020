@@ -2,6 +2,8 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -23,22 +25,21 @@ public class IntakeSubsystem extends BaseSubsystem {
     private double FULL_SPEED_FWD = 1;
     private double FULL_SPEED_BWD = -1;
     private double STOP_SPEED = 0;
-    
     private double ELEVATOR_INTAKE_SPEED = 0.3;
     private double INTAKE_REVERSE = -0.2;
     
     
+
     private final int maxCurrent = 20;
     private final int maxSustainedCurrent = 15;
     private final int maxCurrentTime = 200;
 
-
     private WPI_TalonSRX intakeMotor;
     private TalonSpeedController intakeMotorController;
-    
+
     private WPI_TalonSRX elevatorMotor;
     private TalonSpeedController elevatorMotorController;
-    
+
     private Solenoid deployIntake1;
     private Solenoid deployIntake2;
     
@@ -46,6 +47,8 @@ public class IntakeSubsystem extends BaseSubsystem {
     
     private Timer timer;
     private boolean timerRunning = false;
+
+    private DigitalInput beam;
 
     public Command startIntake() {
         return new SingleShotCommand(this) {
@@ -126,6 +129,9 @@ public class IntakeSubsystem extends BaseSubsystem {
             elevatorMotor.set(ControlMode.PercentOutput, 0);
         }
         timer = new Timer();
+        if(BALL_SENSOR){
+            beam = new DigitalInput(RobotConstants.DIGITIAL_INPUT.BALL_SENSOR);
+        }
     }
 
     public void deployIntakeArms(){
@@ -197,6 +203,12 @@ public class IntakeSubsystem extends BaseSubsystem {
             logger.log("Intake Motor speed", -desiredSpeed);
             elevatorMotorController.setDesiredSpeed(-desiredSpeed);
         }
+    }
+
+    public boolean isBeamBroken(){
+        if(BALL_SENSOR){
+            return beam.get();
+        } else return false;
     }
 
 }

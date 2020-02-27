@@ -4,6 +4,10 @@ import frc.robot.pose.*;
 
 public class RobotConstants {
 
+    public interface DIGITIAL_INPUT{
+        public static final int BALL_SENSOR = 1;
+    }
+
     public interface CAN {
 
         public static final int FRONT_LEFT_MOTOR = 3;
@@ -111,6 +115,7 @@ public class RobotConstants {
         public static final boolean shootMotorMounted = true;
         public static final boolean hoodMotorMounted = true;
         public static final boolean PNEUMATICS_MOUNTED = false;
+        public static final boolean BALL_SENSOR = false;
     }
 
     public interface MOTORCONTROLLER_VALUES {
@@ -147,6 +152,6 @@ public class RobotConstants {
     
     public interface SHOOT_PRESETS{
         public TargetLocation PRESET_1 = new TargetLocation(5.5, 0);
-        public TargetLocation PRESET_2 = new TargetLocation(290, 0);
+        public TargetLocation PRESET_2 = new TargetLocation(190, 0);
     }
 }
