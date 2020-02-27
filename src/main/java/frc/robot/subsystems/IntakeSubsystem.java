@@ -71,22 +71,22 @@ public class IntakeSubsystem extends BaseSubsystem {
             intakeMotorController.configure();
             intakeMotor.set(ControlMode.PercentOutput, 0);
             
-            deployIntake1 = new Solenoid(RobotConstants.CAN.PCM_ID, RobotConstants.CAN.INTAKE_SOL_1);
-            deployIntake2 = new Solenoid(RobotConstants.CAN.PCM_ID, RobotConstants.CAN.INTAKE_SOL_2);
+//            deployIntake1 = new Solenoid(RobotConstants.CAN.PCM_ID, RobotConstants.CAN.INTAKE_SOL_1);
+//            deployIntake2 = new Solenoid(RobotConstants.CAN.PCM_ID, RobotConstants.CAN.INTAKE_SOL_2);
             
-            deployIntake1.set(false);
-            deployIntake2.set(false);
+//            deployIntake1.set(false);
+//            deployIntake2.set(false);
         }
     }
 
     public void deployIntakeArms(){
-        deployIntake1.set(true);
-        deployIntake2.set(true);
+//        deployIntake1.set(true);
+//        deployIntake2.set(true);
     }
 
     public void raiseIntakeArms(){
-        deployIntake1.set(false);
-        deployIntake2.set(false);
+//        deployIntake1.set(false);
+//        deployIntake2.set(false);
     }
     
     @Override
