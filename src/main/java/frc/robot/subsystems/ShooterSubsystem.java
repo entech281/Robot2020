@@ -44,13 +44,17 @@ public class ShooterSubsystem extends BaseSubsystem {
 
     private int RPM_SPEED = 5350;
 
-    private int HOME_OFFSET= 75;
+    private int HOME_OFFSET= 50;
+    private int count = 0;
 
     public Command turnOnShooter() {
         return new SingleShotCommand(this) {
             @Override
             public void doCommand() {
+                count += 1;
+                logger.log("Counter", count);
                 shootOn = true;
+                
             }
         }.withTimeout(EntechCommandBase.DEFAULT_TIMEOUT_SECONDS);
     }
@@ -220,6 +224,9 @@ public class ShooterSubsystem extends BaseSubsystem {
         logging(rPose);
         logger.log("Current command", getCurrentCommand());
         ShooterConfiguration config;
+        logger.log("Shooter is on", shootOn);
+        logger.log("Hood current position", hoodMotorController.getActualPosition());
+        logger.log("Hood Desired Position", hoodMotorController.getDesiredPosition());
         if(shootOn){
             if (autoAdjust) {
                 if(rPose.getVisionDataValidity()){
@@ -238,6 +245,7 @@ public class ShooterSubsystem extends BaseSubsystem {
                     preset2 = false;
                 }
             }
+            adjustShooterSpeed(5350);
 
         } else {
             if(shootMotorMounted)

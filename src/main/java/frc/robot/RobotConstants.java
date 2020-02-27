@@ -105,10 +105,10 @@ public class RobotConstants {
         public static final boolean climber = false;
         public static final boolean colorSensor = false;
         public static final boolean drive = true;
-        public static final boolean elevator = false;
-        public static final boolean intake = false;
-        public static final boolean shootMotorMounted = false;
-        public static final boolean hoodMotorMounted = false;
+        public static final boolean elevator = true;
+        public static final boolean intake = true;
+        public static final boolean shootMotorMounted = true;
+        public static final boolean hoodMotorMounted = true;
     }
 
     public interface MOTORCONTROLLER_VALUES {
@@ -124,7 +124,7 @@ public class RobotConstants {
             public static final int CURRENT_LIMIT = 35;
             public static final double SHOOTER_MOTOR_RAMPUP = 0.5;
             public static final int SHOOTER_MAX_ACCEL = 100;
-            public static final int SHOOTER_TOLERANCE = 5;
+            public static final int SHOOTER_TOLERANCE = 15;
             public static final int SHOOTER_MAX_RPM = 6000;
         }
 
@@ -135,7 +135,7 @@ public class RobotConstants {
             public int ALLOWABLE_ERROR = 5;
             public double ENCODER_CLICKS_PER_HOOD_MOTOR_REVOLUTION = 2100;
             public final double HOOD_PID_F = 4;
-            public final double HOOD_PID_P = 2.56 * 2;
+            public final double HOOD_PID_P = 2.56 * 3;
             public final double HOOD_PID_I = 0;
             public final double HOOD_PID_D = 0;
             public final double HOOD_GEAR_RATIO = 4;
