@@ -145,6 +145,6 @@ public class RobotConstants {
     
     public interface SHOOT_PRESETS{
         public TargetLocation PRESET_1 = new TargetLocation(5.5, 0);
-        public TargetLocation PRESET_2 = new TargetLocation(290, 0);
+        public TargetLocation PRESET_2 = new TargetLocation(190, 0);
     }
 }
