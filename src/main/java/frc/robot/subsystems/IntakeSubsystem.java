@@ -105,12 +105,16 @@ public class IntakeSubsystem extends BaseSubsystem {
             intakeMotorController.configure();
             intakeMotor.set(ControlMode.PercentOutput, 0);
             
-//            deployIntake1 = new Solenoid(RobotConstants.CAN.PCM_ID, RobotConstants.CAN.INTAKE_SOL_1);
-//            deployIntake2 = new Solenoid(RobotConstants.CAN.PCM_ID, RobotConstants.CAN.INTAKE_SOL_2);
-            
-//            deployIntake1.set(false);
-//            deployIntake2.set(false);
         }
+        
+        if(PNEUMATICS_MOUNTED){
+            deployIntake1 = new Solenoid(RobotConstants.CAN.PCM_ID, RobotConstants.CAN.INTAKE_SOL_1);
+            deployIntake2 = new Solenoid(RobotConstants.CAN.PCM_ID, RobotConstants.CAN.INTAKE_SOL_2);
+            
+            deployIntake1.set(false);
+            deployIntake2.set(false);
+        }
+        
         if (elevator) {
             TalonSettings motorSettings = TalonSettingsBuilder.defaults()
                     .withCurrentLimits(maxCurrent, maxSustainedCurrent, maxCurrentTime).brakeInNeutral()
@@ -125,13 +129,17 @@ public class IntakeSubsystem extends BaseSubsystem {
     }
 
     public void deployIntakeArms(){
-//        deployIntake1.set(true);
-//        deployIntake2.set(true);
+        if(PNEUMATICS_MOUNTED){
+            deployIntake1.set(true);
+            deployIntake2.set(true);
+        }
     }
 
     public void raiseIntakeArms(){
-//        deployIntake1.set(false);
-//        deployIntake2.set(false);
+        if(PNEUMATICS_MOUNTED){
+            deployIntake1.set(false);
+            deployIntake2.set(false);
+        }
     }
     
     public boolean isIntakeOn(){

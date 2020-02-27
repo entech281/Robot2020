@@ -35,6 +35,7 @@ public class RobotConstants {
         public static final int TURN_SHOOTER_ON = 8;
         public static final int ENABLE_AUTO_HOOD = 9;
         public static final int FIRE = 11;
+        public static final int DRIVER_SHOOT = 1;
         public static final int DEPLOY_INTAKE = 13;
         public static final int HOOD_FORWARD_ADJUST = 3;
         public static final int HOOD_BACKWARD_ADJUST = 5;
@@ -109,6 +110,7 @@ public class RobotConstants {
         public static final boolean intake = true;
         public static final boolean shootMotorMounted = true;
         public static final boolean hoodMotorMounted = true;
+        public static final boolean PNEUMATICS_MOUNTED = false;
     }
 
     public interface MOTORCONTROLLER_VALUES {

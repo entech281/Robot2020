@@ -62,6 +62,10 @@ public class OperatorInterface {
                 .whenPressed(new SnapToVisionTargetCommand(drive))
                 .add();
         
+        joystickManager.addButton(RobotConstants.BUTTONS.DRIVER_SHOOT)
+                .whenPressed(subsystemManager.getIntakeSubsystem().startElevator())
+                .whenReleased(subsystemManager.getIntakeSubsystem().stopElevator())
+                .add();
         
         drive.setDefaultCommand(new TankDriveCommand(drive, driveStick));
 
