@@ -46,7 +46,7 @@ public class VisionSubsystem extends BaseSubsystem {
         processor.addInput(reading);
         visionData = processor.getCurrentVisionData();
         logger.log("Vertical offset", visionData.getVerticalOffset());
-        logger.log("Horizontal Offset", visionData.getLateralOffset());
+        logger.driverinfo("Horizontal Offset", visionData.getLateralOffset());
     }
 
     public VisionData getVisionData() {
