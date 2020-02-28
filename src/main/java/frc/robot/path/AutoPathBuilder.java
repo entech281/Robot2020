@@ -65,6 +65,10 @@ public class AutoPathBuilder {
         return new DelayCommand(seconds);
     }
     
+    public static Command gotToPreset1(ShooterSubsystem shooter){
+        return shooter.selectPreset2();
+    }
+    
     public static Command zeroNavXAngle(NavXSubsystem navX, boolean inverted){
         return navX.zeroYawOfNavX(inverted);
     }
@@ -116,6 +120,10 @@ public class AutoPathBuilder {
         BasicMoves stopJustSpinningShooterWheel();
         
         BasicMoves startShooterAndHomeHood();
+        
+        BasicMoves turnOffEverything();
+        
+        BasicMoves preset();
         
         @Override
         public boolean equals(Object obj);
@@ -266,6 +274,18 @@ public static class Builder implements BasicMoves{
         @Override
         public BasicMoves startShooterAndHomeHood() {
             parallelCommands.add(commandFactory.hoodHomeAndStartShooter());
+            return this;
+        }
+
+        @Override
+        public BasicMoves preset() {
+            gotToPreset1(shooter);
+            return this;
+        }
+
+        @Override
+        public BasicMoves turnOffEverything() {
+            parallelCommands.add(commandFactory.turnOffAllSubsystems());
             return this;
         }
 

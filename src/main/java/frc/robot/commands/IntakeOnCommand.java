@@ -16,7 +16,7 @@ public class IntakeOnCommand extends EntechCommandBase{
     private Timer timer;
 
     private double DELAY1 = 0.5;
-    private double DELAY2 = 0.2;
+    private double DELAY2 = 0.3;
     public IntakeOnCommand(IntakeSubsystem intake){
         super(intake);
         this.intake = intake;

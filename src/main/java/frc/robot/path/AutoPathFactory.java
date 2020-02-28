@@ -30,11 +30,17 @@ public class AutoPathFactory {
     
     //Start middle shoot 3 balls and pick up 3 more (8 seconds)
     public Command[] middleSixBallAuto(){
-        return AutoPathBuilder.builder(subsystemManager, commandFactory, false).zeroYaw().startShooterAndHomeHood().next().delayForSeconds(1.5).enableAutoShooterHoodAdjustment().next().fire().delayForSeconds(3).next().backward(75).startIntake().stopJustSpinningShooterWheel().next().right(90).next().forward(50).next().right(90).next().forward(109).next().backward(75).next().right(155).next().snapToTarget().next().startShooter().next().fire().next().build();
+        return AutoPathBuilder.builder(subsystemManager, commandFactory, false).zeroYaw().startShooterAndHomeHood().next().delayForSeconds(5).enableAutoShooterHoodAdjustment().next().fire().delayForSeconds(3).next().backward(75).startIntake().stopJustSpinningShooterWheel().next().right(90).next().forward(50).next().right(90).next().forward(109).next().backward(75).next().right(155).next().snapToTarget().next().startShooter().next().fire().next().build();
     }
     
     public Command[] simplePath(){
-        return AutoPathBuilder.builder(subsystemManager, commandFactory, false).next().zeroYaw().next().hoodHoming().next().snapToTargetStartShooter().next().delayForSeconds(1.5).next().fire().delayForSeconds(3).next().backward(24).next().build();
+        return AutoPathBuilder.builder(subsystemManager, commandFactory, false).next().zeroYaw().startShooterAndHomeHood().next().delayForSeconds(5).enableAutoShooterHoodAdjustment().next().fire().delayForSeconds(3).next()
+                .turnOffEverything().next().fire().delayForSeconds(3)
+                .next().backward(24).next().build();
+    }
+    
+    public Command[] backUp(){
+        return AutoPathBuilder.builder(subsystemManager, commandFactory, false).next().zeroYaw().backward(24).next().build();
     }
 
     public Command[] leftEightBallAuto(){
