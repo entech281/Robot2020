@@ -34,6 +34,7 @@ public class Robot extends TimedRobot {
 
     private DataLogger logger;
     private SubsystemManager subsystemManager = new SubsystemManager();
+    private CommandGroupFactory commandFactor;
 
     private SmartDashboardPathChooser optionChooser;
     OperatorInterface oi;
@@ -53,6 +54,7 @@ public class Robot extends TimedRobot {
 
         optionChooser = new SmartDashboardPathChooser();
         oi = new OperatorInterface(subsystemManager);
+        commandFactor = new CommandGroupFactory((subsystemManager));
     }
 
     @Override
@@ -66,6 +68,7 @@ public class Robot extends TimedRobot {
             autoCommand.cancel();
         }
         subsystemManager.getDriveSubsystem().setSpeedMode();
+        CommandScheduler.getInstance().schedule(commandFactor.getStopShooterCommandGroup());
     }
 
     @Override

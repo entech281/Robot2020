@@ -5,6 +5,7 @@ import frc.robot.commands.AdjustBackwardHoodCommand;
 import frc.robot.commands.AdjustRaiseHoodCommand;
 import frc.robot.commands.CommandGroupFactory;
 import frc.robot.commands.DriveForwardSetDistance;
+import frc.robot.commands.HoodHomingCommand;
 import frc.robot.commands.SnapToVisionTargetCommand;
 import frc.robot.commands.SnapToYawCommand;
 import frc.robot.commands.TankDriveCommand;
@@ -69,6 +70,10 @@ public class OperatorInterface {
         joystickManager.addButton(RobotConstants.BUTTONS.DRIVER_SHOOT)
                 .whenPressed(subsystemManager.getIntakeSubsystem().startElevator())
                 .whenReleased(subsystemManager.getIntakeSubsystem().stopElevator())
+                .add();
+        
+        joystickManager.addButton(12)
+                .whenPressed(new HoodHomingCommand(subsystemManager.getShooterSubsystem()))
                 .add();
         
         joystickManager.addButton(9)

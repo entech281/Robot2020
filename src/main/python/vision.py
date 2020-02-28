@@ -38,7 +38,6 @@ while(True):
     clock.tick()
     img = sensor.snapshot()
     for b in img.find_blobs( FILTER_RANGES ):
-        num_
         if valid_target(b):
             data = gather_data(b)
             transmit_data(data)

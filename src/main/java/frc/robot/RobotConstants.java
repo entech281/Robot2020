@@ -68,7 +68,7 @@ public class RobotConstants {
 
         public static final double ROBOT_WIDTH = 23.5;
         public static final double ROBOT_LENGTH = 25;
-        public static final double DRIVE_GEAR_RATIO = 10.7;
+        public static final double DRIVE_GEAR_RATIO = 10.7*(23.5/25.5);
         public static final double WHEEL_DIAMETER_INCHES = 6;
         public static final double MOTOR_REVOLUTIONS_PER_INCH = (Math.PI * WHEEL_DIAMETER_INCHES)
                 / DRIVE_GEAR_RATIO;
@@ -76,7 +76,7 @@ public class RobotConstants {
 
     public interface PID{
         public interface AUTO_STRAIGHT{
-            public static final double P = 1e-4;
+            public static final double P = 4e-4;
             public static final double I = 2e-7;
             public static final double D = 0;
             public static final double F = 0;
@@ -103,7 +103,7 @@ public class RobotConstants {
         public static final int MAX_VELOCITY = 5000;//7500
         public static final int MAX_ACCELLERATION = 5000;//30000
         public static final int ACCEPTABLE_ERROR = 0;
-        public static final int POSITION_TOLERANCE_INCHES = 2;
+        public static final int POSITION_TOLERANCE_INCHES = 1;
     }
 
     public interface AVAILABILITY {
@@ -132,7 +132,7 @@ public class RobotConstants {
             public static final double SHOOTER_MINOUTPUT = -1;
             public static final int CURRENT_LIMIT = 35;
             public static final double SHOOTER_MOTOR_RAMPUP = 0.5;
-            public static final int SHOOTER_MAX_ACCEL = 100;
+            public static final int SHOOTER_MAX_ACCEL = 3000;
             public static final int SHOOTER_TOLERANCE = 15;
             public static final int SHOOTER_MAX_RPM = 6000;
         }

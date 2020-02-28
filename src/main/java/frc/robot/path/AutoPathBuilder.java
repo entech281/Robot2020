@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.robot.commands.CommandGroupFactory;
 import frc.robot.commands.DelayCommand;
 import frc.robot.commands.DriveForwardSetDistance;
+import frc.robot.commands.HoodHomingCommand;
 import frc.robot.commands.SnapAndShootCommand;
 import frc.robot.commands.SnapToVisionTargetCommand;
 import frc.robot.commands.SnapToYawCommand;
@@ -234,7 +235,7 @@ public static class Builder implements BasicMoves{
 
         @Override
         public BasicMoves hoodHoming() {
-            parallelCommands.add(commandFactory.getHoodHomingCommandGroup());
+            parallelCommands.add(new HoodHomingCommand(shooter));
             return this;
         }
 
