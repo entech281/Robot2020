@@ -67,6 +67,9 @@ public class Robot extends TimedRobot {
         if (autoCommand != null) {
             autoCommand.cancel();
         }
+        if(!subsystemManager.getVisionSubsystem().isConnected()){
+            subsystemManager.getVisionSubsystem().tryConnect();
+        }
         subsystemManager.getDriveSubsystem().setSpeedMode();
         CommandScheduler.getInstance().schedule(commandFactor.getStopShooterCommandGroup());
     }
@@ -79,6 +82,9 @@ public class Robot extends TimedRobot {
 
     @Override
     public void autonomousInit() {
+        if(!subsystemManager.getVisionSubsystem().isConnected()){
+            subsystemManager.getVisionSubsystem().tryConnect();
+        }
         AutoPathFactory factory = new AutoPathFactory(subsystemManager, new CommandGroupFactory(subsystemManager));
         autoCommand = AutoCommandFactory.getSelectedCommand(optionChooser.getSelected(),factory);
         CommandScheduler.getInstance().schedule(autoCommand);
