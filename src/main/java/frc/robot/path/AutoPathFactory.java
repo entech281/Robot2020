@@ -34,7 +34,7 @@ public class AutoPathFactory {
     }
     
     public Command[] simplePath(){
-        return AutoPathBuilder.builder(subsystemManager, commandFactory, false).next().zeroYaw().next().hoodHoming().next().snapToTargetStartShooter().next().delayForSeconds(0.5).next().fire().delayForSeconds(3).next().backward(24).next().build();
+        return AutoPathBuilder.builder(subsystemManager, commandFactory, false).next().zeroYaw().next().hoodHoming().next().snapToTargetStartShooter().next().delayForSeconds(1.5).next().fire().delayForSeconds(3).next().backward(24).next().build();
     }
 
     public Command[] leftEightBallAuto(){
