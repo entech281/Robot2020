@@ -187,33 +187,6 @@ public class IntakeSubsystem extends BaseSubsystem {
         logger.log("TIMER IS RUNNING", timerRunning);
     }
     
-    public boolean hasBallEntedElevator(){
-        if(BALL_SENSOR){
-            logger.log("Ball is there", false);
-            boolean ballEntered = !beam.get();
-            if(ballEntered){
-                logger.log("Ball is there", true);
-                timer.stop();
-                timer.reset();
-                timer.start();
-                checkSensor = false;
-            }
-            return ballEntered;
-        } else return true;
-    }
-    
-    public boolean spinElevator(){
-        if(!checkSensor){
-            boolean ballThere = hasBallEntedElevator() || !timer.hasPeriodPassed(0.2);
-            logger.log("BALL IS PRESENT IN ELEVATOR", ballThere);
-            if(ballThere){
-                checkSensor = true;
-            }
-            return ballThere;
-        }else {
-            return hasBallEntedElevator();
-        }
-    }
     
     public void shiftElevatorBackToAllowForRoom(){
         setElevatorSpeed(-0.2);
@@ -224,28 +197,6 @@ public class IntakeSubsystem extends BaseSubsystem {
         setElevatorSpeed(0);
     }
     
-    public boolean isTimerRunning(){
-        if(timerRunning){
-            timerRunning = !timer.hasElapsed(5);
-            if(!timerRunning){
-                timer.stop();
-            }
-        }
-        return timerRunning;
-    }
-    
-    public void startTimer(){
-        timer.start();
-    }
-    
-    public void stopTimer(){
-        timer.stop();
-        timer.reset();
-    }
-    
-    public boolean timerPassed(){
-        return timer.hasElapsed(0.5);
-    }
     
     public boolean sensorReadingValue(){
         if(BALL_SENSOR){
@@ -255,20 +206,6 @@ public class IntakeSubsystem extends BaseSubsystem {
         }
     }
     
-    public void startElevatorIntakeAndStopIntake(){
-        setElevatorSpeed(ELEVATOR_INTAKE_SPEED);
-        setIntakeMotorSpeed(INTAKE_REVERSE);
-    }
-    
-    public void spinBothIntakeAndElevator(){
-        setElevatorSpeed(ELEVATOR_INTAKE_SPEED);
-        setIntakeMotorSpeed(HALF_SPEED_FWD);
-    }
-
-    public void stopElevatorAndStartIntake(){
-        setElevatorSpeed(STOP_SPEED);
-        setIntakeMotorSpeed(FULL_SPEED_FWD);
-    }    
     
     public void setIntakeMotorSpeed(double desiredSpeed) {
         logger.log("Intake Motor speed", desiredSpeed);
