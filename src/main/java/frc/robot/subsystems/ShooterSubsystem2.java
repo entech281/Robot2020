@@ -21,7 +21,7 @@ import frc.robot.pose.RobotPose;
 import frc.robot.pose.ShooterConfiguration;
 import frc.robot.utils.VisionDataProcessor;
 
-public class ShooterSubsystem extends BaseSubsystem {
+public class ShooterSubsystem2 extends BaseSubsystem {
 
     private double SHOOT_SPEED = 1;
     private double HOOD_POSITION;

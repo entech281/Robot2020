@@ -1,10 +1,12 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.commands.CommandGroupFactory;
 import frc.robot.commands.SnapToVisionTargetCommand;
 import frc.robot.commands.TankDriveCommand;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.SubsystemManager;
 
 public class OperatorInterface {
@@ -30,9 +32,14 @@ public class OperatorInterface {
                 .whenReleased(commandFactory.getStopShooterCommandGroup())
                 .add();
         
+        //operatorPanelManager.addButton(RobotConstants.BUTTONS.ENABLE_AUTO_HOOD)
+        //        .whenPressed(subsystemManager.getShooterSubsystem().enableAutoShooting())
+        //        .whenReleased(subsystemManager.getShooterSubsystem().disableAutoShooting())
+        //        .add();
+        ShooterSubsystem ss = subsystemManager.getShooterSubsystem();
         operatorPanelManager.addButton(RobotConstants.BUTTONS.ENABLE_AUTO_HOOD)
-                .whenPressed(subsystemManager.getShooterSubsystem().enableAutoShooting())
-                .whenReleased(subsystemManager.getShooterSubsystem().disableAutoShooting())
+                .whenPressed(new InstantCommand( ss::enableAutoShooting, ss) )
+                .whenReleased(new InstantCommand( ss::disableAutoShooting, ss ))
                 .add();
         
         operatorPanelManager.addButton(RobotConstants.BUTTONS.DEPLOY_INTAKE)
