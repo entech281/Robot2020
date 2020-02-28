@@ -268,12 +268,12 @@ public class ShooterSubsystem extends BaseSubsystem {
             } else {
                 if(preset1){
                     config = processor.calculateShooterConfiguration(RobotConstants.SHOOT_PRESETS.PRESET_1);
-                    setDesiredShooterConfiguration(config);
+                    setDesiredShooterConfiguration(RobotConstants.SHOOT_PRESETS.CLOSER_PRESET);
                     preset1 = false;
                 }
                 else if(preset2){
                     config = processor.calculateShooterConfiguration(RobotConstants.SHOOT_PRESETS.PRESET_2);
-                    setDesiredShooterConfiguration(config);
+                    setDesiredShooterConfiguration(RobotConstants.SHOOT_PRESETS.FARTHER_PRESET);
                     preset2 = false;
                 }
             }
