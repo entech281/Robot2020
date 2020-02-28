@@ -62,7 +62,7 @@ public class NavXSubsystem extends BaseSubsystem {
     
     @Override
     public void customPeriodic(RobotPose rPose, FieldPose fPose) {
-        logger.log("Angle reported by NavX", calculateNavX(navX.getYaw()));
+        logger.driverinfo("Angle reported by NavX", calculateNavX(navX.getYaw()));
     }
     
     public Command zeroYawOfNavX(boolean inverted){
