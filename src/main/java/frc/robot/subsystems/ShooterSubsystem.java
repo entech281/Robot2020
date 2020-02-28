@@ -47,6 +47,8 @@ public class ShooterSubsystem extends BaseSubsystem {
     private int HOME_OFFSET= 50;
     private int count = 0;
 
+    private double HOOD_DESIRED_POSITION = 0.0;
+    
     public Command turnOnShooter() {
         return new SingleShotCommand(this) {
             @Override
@@ -124,19 +126,35 @@ public class ShooterSubsystem extends BaseSubsystem {
         }.withTimeout(EntechCommandBase.DEFAULT_TIMEOUT_SECONDS);
     }
 
+    public void setHoodMotorSpeed(double speed){
+        if(!isUpperLimitHit()){
+            hoodMotor.set(ControlMode.PercentOutput, speed);
+        } else {
+            hoodMotor.set(ControlMode.PercentOutput, 0);
+        }
+    }
+    
+    public void setHomeOffset(){
+        double desired = hoodMotorController.getActualPosition() - HOME_OFFSET;
+        HOOD_DESIRED_POSITION = desired;
+        adjustHoodPosition(desired);    
+    }
+    
+    public boolean reachedOffset(){
+        return (Math.abs(HOOD_DESIRED_POSITION - hoodMotorController.getActualPosition()) <= 15);
+    }
+    
+    public void resetHood(){
+        hoodMotorController.setDesiredPosition(0);
+        hoodMotorController.resetPosition();
+    }
+    
     public Command returnToStartPos() {
         return new SingleShotCommand(this) {
             @Override
             public void doCommand() {
-                double desired = hoodMotorController.getActualPosition() - HOME_OFFSET;
-                adjustHoodPosition(desired);
-                while (!(Math.abs(desired - hoodMotorController.getActualPosition()) <= 15)) {
-
-                }
-                hoodMotorController.setDesiredPosition(0);
-                hoodMotorController.resetPosition();
             }
-        }.withTimeout(EntechCommandBase.DEFAULT_TIMEOUT_SECONDS);
+        };
     }
     
     public Command nudgeHoodForward(){
@@ -163,7 +181,21 @@ public class ShooterSubsystem extends BaseSubsystem {
         };
     }
     
-
+    public void adjustHoodForward(){
+        double desired = hoodMotorController.getActualPosition() - 50;
+        if(!autoAdjust){
+            hoodMotorController.setDesiredPosition(desired);
+        }        
+    }
+    
+    public void adjustHoodBackward(){
+        double desired = hoodMotorController.getActualPosition() + 50;
+        if(!autoAdjust){
+            hoodMotorController.setDesiredPosition(desired);
+        }        
+    }
+        
+    
     public void decreaseRPMSpeed() {
         if (this.RPM_SPEED > 150) {
             this.RPM_SPEED -= 150;
@@ -263,6 +295,7 @@ public class ShooterSubsystem extends BaseSubsystem {
     }
 
     public void adjustShooterSpeed(double desiredSpeed) {
+        logger.log("Desired Speed Shooter", desiredSpeed);
         if (shootMotorMounted) {
             shooterMotorController.setDesiredSpeed(-1 * desiredSpeed);
         }
@@ -326,7 +359,7 @@ public class ShooterSubsystem extends BaseSubsystem {
             adjustHoodPosition(desiredPosition);
         }
         if (shootMotorMounted) {
-            adjustShooterSpeed(5350);
+            adjustShooterSpeed(500);
         }
     }
 

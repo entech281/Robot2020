@@ -3,5 +3,5 @@ package frc.robot.preferences;
 public enum AutoOption{
     ShootAndBackUp,
     MiddleSixBall,
-    RightSevenBall
+    LeftSevenBall
 }

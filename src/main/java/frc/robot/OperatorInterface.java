@@ -1,8 +1,13 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.Joystick;
+import frc.robot.commands.AdjustBackwardHoodCommand;
+import frc.robot.commands.AdjustRaiseHoodCommand;
 import frc.robot.commands.CommandGroupFactory;
+import frc.robot.commands.DriveForwardSetDistance;
+import frc.robot.commands.HoodHomingCommand;
 import frc.robot.commands.SnapToVisionTargetCommand;
+import frc.robot.commands.SnapToYawCommand;
 import frc.robot.commands.TankDriveCommand;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.SubsystemManager;
@@ -41,11 +46,11 @@ public class OperatorInterface {
                 .add();
         
         operatorPanelManager.addButton(RobotConstants.BUTTONS.HOOD_FORWARD_ADJUST)
-                .whileHeld(subsystemManager.getShooterSubsystem().nudgeHoodForward())
+                .whileHeld(new AdjustRaiseHoodCommand(subsystemManager.getShooterSubsystem()))
                 .add();
         
         operatorPanelManager.addButton(RobotConstants.BUTTONS.HOOD_BACKWARD_ADJUST)
-                .whileHeld(subsystemManager.getShooterSubsystem().nudgeHoodBackward())
+                .whileHeld(new AdjustBackwardHoodCommand(subsystemManager.getShooterSubsystem()))
                 .add();
                 
         operatorPanelManager.addButton(RobotConstants.BUTTONS.SELECT_PRESET_1)
@@ -65,6 +70,23 @@ public class OperatorInterface {
         joystickManager.addButton(RobotConstants.BUTTONS.DRIVER_SHOOT)
                 .whenPressed(subsystemManager.getIntakeSubsystem().startElevator())
                 .whenReleased(subsystemManager.getIntakeSubsystem().stopElevator())
+                .add();
+        
+        joystickManager.addButton(12)
+                .whenPressed(new HoodHomingCommand(subsystemManager.getShooterSubsystem()))
+                .add();
+        
+        joystickManager.addButton(9)
+                .whenPressed(new DriveForwardSetDistance(drive, 24))
+                .add();
+        
+        joystickManager.addButton(8)
+                .whenPressed(new SnapToYawCommand(drive, 90, true))
+                .add();
+        
+        joystickManager.addButton(RobotConstants.BUTTONS.OUTAKE)
+                .whenPressed(subsystemManager.getIntakeSubsystem().reverse())
+                .whenReleased(subsystemManager.getIntakeSubsystem().stopEverything())
                 .add();
         
         drive.setDefaultCommand(new TankDriveCommand(drive, driveStick));
