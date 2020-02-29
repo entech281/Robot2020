@@ -279,7 +279,7 @@ public static class Builder implements BasicMoves{
 
         @Override
         public BasicMoves preset() {
-            gotToPreset1(shooter);
+            parallelCommands.add(gotToPreset1(shooter));
             return this;
         }
 

@@ -181,6 +181,14 @@ public class ShooterSubsystem extends BaseSubsystem {
         };
     }
     
+    public boolean atShootSpeed(){
+        return shooterMotorController.getActualSpeed() < -5100;
+    }
+    
+    public boolean atHoodPosition(){
+        return Math.abs(HOOD_POSITION - hoodMotorController.getActualPosition()) < 100;
+    }
+    
     public void adjustHoodForward(){
         double desired = hoodMotorController.getActualPosition() - 50;
         if(!autoAdjust){
@@ -220,7 +228,7 @@ public class ShooterSubsystem extends BaseSubsystem {
         return new SingleShotCommand(this) {
             @Override
             public void doCommand() {
-                setShooterPreset2();
+                setStartingLinePreset();
             }
         };
     }
@@ -266,9 +274,12 @@ public class ShooterSubsystem extends BaseSubsystem {
         logger.log("Current command", getCurrentCommand());
         ShooterConfiguration config;
         logger.log("Shooter is on", shootOn);
-        logger.log("Hood current position", hoodMotorController.getActualPosition());
-        logger.log("Hood Desired Position", hoodMotorController.getDesiredPosition());
+        logger.log("Hood current position1", hoodMotorController.getActualPosition());
+        logger.log("Hood Desired Position1", hoodMotorController.getDesiredPosition());
         logger.log("Preset on ", preset2);
+        logger.log("SHOOT", atShootSpeed() && atHoodPosition());
+        logger.log("Shooter at speed", atShootSpeed());
+        logger.log("Hood at pose", atHoodPosition());
         if(shootOn){
             if (autoAdjust) {
                 if(rPose.getVisionDataValidity()){
@@ -311,8 +322,12 @@ public class ShooterSubsystem extends BaseSubsystem {
         }
     }
     
-    public void setShooterPreset2(){
+    public void setStartingLinePreset(){
         adjustHoodPosition(-940);
+    }
+    
+    public void setShooterPreset2(){
+        adjustHoodPosition(-930);
     }
 
     public void setShooterPreset1(){

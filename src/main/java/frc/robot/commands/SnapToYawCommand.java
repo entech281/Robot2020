@@ -47,7 +47,7 @@ public class SnapToYawCommand extends EntechCommandBase{
             setpoint = NavXDataProcessor.bringInRange(setpoint);
         }
         controller.setSetpoint(setpoint);
-        controller.setTolerance(3);
+        controller.setTolerance(0.5);
         controller.enableContinuousInput(-180.0, 180.0);
     }
 

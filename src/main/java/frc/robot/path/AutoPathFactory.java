@@ -34,7 +34,7 @@ public class AutoPathFactory {
     }
     
     public Command[] simplePath(){
-        return AutoPathBuilder.builder(subsystemManager, commandFactory, false).next().zeroYaw().startShooterAndHomeHood().next().delayForSeconds(5).enableAutoShooterHoodAdjustment().next().fire().delayForSeconds(3).next()
+        return AutoPathBuilder.builder(subsystemManager, commandFactory, false).next().zeroYaw().startShooterAndHomeHood().next().delayForSeconds(5).preset().snapToTarget().next().fire().delayForSeconds(3).next()
                 .turnOffEverything().next().fire().delayForSeconds(3)
                 .next().backward(24).next().build();
     }
