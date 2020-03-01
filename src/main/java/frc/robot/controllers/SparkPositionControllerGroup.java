@@ -30,12 +30,6 @@ public class SparkPositionControllerGroup {
         rearRight.configure();
     }
 
-    public void resetMode() {
-        frontRight.resetMode();
-        frontLeft.resetMode();
-        rearLeft.resetMode();
-        rearRight.resetMode();
-    }
 
     public void resetPosition() {
         frontLeft.resetPosition();

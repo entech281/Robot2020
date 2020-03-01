@@ -12,6 +12,7 @@ import frc.robot.logger.DataLoggerFactory;
 import frc.robot.pose.FieldPose;
 import frc.robot.pose.RobotPose;
 import static frc.robot.RobotConstants.AVAILABILITY.*;
+import frc.robot.pose.PoseSource;
 
 /**
  * Add your docs here.
@@ -21,14 +22,20 @@ public abstract class BaseSubsystem extends SubsystemBase {
     // here. Call these from Commands.
 
     protected DataLogger logger;
+    protected PoseSource poseSource;
 
+    public PoseSource getPoseSource() {
+        return poseSource;
+    }
+
+    public void setPoseSource(PoseSource poseSource) {
+        this.poseSource = poseSource;
+    }
+    
     public BaseSubsystem() {
         this.logger = DataLoggerFactory.getLoggerFactory().createDataLogger(this.getName());
     }
-
+    
     public abstract void initialize();
 
-    public void customPeriodic(RobotPose rPose, FieldPose fPose) {
-
-    }
 }

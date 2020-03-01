@@ -41,7 +41,7 @@ public class VisionSubsystem extends BaseSubsystem {
     }
 
     @Override
-    public void customPeriodic(RobotPose rPose, FieldPose fPose) {
+    public void periodic() {
         String reading = visionPort.readString();
         processor.addInput(reading);
         visionData = processor.getCurrentVisionData();

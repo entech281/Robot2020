@@ -47,7 +47,6 @@ public class TalonSettingsBuilder {
     public static TalonSettings follow(TalonSettings other, int otherTalonId) {
         TalonSettings s = other.copy();
         s.controlMode = ControlMode.Follower;
-        s.demand = otherTalonId;
         return s;
     }
 

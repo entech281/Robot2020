@@ -45,7 +45,6 @@ public class TalonSettings {
     public NeutralMode brakeMode = NeutralMode.Brake;
     public FeedbackDevice feedbackDevice = FeedbackDevice.QuadEncoder;
     public ControlMode controlMode = ControlMode.Disabled;
-    public double demand = DEFAULT_DEMAND;
 
     public TalonSettings copy() {
         TalonSettings copySettings = new TalonSettings();
@@ -59,7 +58,6 @@ public class TalonSettings {
         copySettings.brakeMode = this.brakeMode;
         copySettings.feedbackDevice = this.feedbackDevice;
         copySettings.controlMode = this.controlMode;
-        copySettings.demand = this.demand;
         copySettings.profile = this.profile;
         return copySettings;
     }
@@ -108,20 +106,6 @@ public class TalonSettings {
         talon.configMotionAcceleration(this.profile.accelerationEncoderClicksPerSecond2, TIMEOUT_MS);
         talon.configAllowableClosedloopError(PID_SLOT, this.profile.allowableClosedLoopError, TIMEOUT_MS);
         talon.set(this.controlMode, 0);
-    }
-
-    /**
-     * Sets just the mode. Typically used when you're swtiching back and forth
-     * between modes
-     *
-     * @param talon
-     */
-    public void setMode(TalonSRX talon, double settingValue) {
-        talon.set(this.controlMode, settingValue);
-    }
-
-    public void setMode(TalonSRX talon) {
-        talon.set(this.controlMode, this.demand);
     }
 
     public static class Gains {

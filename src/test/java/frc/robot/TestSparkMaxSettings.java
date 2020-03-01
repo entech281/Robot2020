@@ -10,6 +10,7 @@ import com.revrobotics.CANSparkMax.IdleMode;
 
 import frc.robot.controllers.*;
 
+
 public class TestSparkMaxSettings {
 
     @Test
@@ -52,4 +53,6 @@ public class TestSparkMaxSettings {
         assertEquals(sparkSettings.rampUp.neutralDeadband, copy.rampUp.neutralDeadband, TOLERANCE);
 
     }
+    
+   
 }

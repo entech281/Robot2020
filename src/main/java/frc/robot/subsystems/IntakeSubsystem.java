@@ -67,7 +67,7 @@ public class IntakeSubsystem extends BaseSubsystem {
             TalonSettings motorSettings = TalonSettingsBuilder.defaults().withCurrentLimits(20, 15, 200).brakeInNeutral()
                     .withDirections(false, false).noMotorOutputLimits().noMotorStartupRamping().useSpeedControl().build();
 
-            intakeMotorController = new TalonSpeedController(intakeMotor, motorSettings);
+            intakeMotorController = new TalonSpeedController(intakeMotor, motorSettings,false);
             intakeMotorController.configure();
             intakeMotor.set(ControlMode.PercentOutput, 0);
             
@@ -90,7 +90,7 @@ public class IntakeSubsystem extends BaseSubsystem {
     }
     
     @Override
-    public void customPeriodic(RobotPose rPose, FieldPose fPose) {
+    public void periodic() {
                 logger.log("Current command", getCurrentCommand());
     }
     

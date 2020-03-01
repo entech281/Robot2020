@@ -12,7 +12,7 @@ public abstract class DataLoggerFactory {
 
     public abstract DataLogger createDataLogger(String name);
 
-    private static DataLoggerFactory factory;
+    private static DataLoggerFactory factory = new TestDataLoggerFactory();
 
     public static void setLoggerFactory(DataLoggerFactory factory) {
         DataLoggerFactory.factory = factory;
@@ -22,9 +22,6 @@ public abstract class DataLoggerFactory {
         return DataLoggerFactory.factory;
     }
 
-    public static void configureForTesting() {
-        setLoggerFactory(new TestDataLoggerFactory());
-    }
 
     public static void configureForMatch() {
         setLoggerFactory(new MatchDataLoggerFactory());

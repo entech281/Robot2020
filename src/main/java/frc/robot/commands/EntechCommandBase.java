@@ -13,7 +13,7 @@ public class EntechCommandBase extends CommandBase {
 
     public EntechCommandBase(BaseSubsystem sub) {
         this(sub, DEFAULT_TIMEOUT_SECONDS);
-        logger = DataLoggerFactory.getLoggerFactory().createDataLogger(this.getName());
+        //logger = DataLoggerFactory.getLoggerFactory().createDataLogger(this.getName());
     }
 
     public EntechCommandBase(BaseSubsystem subsystem, double timeout) {

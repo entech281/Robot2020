@@ -52,10 +52,14 @@ public class Robot extends TimedRobot {
         oi = new OperatorInterface(subsystemManager);
     }
 
-    @Override
-    public void robotPeriodic() {
-    }
 
+
+    @Override
+    public void autonomousInit() {
+        autoCommand = AutoCommandFactory.getSelectedCommand(optionChooser.getSelected());
+        CommandScheduler.getInstance().schedule(autoCommand);
+    }    
+    
     @Override
     public void teleopInit() {
         subsystemManager.getNavXSubsystem().zeroYawMethod(false);
@@ -66,27 +70,27 @@ public class Robot extends TimedRobot {
     }
 
     @Override
-    public void teleopPeriodic() {
-        subsystemManager.periodicAll();
-        CommandScheduler.getInstance().run();
-    }
-
+    public void disabledInit() {
+        subsystemManager.getDriveSubsystem().setSpeedMode();
+    }    
+    
     @Override
-    public void autonomousInit() {
-        autoCommand = AutoCommandFactory.getSelectedCommand(optionChooser.getSelected());
-        CommandScheduler.getInstance().schedule(autoCommand);
+    public void robotPeriodic() {
+    }
+    
+    @Override
+    public void teleopPeriodic() {
+        subsystemManager.updatePoses();
+        CommandScheduler.getInstance().run();
     }
 
     @Override
     public void autonomousPeriodic() {
-        subsystemManager.periodicAll();
+        subsystemManager.updatePoses();
         CommandScheduler.getInstance().run();
 
     }
 
-    @Override
-    public void disabledInit() {
-        subsystemManager.getDriveSubsystem().setSpeedMode();
-    }
+
 
 }

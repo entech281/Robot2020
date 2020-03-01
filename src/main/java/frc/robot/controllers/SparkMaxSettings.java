@@ -85,23 +85,6 @@ public class SparkMaxSettings {
 
     }
 
-    /**
-     * Sets just the mode. Typically used when you're swtiching back and forth
-     * between modes
-     *
-     * @param spark
-     */
-    public void setMode(CANSparkMax spark, double value) {
-        CANSparkMax leader;
-        if (this.follow) {
-            leader = new CANSparkMax((int) value, MotorType.kBrushless);
-            spark.follow(leader);
-        } else {
-            pidController = spark.getPIDController();
-            pidController.setReference(value, this.ctrlType);
-        }
-    }
-
     public void setControlType(ControlType ctrlType) {
         this.follow = false;
         this.ctrlType = ctrlType;

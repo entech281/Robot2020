@@ -41,7 +41,7 @@ public class SnapToVisionTargetCommand extends EntechCommandBase {
 
     @Override
     public void execute(){
-        rp = drive.getLatestRobotPose();
+        rp = drive.getPoseSource().getRobotPose();
         logger.log("Vision data", rp.getVisionDataValidity());
         if(rp.getVisionDataValidity()){
             offset = rp.getTargetLateralOffset();

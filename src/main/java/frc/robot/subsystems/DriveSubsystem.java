@@ -118,10 +118,10 @@ public class DriveSubsystem extends BaseSubsystem {
             rearRightEncoder = rearRightSpark.getEncoder();
 
             robotDrive = new DifferentialDrive(leftSpeedController, rightSpeedController);
-            frontLeftPositionController = new SparkPositionController(frontLeftSpark, smartMotionSettings);
-            frontRightPositionController = new SparkPositionController(frontRightSpark, smartMotionSettings);
-            rearLeftPositionController = new SparkPositionController(rearLeftSpark, smartMotionSettings);
-            rearRightPositionController = new SparkPositionController(rearRightSpark, smartMotionSettings);
+            frontLeftPositionController = new SparkPositionController(frontLeftSpark, smartMotionSettings,false);
+            frontRightPositionController = new SparkPositionController(frontRightSpark, smartMotionSettings,false);
+            rearLeftPositionController = new SparkPositionController(rearLeftSpark, smartMotionSettings,false);
+            rearRightPositionController = new SparkPositionController(rearRightSpark, smartMotionSettings,false);
 
             autoController = new PositionDriveController(frontRightSpark, rearRightSpark,
                     frontLeftSpark, rearLeftSpark, smartMotionSettings, positionBuffer,
@@ -158,7 +158,7 @@ public class DriveSubsystem extends BaseSubsystem {
     }
 
     @Override
-    public void customPeriodic(RobotPose rp, FieldPose fp) {
+    public void periodic() {
         if (drive) {
             logger.log("Front Left Encoder Ticks", frontLeftEncoder.getPosition());
             logger.log("Front Right Encoder Ticks", frontRightEncoder.getPosition());
@@ -169,12 +169,9 @@ public class DriveSubsystem extends BaseSubsystem {
                 logger.log("current command", getCurrentCommand().getName());
             }
         }
-        latestRobotPose = rp;
+
     }
-    
-    public RobotPose getLatestRobotPose(){
-        return latestRobotPose;
-    }
+
 
     public void drive(DriveInstruction di) {
         if (drive) {

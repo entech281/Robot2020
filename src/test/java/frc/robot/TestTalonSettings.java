@@ -19,7 +19,7 @@ public class TestTalonSettings {
         ts.motorDirections.inverted = false;
         ts.motorDirections.sensorPhase = false;
 
-        ts.demand = 1.0;
+ 
         TalonSettings inverted = TalonSettingsBuilder.withDirectionSettings(ts, true, true);
 
         assertTrue(inverted.motorDirections.inverted);

@@ -44,10 +44,10 @@ public class PositionDriveController {
     public void activate() {
 
         positionControllerGroup = new SparkPositionControllerGroup(
-                new SparkPositionController(frontLeft, autoSettings),
-                new SparkPositionController(frontRight, autoSettings),
-                new SparkPositionController(backLeft, autoSettings),
-                new SparkPositionController(backRight, autoSettings));
+                new SparkPositionController(frontLeft, autoSettings,false),
+                new SparkPositionController(frontRight, autoSettings,false),
+                new SparkPositionController(backLeft, autoSettings,false),
+                new SparkPositionController(backRight, autoSettings,false));
         positionControllerGroup.configureAll();
         positionControllerGroup.resetPosition();
 

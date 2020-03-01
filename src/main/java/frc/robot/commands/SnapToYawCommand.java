@@ -41,7 +41,7 @@ public class SnapToYawCommand extends EntechCommandBase{
     public void initialize() {
         drive.setPositionMode();
         setpoint = desiredYaw;
-        rPose = drive.getLatestRobotPose();
+        rPose = drive.getPoseSource().getRobotPose();
         if(relative){
             setpoint = rPose.getRobotPosition().getTheta() + setpoint;
             setpoint = NavXDataProcessor.bringInRange(setpoint);
@@ -56,7 +56,7 @@ public class SnapToYawCommand extends EntechCommandBase{
     
     @Override
     public void execute() {
-        rPose = drive.getLatestRobotPose();
+        rPose = drive.getPoseSource().getRobotPose();
         output = controller.calculate(rPose.getRobotPosition().getTheta());
         logger.log("Setpoint", controller.getSetpoint());
         logger.log("Offset", controller.getPositionError());

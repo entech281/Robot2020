@@ -1,9 +1,14 @@
 package frc.robot.controllers;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.ControlType;
 
-public class SparkPositionController extends BaseSparkController {
+public class SparkPositionController extends BaseSparkController implements PositionController{
 
+    public SparkPositionController(CANSparkMax spark, SparkMaxSettings settings, boolean reversed) {
+        super(spark, settings,reversed);
+    }    
+    
     private double desiredPosition = 0.0;
 
     public double getDesiredPosition() {
@@ -17,11 +22,32 @@ public class SparkPositionController extends BaseSparkController {
      */
     public void setDesiredPosition(double desiredPosition) {
         this.desiredPosition = desiredPosition;
-        this.resetMode(desiredPosition);
-
+        spark.getPIDController().setReference(correctDirection(desiredPosition), ControlType.kCurrent);
     }
 
-    public SparkPositionController(CANSparkMax spark, SparkMaxSettings settings) {
-        super(spark, settings);
+    @Override
+    public double getActualPosition() {
+        return correctDirection(spark.getEncoder().getPosition());
     }
+
+    @Override
+    public boolean isAtLowerLimit() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public boolean isAtUpperLimit() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public boolean isEnabled() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void init() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+ 
 }
