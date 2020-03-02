@@ -1,5 +1,13 @@
 package frc.robot.utils;
 
+import java.util.Base64;
+
+import org.opencv.core.Mat;
+import org.opencv.core.MatOfByte;
+import org.opencv.imgcodecs.Imgcodecs;
+
+import edu.wpi.cscore.CvSource;
+import edu.wpi.cscore.VideoMode;
 import frc.robot.RobotConstants;
 import frc.robot.pose.ShooterConfiguration;
 import frc.robot.pose.TargetLocation;
@@ -8,7 +16,6 @@ import frc.robot.pose.VisionData;
 public class VisionDataProcessor {
 
     private String buffer = "";
-    private String retval;
     private int visionDataMemory = 5;
     private int num_consecutive_bad_data = 0;
     private final int TOLERANCE_CONSECUTIVE_BAD_DATA = 20;
@@ -24,7 +31,7 @@ public class VisionDataProcessor {
         return new TargetLocation(distance, angle);
     }
 
-    //distance in inches
+    // distance in inches
     public ShooterConfiguration calculateShooterConfiguration(TargetLocation location) {
         double distance = location.getDistanceToTarget();
         double speedRPM = 5350;
@@ -34,7 +41,7 @@ public class VisionDataProcessor {
     }
 
     public void addInput(String readings) {
-        if(readings.length() < 2)
+        if (readings.length() < 2)
             num_consecutive_bad_data += 1;
         else
             num_consecutive_bad_data = 0;
@@ -60,14 +67,14 @@ public class VisionDataProcessor {
             buffer = buffer.substring(buffer.lastIndexOf("\n"));
         }
     }
-    
-    private boolean noRecentDataAvailable(){
+
+    private boolean noRecentDataAvailable() {
         return num_consecutive_bad_data > TOLERANCE_CONSECUTIVE_BAD_DATA;
     }
 
     public VisionData getCurrentVisionData() {
         parseBuffer();
-        if(noRecentDataAvailable()){
+        if (noRecentDataAvailable()) {
             visionDataStack.add(VisionData.DEFAULT_VISION_DATA);
         }
         return visionDataStack.peek();
@@ -80,15 +87,21 @@ public class VisionDataProcessor {
         double lateralOffset = -1;
         double verticalOffset = -1;
         double blobWidth = -1;
-
         double frameRate = 0.0;
+        Mat frame = null;
 
         if (visionTargetFound) {
             lateralOffset = RobotConstants.ROBOT_DEFAULTS.VISION.FRAME_WIDTH / 2 - Integer.parseInt(outputData[1]);
             verticalOffset = Double.parseDouble(outputData[2]);
             blobWidth = Double.parseDouble(outputData[3]);
             frameRate = Double.parseDouble(outputData[4]);
+            frame = getMatFromBase64String(outputData[5]);
         }
-        return new VisionData(visionTargetFound, lateralOffset, verticalOffset, blobWidth);
+        return new VisionData(visionTargetFound, lateralOffset, verticalOffset, blobWidth, frame);
+    }
+
+    private Mat getMatFromBase64String(String encoded){
+        byte[] imgBytes = Base64.getDecoder().decode(encoded);
+        return Imgcodecs.imdecode(new MatOfByte(imgBytes), Imgcodecs.CV_LOAD_IMAGE_UNCHANGED);
     }
 }

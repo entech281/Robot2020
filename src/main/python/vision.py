@@ -1,4 +1,4 @@
-import sensor, image, time
+import sensor, image, time, ubinascii
 
 def draw_lines(x, y):
     centerX = 80
@@ -43,7 +43,7 @@ while(True):
           height = abs(b.y() - b.h())
           draw_lines(x, y)
           img.draw_rectangle( b.rect(), color = (0, 0, 255), thickness = 3)
-    output = f"{str(target_found)} {str(x)} {str(y)} {str(width)} {str(clock.fps())} -"
+    output = str(target_found) +" "+ str(x) + " "+ str(y) +" " + str(width) + " " + str(clock.fps()) + " " + ubinascii.b2a_base64(img) + " -"
     if counter % 50 == 0:
         save(img, num_blobs, num_compact, counter)
     print(output)
