@@ -20,6 +20,41 @@ public class ConsoleDataLogger extends DataLogger {
     }
 
     @Override
+    public void driverinfo(String key, String value) {
+        printMessage("%s", key, value);
+    }
+
+    @Override
+    public void driverinfo(String key, Object value) {
+        printMessage("%s", key, "" + value);
+    }
+
+    @Override
+    public void driverinfo(String key, double value) {
+        printMessage("%.3f", key, value);
+    }
+
+    @Override
+    public void driverinfo(String key, int value) {
+        printMessage("%d", key, value);
+    }
+
+    @Override
+    public void driverinfo(String key, long value) {
+        printMessage("%d", key, value);
+    }
+
+    @Override
+    public void driverinfo(String key, boolean value) {
+        printMessage("%s", key, Boolean.toString(value));
+    }
+
+    @Override
+    public void warn(String message) {
+        printMessage("%s", "", message);
+    }
+
+    @Override
     public void log(String key, String value) {
         printMessage("%s", key, value);
     }
@@ -49,10 +84,5 @@ public class ConsoleDataLogger extends DataLogger {
         printMessage("%s", key, Boolean.toString(value));
     }
 
-    @Override
-    public void warn(String message) {
-        printMessage("%s", "", message);
-
-    }
 
 }
