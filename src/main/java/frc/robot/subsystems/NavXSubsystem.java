@@ -10,9 +10,12 @@ import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.Timer;
-import frc.robot.posev2.FieldPose;
-import frc.robot.posev2.NavXData;
-import frc.robot.posev2.RobotPose;
+import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.commands.SingleShotCommand;
+import frc.robot.pose.FieldPose;
+import frc.robot.pose.NavXData;
+import frc.robot.pose.RobotPose;
+import frc.robot.utils.NavXDataProcessor;
 
 /**
  *
@@ -24,10 +27,14 @@ public class NavXSubsystem extends BaseSubsystem {
     private Timer timer;
     private double TIMEOUT_CALIBRATION_SECONDS = 31;
     private boolean navXWorking = true;
+    private boolean inverted = false;
 
     public NavXSubsystem() {
         timer = new Timer();
+        inverted = false;
     }
+    
+    
 
     @Override
     public void initialize() {
@@ -41,11 +48,44 @@ public class NavXSubsystem extends BaseSubsystem {
             }
         }
         navX.zeroYaw();
+        logger.log("Nav angle", navX.getYaw());
         logger.log("NavX Initialize Finish", false);
     }
 
     public NavXData updateNavXAngle() {
-        return new NavXData(navX.getAngle(), this.navXWorking);
+        return new NavXData(calculateNavX(navX.getYaw()), this.navXWorking);
     }
+
+    public void enableOffset(){
+        inverted = true;
+    }
+    
+    @Override
+    public void customPeriodic(RobotPose rPose, FieldPose fPose) {
+        logger.driverinfo("Angle reported by NavX", calculateNavX(navX.getYaw()));
+    }
+    
+    public Command zeroYawOfNavX(boolean inverted){
+        return new SingleShotCommand(this) {
+            @Override
+            public void doCommand() {
+                zeroYawMethod(inverted);
+            }
+        };
+    }
+    
+    public double calculateNavX(double angle){
+        if(inverted){
+            angle = NavXDataProcessor.bringInRange(angle + 180);
+        }
+        return angle;
+    }
+    
+    public void zeroYawMethod(boolean inverted){
+        navX.zeroYaw();
+        if(inverted)
+            enableOffset();
+    }
+    
 
 }

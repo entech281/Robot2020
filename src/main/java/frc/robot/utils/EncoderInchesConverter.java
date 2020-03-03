@@ -18,12 +18,12 @@ public class EncoderInchesConverter {
         this.encoderCountsPerInch = encoderCounts / (wheelDiameter * Math.PI) * gearRatio;
     }
 
-    public double toInches(int encoderCounts) {
+    public double toInches(double encoderCounts) {
         return (double) (encoderCounts) / encoderCountsPerInch;
     }
 
-    public int toCounts(double inches) {
-        return (int) (encoderCountsPerInch * inches);
+    public double toCounts(double inches) {
+        return (encoderCountsPerInch * inches);
     }
 
 }

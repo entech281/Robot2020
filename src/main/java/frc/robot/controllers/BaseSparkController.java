@@ -1,7 +1,5 @@
 package frc.robot.controllers;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.revrobotics.CANSparkMax;
 
 public abstract class BaseSparkController {
@@ -23,17 +21,17 @@ public abstract class BaseSparkController {
     }
 
     /**
-     * A little tricky-- this is an Integer so that we can return Null if this
-     * talon is a follower. That's because a follower is configured because its
+     * A little tricky-- this is an Double so that we can return Null if this
+     * spark is a follower. That's because a follower is configured because its
      * encoder is broken!
      *
      * @return
      */
-    public Integer getActualPosition() {
+    public Double getActualPosition() {
         if (this.settings.follow) {
             return null;
         } else {
-            return (int) this.getSpark().getEncoder().getPosition();
+            return (double) this.getSpark().getEncoder().getPosition();
         }
 
     }

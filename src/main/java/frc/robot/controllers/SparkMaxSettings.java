@@ -9,9 +9,6 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 public class SparkMaxSettings {
 
-    /**
-     *
-     */
     public static final int TIMEOUT_MS = 10;
     public static final int PID_SLOT = 0;
     public static final int PROFILE_SLOT = 0;
@@ -32,21 +29,39 @@ public class SparkMaxSettings {
     public CANPIDController pidController;
 
     public SparkMaxSettings copy() {
-        SparkMaxSettings settingsNew = new SparkMaxSettings();
-        settingsNew.setControlType(ctrlType);
-        settingsNew.gains = this.gains;
-        settingsNew.currentLimits = this.currentLimits;
-        settingsNew.rampUp = this.rampUp;
-        settingsNew.brakeMode = this.brakeMode;
-        settingsNew.motorDirections = this.motorDirections;
-        settingsNew.outputLimits = this.outputLimits;
-        settingsNew.profile = this.profile;
-        return settingsNew;
+        SparkMaxSettings settings = new SparkMaxSettings();
+        settings.gains.d = gains.d;
+        settings.gains.f = gains.f;
+        settings.gains.i = gains.i;
+        settings.gains.p = gains.p;
+
+        settings.currentLimits.smartLimit = currentLimits.smartLimit;
+
+        settings.outputLimits.maxMotorOutput = outputLimits.maxMotorOutput;
+        settings.outputLimits.minMotorOutput = outputLimits.minMotorOutput;
+
+        settings.rampUp.neutralDeadband = rampUp.neutralDeadband;
+        settings.rampUp.rampUpSecondsClosedLoop = rampUp.rampUpSecondsClosedLoop;
+        settings.rampUp.rampUpSecondsOpenLoop = rampUp.rampUpSecondsOpenLoop;
+
+        settings.motorDirections.inverted = motorDirections.inverted;
+        settings.motorDirections.sensorPhase = motorDirections.sensorPhase;
+
+        settings.brakeMode = brakeMode;
+        settings.profile.accelStrategy = profile.accelStrategy;
+        settings.profile.allowableClosedLoopError = profile.allowableClosedLoopError;
+        settings.profile.cruiseVelocityRPM = profile.cruiseVelocityRPM;
+        settings.profile.maxAccel = profile.maxAccel;
+
+        settings.ctrlType = ctrlType;
+        settings.demand = demand;
+        settings.follow = follow;
+        return settings;
     }
 
     public void configureSparkMax(CANSparkMax spark) {
-        spark.restoreFactoryDefaults();
         //Current Limits
+        spark.restoreFactoryDefaults();
         pidController = new CANPIDController(spark);
 
         spark.setCANTimeout(TIMEOUT_MS);
@@ -54,16 +69,19 @@ public class SparkMaxSettings {
         spark.setClosedLoopRampRate(rampUp.rampUpSecondsClosedLoop);
         spark.setOpenLoopRampRate(rampUp.rampUpSecondsOpenLoop);
         spark.setInverted(motorDirections.inverted);
+        spark.setClosedLoopRampRate(rampUp.rampUpSecondsClosedLoop);
         spark.setIdleMode(brakeMode);
-        spark.getEncoder().setPositionConversionFactor(spark.getEncoder().getCountsPerRevolution());
 
         pidController.setOutputRange(outputLimits.minMotorOutput, outputLimits.maxMotorOutput);
         pidController.setFF(gains.f);
         pidController.setI(gains.i);
         pidController.setP(gains.p);
         pidController.setD(gains.d);
-        pidController.setSmartMotionAccelStrategy(profile.trapezoStrategy, PID_SLOT);
+        pidController.setSmartMotionAccelStrategy(profile.accelStrategy, PID_SLOT);
         pidController.setSmartMotionAllowedClosedLoopError(profile.allowableClosedLoopError, PID_SLOT);
+        pidController.setSmartMotionMaxAccel(profile.maxAccel, PID_SLOT);
+        pidController.setSmartMotionMaxVelocity(profile.cruiseVelocityRPM, PID_SLOT);
+        pidController.setSmartMotionMinOutputVelocity(-profile.cruiseVelocityRPM, PID_SLOT);
 
     }
 
@@ -111,8 +129,9 @@ public class SparkMaxSettings {
     public static class MotionProfile {
 
         public int cruiseVelocityRPM = 3200;
-        public AccelStrategy trapezoStrategy = AccelStrategy.kTrapezoidal;
-        public int allowableClosedLoopError = 20;
+        public AccelStrategy accelStrategy = AccelStrategy.kTrapezoidal;
+        public double allowableClosedLoopError = 20;
+        public int maxAccel = 20;
     }
 
     public static class CurrentLimits {

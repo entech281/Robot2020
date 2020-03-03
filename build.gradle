@@ -1,8 +1,12 @@
 plugins {
     id "java"
     id "eclipse"
-    id "edu.wpi.first.GradleRIO" version "2020.1.2"
+    id "edu.wpi.first.GradleRIO" version "2020.3.2"
+    id 'jacoco'
     id "com.github.spotbugs" version "3.0.0"
+    
+    //id 'net.saliman.cobertura' version '3.0.0'
+    id 'com.github.ksoichiro.console.reporter' version '0.6.2'
 }
 
 sourceCompatibility = JavaVersion.VERSION_11
@@ -39,6 +43,18 @@ deploy {
     }
 }
 
+//jacoco {
+//    toolVersion = "0.8.5"
+//    reportsDir = file("$buildDir/customJacocoReportDir")
+//}
+
+//test {
+//    jacoco {
+//        destinationFile = file("$buildDir/jacoco/jacocoTest.exec")
+//        classDumpDir = file("$buildDir/jacoco/classpathdumps")
+//    }
+//}
+
 // Set this to true to enable desktop support.
 def includeDesktopSupport = false
 
@@ -60,6 +76,10 @@ dependencies {
 
     // https://mvnrepository.com/artifact/org.mockito/mockito-core
     testCompile group: 'org.mockito', name: 'mockito-core', version: '2.1.0'
+
+    // https://mvnrepository.com/artifact/org.powermock/powermock-mockito-release-full
+    testCompile group: 'org.powermock', name: 'powermock-mockito-release-full', version: '1.5.4', ext: 'pom'
+
 
 
     testImplementation 'junit:junit:4.12'
@@ -85,3 +105,12 @@ tasks.withType(com.github.spotbugs.SpotBugsTask) {
     html.enabled = true
   }
 }
+
+jacocoTestReport {
+    reports {
+        xml.enabled = true
+        html.enabled = true
+    }
+}
+
+check.dependsOn jacocoTestReport

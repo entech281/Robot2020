@@ -1,7 +1,7 @@
 package frc.robot.controllers;
 
+import com.revrobotics.CANPIDController;
 import com.revrobotics.ControlType;
-import com.revrobotics.SparkMax;
 import com.revrobotics.CANPIDController.AccelStrategy;
 import com.revrobotics.CANSparkMax.IdleMode;
 
@@ -46,38 +46,19 @@ public class SparkMaxSettingsBuilder {
 
     public interface SparkControlMode {
 
-        public PositionControlSettings.GainSettings usePositionControl();
+        public PositionControlSettings usePositionControl();
+
+        public SmartMotionControl.GainSettings useSmartMotionControl();
 
         public SpeedControlSettings useSpeedControl();
-
-        public SpeedControlSettings.GainSettingsSpeed useSpeedControlWithPID();
-
     }
 
     public interface PositionControlSettings {
 
-        public interface GainSettings {
-
-            ProfileSettings withGains(double f, double p, double i, double d);
-        }
-
-        public interface ProfileSettings {
-
-            ProfileSettings withMotionProfile(int cruiseVelocityRPM, AccelStrategy accelStrategy, int allowableError);
-        }
-
-        public interface Finish {
-
-            public SparkMaxSettings build();
-        }
+        Finish withGains(double f, double p, double i, double d);
     }
 
     public interface SpeedControlSettings {
-
-        public interface GainSettingsSpeed {
-
-            SpeedControlSettings withGainsSpeed(double f, double p, double i, double d);
-        }
 
         public SparkMaxSettings build();
     }
@@ -117,10 +98,44 @@ public class SparkMaxSettingsBuilder {
         public SparkControlMode withMotorRampUpOnStart(double secondsToFullPower);
     }
 
+    public interface SmartMotionControl {
+
+        public interface GainSettings {
+
+            public StrategySettings withPositionGains(double f, double p, double i, double d);
+        }
+
+        public interface StrategySettings {
+
+            public VelocityLimits useAccelerationStrategy(CANPIDController.AccelStrategy strategy);
+        }
+
+        public interface VelocityLimits {
+
+            public AccelerationLimits withMaxVelocity(int maxVel);
+        }
+
+        public interface AccelerationLimits {
+
+            public AllowedError withMaxAcceleration(int maxAccel);
+        }
+
+        public interface AllowedError {
+
+            public Finish withClosedLoopError(int error);
+        }
+    }
+
+    public interface Finish {
+
+        SparkMaxSettings build();
+    }
+
     public static class Builder
-            implements SparkControlMode, PositionControlSettings, PositionControlSettings.GainSettings,
-            PositionControlSettings.ProfileSettings, PositionControlSettings.Finish, SpeedControlSettings,
-            SafetySettings, SafetySettings.BrakeMode, DirectionSettings, MotorOutputLimits, MotorRamping, SpeedControlSettings.GainSettingsSpeed {
+            implements SparkControlMode, PositionControlSettings, SpeedControlSettings,
+            SafetySettings, SafetySettings.BrakeMode, DirectionSettings, MotorOutputLimits, MotorRamping,
+            SmartMotionControl, SmartMotionControl.AccelerationLimits, SmartMotionControl.AllowedError, SmartMotionControl.GainSettings,
+            SmartMotionControl.StrategySettings, SmartMotionControl.VelocityLimits, Finish {
 
         private SparkMaxSettings settings = new SparkMaxSettings();
 
@@ -199,16 +214,7 @@ public class SparkMaxSettingsBuilder {
         }
 
         @Override
-        public ProfileSettings withMotionProfile(int cruiseVelocityRPM, AccelStrategy accelStrategy,
-                int allowableError) {
-            settings.profile.allowableClosedLoopError = allowableError;
-            settings.profile.cruiseVelocityRPM = cruiseVelocityRPM;
-            settings.profile.trapezoStrategy = accelStrategy;
-            return this;
-        }
-
-        @Override
-        public ProfileSettings withGains(double f, double p, double i, double d) {
+        public Finish withGains(double f, double p, double i, double d) {
             settings.gains.f = f;
             settings.gains.p = p;
             settings.gains.i = i;
@@ -217,17 +223,8 @@ public class SparkMaxSettingsBuilder {
         }
 
         @Override
-        public SpeedControlSettings withGainsSpeed(double f, double p, double i, double d) {
-            settings.gains.f = f;
-            settings.gains.p = p;
-            settings.gains.i = i;
-            settings.gains.d = d;
-            return this;
-        }
-
-        @Override
-        public GainSettings usePositionControl() {
-            settings.setControlType(ControlType.kSmartMotion);
+        public PositionControlSettings usePositionControl() {
+            settings.setControlType(ControlType.kPosition);
             return this;
         }
 
@@ -238,8 +235,41 @@ public class SparkMaxSettingsBuilder {
         }
 
         @Override
-        public GainSettingsSpeed useSpeedControlWithPID() {
-            settings.setControlType(ControlType.kSmartVelocity);
+        public GainSettings useSmartMotionControl() {
+            settings.setControlType(ControlType.kSmartMotion);
+            return this;
+        }
+
+        @Override
+        public VelocityLimits useAccelerationStrategy(AccelStrategy strategy) {
+            settings.profile.accelStrategy = strategy;
+            return this;
+        }
+
+        @Override
+        public Finish withClosedLoopError(int error) {
+            settings.profile.allowableClosedLoopError = error;
+            return this;
+        }
+
+        @Override
+        public StrategySettings withPositionGains(double f, double p, double i, double d) {
+            settings.gains.f = f;
+            settings.gains.p = p;
+            settings.gains.i = i;
+            settings.gains.d = d;
+            return this;
+        }
+
+        @Override
+        public AccelerationLimits withMaxVelocity(int maxVel) {
+            settings.profile.cruiseVelocityRPM = maxVel;
+            return this;
+        }
+
+        @Override
+        public AllowedError withMaxAcceleration(int maxAccel) {
+            settings.profile.maxAccel = maxAccel;
             return this;
         }
 

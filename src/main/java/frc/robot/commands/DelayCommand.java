@@ -1,35 +1,30 @@
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.wpilibj.command.CommandGroup;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.subsystems.ClimbSubsystem;
-import frc.robot.subsystems.ShooterSubsystem;
 
 public class DelayCommand extends CommandBase {
 
-    ClimbSubsystem climb;
     double time;
+    Timer timer;
 
-    public DelayCommand(ClimbSubsystem climb, double seconds) {
-        this.climb = climb;
+    public DelayCommand(double seconds) {
+        timer = new Timer();
         time = seconds;
     }
 
     @Override
     public void initialize() {
-
+        timer.start();
     }
 
     @Override
     public void execute() {
-        climb.delay(time);
     }
 
     @Override
     public boolean isFinished() {
-        return true;
+        return timer.hasElapsed(time);
     }
 }

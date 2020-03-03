@@ -3,14 +3,14 @@ package frc.robot.subsystems;
 import java.util.*;
 
 import frc.robot.logger.DataLoggerFactory;
-import frc.robot.posev2.FieldPoseManager;
-import frc.robot.posev2.RobotPoseManager;
-import frc.robot.pose.RobotPose;
+import frc.robot.pose.FieldPoseManager;
+import frc.robot.pose.RobotPoseManager;
 
 public class SubsystemManager {
 
+    boolean hasClimb = false;
+
     public SubsystemManager() {
-        DataLoggerFactory.configureForMatch();
     }
 
     public DriveSubsystem getDriveSubsystem() {
@@ -25,10 +25,6 @@ public class SubsystemManager {
         return navXSubsystem;
     }
 
-    public ElevatorSubsystem getElevatorSubsystem() {
-        return elevatorSubsystem;
-    }
-
     public ClimbSubsystem getClimbSubsystem() {
         return climbSubsystem;
     }
@@ -36,14 +32,22 @@ public class SubsystemManager {
     public ShooterSubsystem getShooterSubsystem() {
         return shootSubsystem;
     }
+    
+    public VisionSubsystem getVisionSubsystem(){
+        return visionSubsystem;
+    }
+
+    public FieldPoseManager getFieldPoseManager(){
+        return fieldPoseManager;
+    }
 
     private DriveSubsystem driveSubsystem;
     private IntakeSubsystem intakeSubsystem;
     private NavXSubsystem navXSubsystem;
     private ShooterSubsystem shootSubsystem;
     private ClimbSubsystem climbSubsystem;
-    private ElevatorSubsystem elevatorSubsystem;
     private ColorSubsystem colorSubsystem;
+    private VisionSubsystem visionSubsystem;
 
     private final RobotPoseManager robotPoseManager = new RobotPoseManager();
     private final FieldPoseManager fieldPoseManager = new FieldPoseManager();
@@ -56,10 +60,10 @@ public class SubsystemManager {
         navXSubsystem = new NavXSubsystem();
         shootSubsystem = new ShooterSubsystem();
         climbSubsystem = new ClimbSubsystem();
-        elevatorSubsystem = new ElevatorSubsystem();
         colorSubsystem = new ColorSubsystem();
+        visionSubsystem = new VisionSubsystem();
 
-        Collections.addAll(allSubsystems, driveSubsystem, intakeSubsystem, navXSubsystem, shootSubsystem, climbSubsystem, elevatorSubsystem);
+        Collections.addAll(allSubsystems, driveSubsystem, intakeSubsystem, navXSubsystem, visionSubsystem, shootSubsystem);
 
         allSubsystems.forEach(subsystem -> subsystem.initialize());
 
@@ -76,7 +80,9 @@ public class SubsystemManager {
     private void updatePoses() {
         robotPoseManager.updateEncoders(driveSubsystem.getEncoderValues());
         robotPoseManager.updateNavxAngle(navXSubsystem.updateNavXAngle());
+        robotPoseManager.updateVisionData(visionSubsystem.getVisionData());
         robotPoseManager.updateWheelColor(colorSubsystem.getRobotColorSensorReading());
+        robotPoseManager.update();
     }
 
 }

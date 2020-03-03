@@ -6,13 +6,12 @@
  /*----------------------------------------------------------------------------*/
 package frc.robot.subsystems;
 
-import java.util.ArrayList;
-import java.util.List;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.logger.DataLogger;
 import frc.robot.logger.DataLoggerFactory;
-import frc.robot.posev2.FieldPose;
-import frc.robot.posev2.RobotPose;
+import frc.robot.pose.FieldPose;
+import frc.robot.pose.RobotPose;
+import static frc.robot.RobotConstants.AVAILABILITY.*;
 
 /**
  * Add your docs here.
@@ -24,7 +23,6 @@ public abstract class BaseSubsystem extends SubsystemBase {
     protected DataLogger logger;
 
     public BaseSubsystem() {
-        DataLoggerFactory.configureForMatch();
         this.logger = DataLoggerFactory.getLoggerFactory().createDataLogger(this.getName());
     }
 
