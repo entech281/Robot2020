@@ -48,12 +48,12 @@ public class RobotConstants {
 
         public static final RobotPosition START_POSITION = new RobotPosition(0, 0, 0);
         public static final RobotPose START_POSE = new RobotPose(START_POSITION, VISION.DEFAULT_VISION_DATA);
-
         public interface VISION {
 
             public static final VisionData DEFAULT_VISION_DATA = new VisionData(false, -1, -1, -1);
             public static final int FRAME_WIDTH = 160;
             public static final int FRAME_HEIGHT = 120;
+            public static final double CAMERA_RANGE_ANGLE = 30; // in degrees
         }
     }
 
