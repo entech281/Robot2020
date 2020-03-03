@@ -1,20 +1,23 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.Joystick;
-import frc.robot.commands.AutonomousPathCommand;
+import frc.robot.commands.AdjustBackwardHoodCommand;
+import frc.robot.commands.AdjustRaiseHoodCommand;
 import frc.robot.commands.CommandGroupFactory;
 import frc.robot.commands.DriveForwardSetDistance;
+import frc.robot.commands.HoodHomingCommand;
 import frc.robot.commands.SnapToVisionTargetCommand;
 import frc.robot.commands.SnapToYawCommand;
 import frc.robot.commands.TankDriveCommand;
-import frc.robot.path.AutoPathFactory;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.SubsystemManager;
 
 public class OperatorInterface {
 
     private Joystick driveStick;
-    private JoystickButtonManager manager;
+    private Joystick operatorPanel;
+    private JoystickButtonManager joystickManager;
+    private JoystickButtonManager operatorPanelManager;
     private SubsystemManager subsystemManager;
     private DriveSubsystem drive;
     private CommandGroupFactory commandFactory;
@@ -23,73 +26,85 @@ public class OperatorInterface {
         this.subsystemManager = subMan;
         commandFactory = new CommandGroupFactory((subsystemManager));
         this.driveStick = new Joystick(RobotConstants.GAMEPAD.DRIVER_JOYSTICK);
-        this.manager = new JoystickButtonManager(driveStick);
-
-//        manager.addButton(RobotConstants.BUTTONS.INTAKE_BUTTON)
-//                .whenPressed(new StartIntakeCommand(subsystemManager.getIntakeSubsystem(), subsystemManager.getElevatorSubsystem(), subsystemManager.getShooterSubsystem()))
-//                .whenReleased(new StopIntakeCommand(subsystemManager.getIntakeSubsystem(), subsystemManager.getElevatorSubsystem()))
-//                .add();
-         
-         manager.addButton(RobotConstants.BUTTONS.INTAKE_BUTTON)
-                 .whenPressed(commandFactory.getStartIntakeCommandGroup())
-                 .whenReleased(commandFactory.getStopIntakeCommandGroup())
-                 .add();
-
-//        manager.addButton(RobotConstants.BUTTONS.START_SHOOTER_BUTTON)
-//                .whenPressed(new StartShooterCommand(subsystemManager.getShooterSubsystem(), subsystemManager.getElevatorSubsystem()))
-//                .whenReleased(new StopShooterCommand(subsystemManager.getShooterSubsystem()))
-//                .add();
+        this.operatorPanel = new Joystick(RobotConstants.GAMEPAD.OPERATOR_PANEL);
+        this.joystickManager = new JoystickButtonManager(driveStick);
+        this.operatorPanelManager = new JoystickButtonManager(operatorPanel);
         
-        manager.addButton(RobotConstants.BUTTONS.START_SHOOTER_BUTTON)
-                 .whenPressed(commandFactory.getStartShooterCommandGroup())
-                 .whenReleased(commandFactory.getStopShooterCommandGroup())
-                 .add();
-        
-        manager.addButton(RobotConstants.BUTTONS.FIRE_BUTTON)
-                .whenPressed(subsystemManager.getElevatorSubsystem().start())
-                .whenReleased(subsystemManager.getElevatorSubsystem().stop())
-                .add();
-
-        
-        drive = subsystemManager.getDriveSubsystem();
-        
-        manager.addButton(4)
-                .whenPressed(new DriveForwardSetDistance(drive,48))
+        operatorPanelManager.addButton(RobotConstants.BUTTONS.TURN_SHOOTER_ON)
+                .whenPressed(commandFactory.getStartShooterCommandGroup())
+                .whenReleased(commandFactory.getStopShooterCommandGroup())
                 .add();
         
-        manager.addButton(6)
-                .whenPressed(new SnapToYawCommand(subsystemManager.getNavXSubsystem(), subsystemManager.getDriveSubsystem(), -90, true))
-                .add();
-
-
-        manager.addButton(RobotConstants.BUTTONS.RESET_BUTTON)
-                .whenPressed(drive.reset())
-                .add();
-
-        manager.addButton(10)
+        operatorPanelManager.addButton(RobotConstants.BUTTONS.ENABLE_AUTO_HOOD)
                 .whenPressed(subsystemManager.getShooterSubsystem().enableAutoShooting())
                 .whenReleased(subsystemManager.getShooterSubsystem().disableAutoShooting())
                 .add();
-
-//        manager.addButton(7)
-//                .whenPressed(new HoodHomingCommand(subsystemManager.getShooterSubsystem()))
+        
+        operatorPanelManager.addButton(RobotConstants.BUTTONS.DEPLOY_INTAKE)
+                .whileHeld(commandFactory.getStartIntakeCommandGroup())
+                .whenReleased(commandFactory.getStopIntakeCommandGroup())
+                .add();
+        
+        operatorPanelManager.addButton(RobotConstants.BUTTONS.HOOD_FORWARD_ADJUST)
+                .whileHeld(new AdjustRaiseHoodCommand(subsystemManager.getShooterSubsystem()))
+                .add();
+        
+        operatorPanelManager.addButton(RobotConstants.BUTTONS.HOOD_BACKWARD_ADJUST)
+                .whileHeld(new AdjustBackwardHoodCommand(subsystemManager.getShooterSubsystem()))
+                .add();
+                
+        operatorPanelManager.addButton(RobotConstants.BUTTONS.SELECT_PRESET_1)
+                .whenPressed(subsystemManager.getShooterSubsystem().selectPreset1())
+                .add();
+        
+        operatorPanelManager.addButton(RobotConstants.BUTTONS.SELECT_PRESET_2)
+                .whenPressed(subsystemManager.getShooterSubsystem().selectPreset2())
+                .add();
+        
+        drive = subsystemManager.getDriveSubsystem();
+        
+        joystickManager.addButton(RobotConstants.BUTTONS.SNAP_TO_TARGET)
+                .whenPressed(new SnapToVisionTargetCommand(drive).withTimeout(5))
+                .add();
+        
+        joystickManager.addButton(RobotConstants.BUTTONS.DRIVER_SHOOT)
+                .whenPressed(subsystemManager.getIntakeSubsystem().startElevator())
+                .whenReleased(subsystemManager.getIntakeSubsystem().stopElevator())
+                .add();
+        
+        joystickManager.addButton(12)
+                .whenPressed(new HoodHomingCommand(subsystemManager.getShooterSubsystem()))
+                .add();
+        
+//        joystickManager.addButton(9)
+//                .whenPressed(new DriveForwardSetDistance(drive, 24))
 //                .add();
-        manager.addButton(7)
-                .whenPressed(commandFactory.getHoodHomingCommandGroup())
-                .add();
-
-        manager.addButton(RobotConstants.BUTTONS.RESET_BUTTON)
-                .whenPressed(drive.reset())
+//        
+//        joystickManager.addButton(8)
+//                .whenPressed(new SnapToYawCommand(drive, 90, true))
+//                .add();
+        
+        joystickManager.addButton(RobotConstants.BUTTONS.OUTAKE)
+                .whenPressed(subsystemManager.getIntakeSubsystem().reverse())
+                .whenReleased(subsystemManager.getIntakeSubsystem().stopEverything())
                 .add();
         
-        manager.addButton(3)
-                .whenPressed(new SnapToVisionTargetCommand(subsystemManager.getDriveSubsystem(), subsystemManager.getVisionSubsystem()))
+        joystickManager.addButton(8)
+                .whenPressed(new HoodHomingCommand(subsystemManager.getShooterSubsystem()))
                 .add();
         
-        manager.addButton(12)
-                .whenPressed(new AutonomousPathCommand(new AutoPathFactory(subsystemManager, commandFactory).middleSixBallAuto()))
+        joystickManager.addButton(9)
+                .whenPressed(subsystemManager.getShooterSubsystem().goTo10Degrees())
                 .add();
-
+        
+        joystickManager.addButton(6)
+                .whenPressed(new SnapToYawCommand(drive, 2.5, true).withTimeout(0.25))
+                .add();
+        
+        joystickManager.addButton(5)
+                .whenPressed(new SnapToYawCommand(drive, -2.5, true).withTimeout(0.25))
+                .add();
+        
         drive.setDefaultCommand(new TankDriveCommand(drive, driveStick));
 
     }

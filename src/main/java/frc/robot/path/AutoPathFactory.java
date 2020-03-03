@@ -28,17 +28,24 @@ public class AutoPathFactory {
         this.commandFactory = commandFactory;
     }
     
-    //Start middle shoot 3 balls and pick up 3 more
+    //Start middle shoot 3 balls and pick up 3 more (8 seconds)
     public Command[] middleSixBallAuto(){
-        return AutoPathBuilder.builder(subsystemManager, commandFactory).zeroYaw(false).backward(75).right(90).forward(50).right(85).forward(109).backward(75).right(130).snapToTarget().build();
+        return AutoPathBuilder.builder(subsystemManager, commandFactory, false).zeroYaw().startShooterAndHomeHood().next().delayForSeconds(5).enableAutoShooterHoodAdjustment().next().fire().delayForSeconds(3).next().backward(75).startIntake().stopJustSpinningShooterWheel().next().right(90).next().forward(50).next().right(90).next().forward(109).next().backward(75).next().right(155).next().snapToTarget().next().startShooter().next().fire().next().build();
     }
     
     public Command[] simplePath(){
-        return AutoPathBuilder.builder(subsystemManager, commandFactory).zeroYaw(false).snapToTargetStartShooter().delayForSeconds(0.5).fire().delayForSeconds(3).backward(45).build();
+        return AutoPathBuilder.builder(subsystemManager, commandFactory, false).next().zeroYaw().startShooterAndHomeHood().next().delayForSeconds(5).preset().snapToTarget().next().fire().delayForSeconds(3).next()
+                .turnOffEverything().next().fire().delayForSeconds(3)
+                .next().backward(24).next().build();
+    }
+    
+    public Command[] backUp(){
+        return AutoPathBuilder.builder(subsystemManager, commandFactory, false).next().zeroYaw().backward(24).next().build();
     }
 
     public Command[] leftEightBallAuto(){
-        return AutoPathBuilder.builder(subsystemManager, commandFactory).zeroYaw(true).forward(100).right(135).snapToTargetStartShooter().fire().delayForSeconds(2).nonRelativeTurn(180).forward(100).backward(100).right(135).snapToTargetStartShooter().fire().build();
+        //85 -> 137
+        return AutoPathBuilder.builder(subsystemManager, commandFactory, true).zeroYaw().startIntake().next().startShooterAndHomeHood().forward(140).next().enableAutoShooterHoodAdjustment().right(155).next().snapToTarget().next().fire().delayForSeconds(2).next().nonRelativeTurn(180).stopShooter().next().forward(85).next().backward(85).startShooter().next().right(155).enableAutoShooterHoodAdjustment().next().snapToTarget().next().fire().next().build();
     }
     
 }

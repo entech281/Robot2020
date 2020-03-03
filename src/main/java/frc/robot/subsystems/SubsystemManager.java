@@ -25,10 +25,6 @@ public class SubsystemManager {
         return navXSubsystem;
     }
 
-    public ElevatorSubsystem getElevatorSubsystem() {
-        return elevatorSubsystem;
-    }
-
     public ClimbSubsystem getClimbSubsystem() {
         return climbSubsystem;
     }
@@ -41,8 +37,13 @@ public class SubsystemManager {
         return visionSubsystem;
     }
 
+<<<<<<< HEAD
     public ColorPanelSubsystem getColorPanelSubsystem() {
         return colorSubsystem;
+=======
+    public FieldPoseManager getFieldPoseManager(){
+        return fieldPoseManager;
+>>>>>>> b6e6634d939425505db953fe3ceea04e8075d877
     }
 
     private DriveSubsystem driveSubsystem;
@@ -50,8 +51,12 @@ public class SubsystemManager {
     private NavXSubsystem navXSubsystem;
     private ShooterSubsystem shootSubsystem;
     private ClimbSubsystem climbSubsystem;
+<<<<<<< HEAD
     private ElevatorSubsystem elevatorSubsystem;
     private ColorPanelSubsystem colorSubsystem;
+=======
+    private ColorSubsystem colorSubsystem;
+>>>>>>> b6e6634d939425505db953fe3ceea04e8075d877
     private VisionSubsystem visionSubsystem;
 
     private final RobotPoseManager robotPoseManager = new RobotPoseManager();
@@ -65,8 +70,12 @@ public class SubsystemManager {
         navXSubsystem = new NavXSubsystem();
         shootSubsystem = new ShooterSubsystem();
         climbSubsystem = new ClimbSubsystem();
+<<<<<<< HEAD
         elevatorSubsystem = new ElevatorSubsystem();
         colorSubsystem = new ColorPanelSubsystem();
+=======
+        colorSubsystem = new ColorSubsystem();
+>>>>>>> b6e6634d939425505db953fe3ceea04e8075d877
         visionSubsystem = new VisionSubsystem();
 
         Collections.addAll(allSubsystems, driveSubsystem, intakeSubsystem, navXSubsystem, visionSubsystem, shootSubsystem);

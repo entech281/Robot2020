@@ -16,6 +16,55 @@ public class CompositeLogger extends DataLogger {
     }
 
     @Override
+    public void driverinfo(String key, Object value) {
+        for (DataLogger l : loggers) {
+            l.driverinfo(key, value);
+        }
+    }
+
+    @Override
+    public void driverinfo(String key, double value) {
+        for (DataLogger l : loggers) {
+            l.driverinfo(key, value);
+        }
+    }
+
+    @Override
+    public void driverinfo(String key, int value) {
+        for (DataLogger l : loggers) {
+            l.driverinfo(key, value);
+        }
+    }
+
+    @Override
+    public void driverinfo(String key, String value) {
+        for (DataLogger l : loggers) {
+            l.driverinfo(key, value);
+        }
+    }
+
+    @Override
+    public void driverinfo(String key, long value) {
+        for (DataLogger l : loggers) {
+            l.driverinfo(key, value);
+        }
+    }
+
+    @Override
+    public void driverinfo(String key, boolean value) {
+        for (DataLogger l : loggers) {
+            l.driverinfo(key, value);
+        }
+    }
+
+    @Override
+    public void warn(String message) {
+        for (DataLogger l : loggers) {
+            l.warn(message);
+        }
+    }
+
+    @Override
     public void log(String key, Object value) {
         for (DataLogger l : loggers) {
             l.log(key, value);
@@ -54,13 +103,6 @@ public class CompositeLogger extends DataLogger {
     public void log(String key, boolean value) {
         for (DataLogger l : loggers) {
             l.log(key, value);
-        }
-    }
-
-    @Override
-    public void warn(String message) {
-        for (DataLogger l : loggers) {
-            l.warn(message);
         }
     }
 

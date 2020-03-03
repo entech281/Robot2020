@@ -10,6 +10,7 @@ public class RobotPose {
     private VisionData visionData;
     private ColorWheel wheelColor;
     private TargetLocation targetLocation;
+    private boolean visionDataValidity;
 
     
     public RobotPose(RobotPosition robotPosition, VisionData vData) {
@@ -17,6 +18,7 @@ public class RobotPose {
         visionData = vData;
         wheelColor = null;
         targetLocation = new VisionDataProcessor().compute(vData, robotPosition.getTheta());
+        visionDataValidity = vData.targetFound();
 
     }
 
@@ -42,5 +44,9 @@ public class RobotPose {
 
     public TargetLocation getTargetLocation() {
         return targetLocation;
+    }
+    
+    public boolean getVisionDataValidity(){
+        return visionDataValidity;
     }
 }

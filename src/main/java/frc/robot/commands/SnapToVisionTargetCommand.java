@@ -8,6 +8,7 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj.controller.PIDController;
 import frc.robot.DriveInstruction;
 import frc.robot.RobotConstants;
+import frc.robot.pose.RobotPose;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.utils.PIDControlOutputProcessor;
@@ -19,16 +20,15 @@ import frc.robot.utils.PIDControlOutputProcessor;
 public class SnapToVisionTargetCommand extends EntechCommandBase {
 
     private DriveSubsystem drive;
-    private VisionSubsystem vision;
     private PIDController controller;
     private double offset;
-    private double output;
+    private double output = 0.0;
+    private RobotPose rp = RobotConstants.ROBOT_DEFAULTS.START_POSE;
     
 
-    public SnapToVisionTargetCommand(DriveSubsystem drive, VisionSubsystem vision) {
+    public SnapToVisionTargetCommand(DriveSubsystem drive) {
         super(drive);
         this.drive = drive;
-        this.vision = vision;
         this.controller = new PIDController(RobotConstants.PID.TARGET_LOCK.P,
             RobotConstants.PID.TARGET_LOCK.I,
             RobotConstants.PID.TARGET_LOCK.D);
@@ -41,18 +41,22 @@ public class SnapToVisionTargetCommand extends EntechCommandBase {
 
     @Override
     public void execute(){
-        if(vision.getVisionData().targetFound()){
-            offset = vision.getVisionData().getLateralOffset();
+        rp = drive.getLatestRobotPose();
+        logger.log("Vision data", rp.getVisionDataValidity());
+        if(rp.getVisionDataValidity()){
+            offset = rp.getTargetLateralOffset();
+            logger.log("Offset", offset);
             output = controller.calculate(offset);
-            controller.calculate(offset, 0);
             output = PIDControlOutputProcessor.constrain(output, 0.4);
+            logger.log("Output", output);
             drive.drive(new DriveInstruction(0, output));
         }
+
     }
 
     @Override
     public boolean isFinished(){
-        return controller.atSetpoint() || !vision.getVisionData().targetFound();
+        return controller.atSetpoint() || !rp.getVisionDataValidity();
     }
 
 }

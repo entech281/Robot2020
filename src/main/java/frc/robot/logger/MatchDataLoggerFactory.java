@@ -11,9 +11,7 @@ public class MatchDataLoggerFactory extends DataLoggerFactory {
 
     @Override
     public DataLogger createDataLogger(String name) {
-        // TODO: remove ConsoleDataLogger at the competition.
-        return new CompositeLogger(new SmartDashboardLogger(name));
-        // return new CompositeLogger(new SmartDashboardLogger(name), new ConsoleDataLogger(name, new WpilibTimeSource()));
+        return new CompositeLogger(new ShuffleBoardLogger(name));
     }
 
 }

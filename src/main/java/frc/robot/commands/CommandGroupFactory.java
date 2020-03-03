@@ -18,11 +18,6 @@ public class CommandGroupFactory {
     private SubsystemManager subsystemManager;
     private SequentialCommandGroup hoodHomingCommandGroup;
     private SequentialCommandGroup startShooterCommandGroup;
-    private ParallelCommandGroup snapToTargetAndStartShooter;
-    private ParallelCommandGroup startIntakeCommandGroup;
-    private SequentialCommandGroup stopShooterCommandGroup;
-    private SequentialCommandGroup stopIntakeCommandGroup;
-    private SequentialCommandGroup climbCommandGroup;
     
     public CommandGroupFactory(SubsystemManager subsystemManager){
         this.subsystemManager = subsystemManager;
@@ -31,72 +26,93 @@ public class CommandGroupFactory {
     }
 
     private void createCommands(){
-        hoodHomingCommandGroup = new EntechCommandGroup()
-                .addCommand(subsystemManager.getShooterSubsystem().goToUpperLimit())
-                .addCommand(subsystemManager.getShooterSubsystem().returnToStartPos())
-                .getSequentialCommandGroup();
+//        hoodHomingCommandGroup = new EntechCommandGroup()
+//                .addCommand(subsystemManager.getShooterSubsystem().goToUpperLimit())
+//                .addCommand(subsystemManager.getShooterSubsystem().returnToStartPos())
+//                .getSequentialCommandGroup();
 
         startShooterCommandGroup = new EntechCommandGroup()
-                .addCommand(subsystemManager.getElevatorSubsystem().shiftBack())
                 .addCommand(subsystemManager.getShooterSubsystem().turnOnShooter())
                 .getSequentialCommandGroup();
 
-        snapToTargetAndStartShooter = new EntechCommandGroup()
-                .addCommand(subsystemManager.getShooterSubsystem().enableAutoShooting())
-                .addCommand(startShooterCommandGroup)
-                .addCommand(new SnapToVisionTargetCommand(subsystemManager.getDriveSubsystem(), subsystemManager.getVisionSubsystem()))
-                .getParallelCommandGroup();
 
-        startIntakeCommandGroup = new EntechCommandGroup()
-                .addCommand(subsystemManager.getIntakeSubsystem().start())
-                .addCommand(subsystemManager.getElevatorSubsystem().start())
-                .addCommand(subsystemManager.getShooterSubsystem().turnOffShooter())
-                .getParallelCommandGroup();
 
-        stopShooterCommandGroup = new EntechCommandGroup()
-                .addCommand(subsystemManager.getElevatorSubsystem().stop())
-                .addCommand(subsystemManager.getShooterSubsystem().turnOffShooter())
-                .addCommand(hoodHomingCommandGroup)
-                .getSequentialCommandGroup();
 
-        stopIntakeCommandGroup = new EntechCommandGroup()
-                .addCommand(subsystemManager.getIntakeSubsystem().stop())
-                .addCommand(subsystemManager.getElevatorSubsystem().stop())
-                .getSequentialCommandGroup();
-
-        climbCommandGroup = new EntechCommandGroup()
+    }
+    
+    public SequentialCommandGroup getClimbCommandGroup(){
+        return new EntechCommandGroup()
                 .addCommand(subsystemManager.getClimbSubsystem().dropHookRaisingMech())
                 .addCommand(new DelayCommand(0.5))
                 .addCommand(subsystemManager.getClimbSubsystem().pullRobotUp())
                 .getSequentialCommandGroup();
     }
-    
-    public SequentialCommandGroup getClimbCommandGroup(){
-        return climbCommandGroup;
-    }
 
     public SequentialCommandGroup getStopIntakeCommandGroup(){
-        return stopIntakeCommandGroup;
+        return new EntechCommandGroup()
+                .addCommand(subsystemManager.getIntakeSubsystem().stopIntake())
+                .addCommand(subsystemManager.getIntakeSubsystem().stopElevator())
+                .getSequentialCommandGroup();
     }
 
     public SequentialCommandGroup getStopShooterCommandGroup(){
-        return stopShooterCommandGroup;
+        return new EntechCommandGroup()
+                .addCommand(subsystemManager.getIntakeSubsystem().stopElevator())
+                .addCommand(subsystemManager.getShooterSubsystem().turnOffShooter())
+                .addCommand(new HoodHomingCommand(subsystemManager.getShooterSubsystem()))
+                .getSequentialCommandGroup();
     }
     
-    public ParallelCommandGroup getStartIntakeCommandGroup(){
-        return startIntakeCommandGroup;
+    public SequentialCommandGroup getStartIntakeCommandGroup(){
+        return new EntechCommandGroup()
+                .addCommand(subsystemManager.getShooterSubsystem().turnOffShooter())
+                .addCommand(subsystemManager.getIntakeSubsystem().startIntake())
+                .addCommand(new IntakeOnCommand(subsystemManager.getIntakeSubsystem()))
+                .getSequentialCommandGroup();
     }
     
-    public ParallelCommandGroup getSnapToGoalAndStartShooter(){
-        return snapToTargetAndStartShooter;
+    public SequentialCommandGroup getSnapToGoalAndStartShooter(){
+        return new EntechCommandGroup()
+                .addCommand(subsystemManager.getShooterSubsystem().enableAutoShooting())
+                .addCommand(startShooterCommandGroup)
+                .addCommand(new SnapToVisionTargetCommand(subsystemManager.getDriveSubsystem()))
+                .getSequentialCommandGroup();
     }
     
     public SequentialCommandGroup getStartShooterCommandGroup(){
-        return startShooterCommandGroup;
+        return new EntechCommandGroup()
+                .addCommand(getStopIntakeCommandGroup())
+                .addCommand(subsystemManager.getIntakeSubsystem().shiftElevatorBack())
+                .addCommand(subsystemManager.getShooterSubsystem().turnOnShooter())
+                .getSequentialCommandGroup();
     }
     
-    public SequentialCommandGroup getHoodHomingCommandGroup(){
-        return hoodHomingCommandGroup;
+    public SequentialCommandGroup turnOffAllSubsystems(){
+        return new EntechCommandGroup()
+                .addCommand(getStopIntakeCommandGroup())
+                .addCommand(subsystemManager.getIntakeSubsystem().stopElevator())
+                .addCommand(getStopShooterCommandGroup())
+                .getSequentialCommandGroup();
+        
+    }
+    
+//    public SequentialCommandGroup getHoodHomingCommandGroup(){
+//        return new EntechCommandGroup()
+//                .addCommand(subsystemManager.getShooterSubsystem().goToUpperLimit())
+//                .addCommand(subsystemManager.getShooterSubsystem().returnToStartPos())
+//                .getSequentialCommandGroup();
+//    }
+    
+    public SequentialCommandGroup hoodHomeAndStartShooter(){
+        SequentialCommandGroup hoodHomingCommand = new EntechCommandGroup()
+                .addCommand(subsystemManager.getShooterSubsystem().goToUpperLimit())
+                .addCommand(subsystemManager.getShooterSubsystem().returnToStartPos())
+                .getSequentialCommandGroup();
+        
+        return new EntechCommandGroup()
+                .addCommand(subsystemManager.getShooterSubsystem().turnOnShooter())
+                .addCommand(hoodHomingCommand)
+                .getSequentialCommandGroup();
     }
     
 }

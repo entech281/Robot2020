@@ -6,14 +6,16 @@
 package frc.robot.path;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.robot.commands.CommandGroupFactory;
 import frc.robot.commands.DelayCommand;
 import frc.robot.commands.DriveForwardSetDistance;
+import frc.robot.commands.HoodHomingCommand;
 import frc.robot.commands.SnapAndShootCommand;
 import frc.robot.commands.SnapToVisionTargetCommand;
 import frc.robot.commands.SnapToYawCommand;
 import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.subsystems.ElevatorSubsystem;
+import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.NavXSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.SubsystemManager;
@@ -35,45 +37,55 @@ public class AutoPathBuilder {
         return new DriveForwardSetDistance(drive, -inches);
     }
 
-    public static Command turnRight(DriveSubsystem drive, NavXSubsystem navX, double degrees) {
-        return new SnapToYawCommand(navX, drive, degrees, true);
+    public static Command turnRight(DriveSubsystem drive, double degrees) {
+        return new SnapToYawCommand(drive, degrees, true);
     }
 
-    public static Command turnLeft(DriveSubsystem drive, NavXSubsystem navX, double degrees) {
-        return new SnapToYawCommand(navX, drive, -degrees, true);
+    public static Command turnLeft(DriveSubsystem drive, double degrees) {
+        return new SnapToYawCommand(drive, -degrees, true);
     }
 
-    public static Command turnNonRelative(DriveSubsystem drive, NavXSubsystem navX, double direction){
-        return new SnapToYawCommand(navX, drive, direction, false);
+    public static Command turnNonRelative(DriveSubsystem drive, double direction){
+        return new SnapToYawCommand(drive, direction, false);
     }
     
-    public static Command snapToTargetAlign(DriveSubsystem drive, VisionSubsystem vision){
-        return new SnapToVisionTargetCommand(drive, vision);
+    public static Command snapToTargetAlign(DriveSubsystem drive){
+        return new SnapToVisionTargetCommand(drive);
     }
     
-    public static Command snapToTargetShoot(DriveSubsystem drive, VisionSubsystem vision, ShooterSubsystem shooter, ElevatorSubsystem elevator){
-        return new SnapAndShootCommand(drive, elevator, vision, shooter);
+    public static Command snapToTargetShoot(DriveSubsystem drive, ShooterSubsystem shooter, IntakeSubsystem intakeSubsystem){
+        return new SnapAndShootCommand(drive, shooter, intakeSubsystem);
     }
     
-    public static Command fireBalls(ElevatorSubsystem elevator){
-        return elevator.start();
+    public static Command fireBalls(IntakeSubsystem intake){
+        return intake.startElevator();
     }
     
     public static Command delay(double seconds){
         return new DelayCommand(seconds);
     }
     
-    public static BasicMoves builder(SubsystemManager subsystemManager, CommandGroupFactory commandFactory) {
-        return new Builder(subsystemManager, commandFactory);
+    public static Command gotToPreset1(ShooterSubsystem shooter){
+        return shooter.selectPreset2();
     }
     
     public static Command zeroNavXAngle(NavXSubsystem navX, boolean inverted){
         return navX.zeroYawOfNavX(inverted);
     }
     
+    public static Command enableAutoHoodAdjustment(ShooterSubsystem shooter){
+        return shooter.enableAutoShooting();
+    }
+    
+    
+    
+    public static BasicMoves builder(SubsystemManager subsystemManager, CommandGroupFactory commandFactory, boolean invertedStart) {
+        return new Builder(subsystemManager, commandFactory, invertedStart);
+    }
+    
     public interface BasicMoves {
         
-        BasicMoves zeroYaw(boolean inverted);
+        BasicMoves zeroYaw();
 
         BasicMoves right(double degrees);
 
@@ -93,26 +105,54 @@ public class AutoPathBuilder {
         
         BasicMoves delayForSeconds(double seconds);
 
+        BasicMoves next();
+        
+        BasicMoves hoodHoming();
+        
+        BasicMoves startShooter();
+        
+        BasicMoves startIntake();
+        
+        BasicMoves stopShooter();
+        
+        BasicMoves enableAutoShooterHoodAdjustment();
+        
+        BasicMoves stopJustSpinningShooterWheel();
+        
+        BasicMoves startShooterAndHomeHood();
+        
+        BasicMoves turnOffEverything();
+        
+        BasicMoves preset();
+        
+        @Override
+        public boolean equals(Object obj);
+
         Command[] build();
     }
     
 public static class Builder implements BasicMoves{
 
+        private List<Command> parallelCommands;
         private List<Command> commands;
         private DriveSubsystem drive;
         private NavXSubsystem navXSubsystem;
         private VisionSubsystem visionSubsystem;
-        private ElevatorSubsystem elevator;
         private ShooterSubsystem shooter;
+        private IntakeSubsystem intake;
         private CommandGroupFactory commandFactory;
+        private boolean invertedStart;
 
-        public Builder(SubsystemManager subsystemManager, CommandGroupFactory commandFactory){
+        public Builder(SubsystemManager subsystemManager, CommandGroupFactory commandFactory, boolean inverted){
+            parallelCommands = new ArrayList<>();
+            commands = new ArrayList<>();
             this.drive = subsystemManager.getDriveSubsystem();
             this.navXSubsystem = subsystemManager.getNavXSubsystem();
             this.visionSubsystem = subsystemManager.getVisionSubsystem();
-            this.elevator = subsystemManager.getElevatorSubsystem();
             this.shooter = subsystemManager.getShooterSubsystem();
+            this.intake = subsystemManager.getIntakeSubsystem();
             this.commandFactory = commandFactory;
+            invertedStart = inverted;
         }
         @Override
         public Command[] build() {
@@ -125,7 +165,7 @@ public static class Builder implements BasicMoves{
 
         @Override
         public BasicMoves right(double degrees) {
-            commands.add(turnRight(drive, navXSubsystem, degrees));
+            parallelCommands.add(turnRight(drive, degrees).withTimeout(10));
             return this;
         }
         
@@ -133,56 +173,119 @@ public static class Builder implements BasicMoves{
 
         @Override
         public BasicMoves left(double degrees) {
-            commands.add(turnLeft(drive, navXSubsystem, degrees));
+            parallelCommands.add(turnLeft(drive, degrees).withTimeout(10));
             return this;
         }
 
         @Override
         public BasicMoves forward(double inches) {
-            commands.add(goForward(drive, inches));
+            parallelCommands.add(goForward(drive, inches).withTimeout(10));
             return this;
         }
 
         @Override
         public BasicMoves backward(double inches) {
-            commands.add(goBackward(drive, inches));
+            parallelCommands.add(goBackward(drive, inches).withTimeout(10));
             return this;
         }
         
         @Override
         public BasicMoves nonRelativeTurn(double direction){
-            commands.add(turnNonRelative(drive, navXSubsystem, direction));
+            parallelCommands.add(turnNonRelative(drive, direction).withTimeout(10));
             return this;
         }
 
         @Override
         public BasicMoves snapToTarget() {
-            commands.add(snapToTargetAlign(drive, visionSubsystem));
+            parallelCommands.add(snapToTargetAlign(drive).withTimeout(10));
             return this;
         }
 
         @Override
         public BasicMoves snapToTargetStartShooter() {
-            commands.add(commandFactory.getSnapToGoalAndStartShooter());
+            parallelCommands.add(commandFactory.getSnapToGoalAndStartShooter().withTimeout(10));
             return this;
             
         }
 
         @Override
         public BasicMoves fire() {
-            commands.add(fireBalls(elevator));
+            parallelCommands.add(fireBalls(intake).withTimeout(10));
             return this;
         }
 
         @Override
-        public BasicMoves zeroYaw(boolean inverted) {
-            commands.add(zeroNavXAngle(navXSubsystem, inverted));
+        public BasicMoves zeroYaw() {
+            parallelCommands.add(zeroNavXAngle(navXSubsystem, invertedStart).withTimeout(10));
             return this;
         }
 
+        public BasicMoves stopJustSpinningShooterWheel(){
+            parallelCommands.add(shooter.turnOffShooter());
+            return this;
+        }
+        
         @Override
         public BasicMoves delayForSeconds(double seconds) {
-            commands.add(delay(seconds));
+            parallelCommands.add(delay(seconds).withTimeout(10));
+            return this;
+        }
+
+        @Override
+        public BasicMoves next() {
+            Command[] parallelComm = new Command[parallelCommands.size()];
+            for(int i = parallelComm.length - 1; i >= 0; i-= 1){
+                parallelComm[i] = parallelCommands.remove(i);
+            }
+            commands.add(new ParallelCommandGroup(parallelComm));
+            return this;
+        }
+
+        @Override
+        public BasicMoves hoodHoming() {
+            parallelCommands.add(new HoodHomingCommand(shooter));
+            return this;
+        }
+
+        @Override
+        public BasicMoves startShooter() {
+            parallelCommands.add(commandFactory.getStartShooterCommandGroup());
+            return this;
+        }
+
+        @Override
+        public BasicMoves startIntake() {
+            parallelCommands.add(commandFactory.getStartIntakeCommandGroup());
+            return this;
+        }
+
+        @Override
+        public BasicMoves stopShooter() {
+            parallelCommands.add(commandFactory.getStopShooterCommandGroup());
+            return this;
+        }
+
+        @Override
+        public BasicMoves enableAutoShooterHoodAdjustment() {
+            parallelCommands.add(enableAutoHoodAdjustment(shooter));
+            return this;
+        }
+
+        @Override
+        public BasicMoves startShooterAndHomeHood() {
+            parallelCommands.add(commandFactory.hoodHomeAndStartShooter());
+            return this;
+        }
+
+        @Override
+        public BasicMoves preset() {
+            parallelCommands.add(gotToPreset1(shooter));
+            return this;
+        }
+
+        @Override
+        public BasicMoves turnOffEverything() {
+            parallelCommands.add(commandFactory.turnOffAllSubsystems());
             return this;
         }
 

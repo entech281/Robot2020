@@ -12,6 +12,6 @@ public class FieldPoseManager {
 
     public void updateFieldColor(WheelColorValue wheelColor) {
         this.colorWheel = wheelColor;
-
     }
+
 }

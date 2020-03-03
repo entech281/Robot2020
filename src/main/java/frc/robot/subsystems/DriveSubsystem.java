@@ -48,6 +48,8 @@ public class DriveSubsystem extends BaseSubsystem {
     private DifferentialDrive robotDrive;
 
     private PositionDriveController autoController;
+    
+    private RobotPose latestRobotPose = RobotConstants.ROBOT_DEFAULTS.START_POSE;
 
     private PositionBuffer positionBuffer = new PositionBuffer();
 
@@ -65,7 +67,7 @@ public class DriveSubsystem extends BaseSubsystem {
             .brakeInNeutral()
             .withDirections(false, false)
             .limitMotorOutputs(1.0, -1.0)
-            .noMotorStartupRamping()
+            .withMotorRampUpOnStart(0.1)
             .useSmartMotionControl()
             .withPositionGains(RobotConstants.PID.AUTO_STRAIGHT.F,
                     RobotConstants.PID.AUTO_STRAIGHT.P,
@@ -152,7 +154,7 @@ public class DriveSubsystem extends BaseSubsystem {
                     frontRightEncoder.getPosition(),
                     rearRightEncoder.getPosition());
         }
-        return new EncoderValues(0, 0, 0, 0);
+        return EncoderValues.NO_ENCODER_VALUES;
     }
 
     @Override
@@ -167,6 +169,11 @@ public class DriveSubsystem extends BaseSubsystem {
                 logger.log("current command", getCurrentCommand().getName());
             }
         }
+        latestRobotPose = rp;
+    }
+    
+    public RobotPose getLatestRobotPose(){
+        return latestRobotPose;
     }
 
     public void drive(DriveInstruction di) {

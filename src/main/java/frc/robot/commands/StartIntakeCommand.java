@@ -6,7 +6,6 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 
@@ -15,7 +14,7 @@ import frc.robot.subsystems.ShooterSubsystem;
  * @author aryan
  */
 public class StartIntakeCommand extends ParallelCommandGroup{
-    public StartIntakeCommand(IntakeSubsystem intake, ElevatorSubsystem elevator, ShooterSubsystem shoot){
-        addCommands(intake.start(), elevator.start(), shoot.turnOffShooter());
+    public StartIntakeCommand(IntakeSubsystem intake, ShooterSubsystem shoot){
+        addCommands(intake.startIntake(), intake.stopElevator(), shoot.turnOffShooter());
     }
 }
