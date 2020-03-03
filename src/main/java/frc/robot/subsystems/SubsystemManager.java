@@ -29,10 +29,6 @@ public class SubsystemManager implements PoseSource{
         return navXSubsystem;
     }
 
-    public ElevatorSubsystem getElevatorSubsystem() {
-        return elevatorSubsystem;
-    }
-
     public ClimbSubsystem getClimbSubsystem() {
         return climbSubsystem;
     }
@@ -54,7 +50,6 @@ public class SubsystemManager implements PoseSource{
     private NavXSubsystem navXSubsystem;
     private ShooterSubsystem shootSubsystem;
     private ClimbSubsystem climbSubsystem;
-    private ElevatorSubsystem elevatorSubsystem;
     private ColorSubsystem colorSubsystem;
     private VisionSubsystem visionSubsystem;
 
@@ -69,7 +64,6 @@ public class SubsystemManager implements PoseSource{
         navXSubsystem = new NavXSubsystem();
         shootSubsystem = new ShooterSubsystem();
         climbSubsystem = new ClimbSubsystem();
-        elevatorSubsystem = new ElevatorSubsystem();
         colorSubsystem = new ColorSubsystem();
         visionSubsystem = new VisionSubsystem();
 

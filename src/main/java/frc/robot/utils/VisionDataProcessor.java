@@ -28,7 +28,7 @@ public class VisionDataProcessor {
     public ShooterConfiguration calculateShooterConfiguration(TargetLocation location) {
         double distance = location.getDistanceToTarget();
         double speedRPM = 5350;
-        double angle = 17.7 + 0.287 * distance - 7.07e-4 * Math.pow(distance, 2);
+        double angle = 19 + 0.287 * distance - 7.07e-4 * Math.pow(distance, 2);
 
         return new ShooterConfiguration(angle, speedRPM);
     }

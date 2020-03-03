@@ -27,29 +27,24 @@ public class TestShooterSubsystem {
     @Test
     public void testShooterSubsystemStartup(){
 
-        PoseSource mockPoses = Mockito.mock(PoseSource.class);
-        ShooterSubsystem2 shooter = new ShooterSubsystem2();
-        shooter.setPoseSource(mockPoses);
-        
-        when(mockPoses.getRobotPose()).thenReturn(
-            new RobotPose(
-                new RobotPosition(0.0,0.0,0.0),
-                VisionData.DEFAULT_VISION_DATA
-            ) 
-        );
-        assertEquals(5300, shooter.getRPMSpeed(), 0.1);
-        
+        ShooterSubsystem2 shooter = Mockito.mock(ShooterSubsystem2.class);
+ 
         Command c = new RunWhenDisabledCommandDecorator ( new SequentialCommandGroup(
                 new PrintCommand ("Starting "),
                 new InstantCommand(shooter::decreaseRPMSpeed),
                 new PrintCommand ("Done")
         ));
-        scheduler.schedule(c);
+        Command d = new RunWhenDisabledCommandDecorator ( 
+                new InstantCommand ( () -> shooter.adjustHoodPosition(10.0))
+        );
+
+        scheduler.schedule(c,d);
 
         for ( int i=0;i<5;i++){
              scheduler.run();
         }
-        assertEquals(5150, shooter.getRPMSpeed(), 0.1);
+        verify(shooter).decreaseRPMSpeed();
+        verify(shooter).adjustHoodPosition(10.0);
     }
    
 }

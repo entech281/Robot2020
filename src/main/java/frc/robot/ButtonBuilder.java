@@ -37,6 +37,7 @@ class JoystickButtonManager {
         public Builder whenReleased(Command command);
 
         public Builder whileHeld(Command command);
+        
     }
 
     public class Builder implements BuilderWithoutHandlers {
@@ -63,7 +64,7 @@ class JoystickButtonManager {
 
         @Override
         public Builder whileHeld(Command command) {
-            buttonBeingBuilt.whileHeld(command);
+            buttonBeingBuilt.whenHeld(command);
             return this;
         }
 

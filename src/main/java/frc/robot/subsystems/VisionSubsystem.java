@@ -27,16 +27,13 @@ public class VisionSubsystem extends BaseSubsystem {
 
     private VisionData visionData = VisionData.DEFAULT_VISION_DATA;
     private VisionDataProcessor processor;
-    private int count = 0;
+
+    private boolean isConnected = false;
 
     @Override
     public void initialize() {
         logger.log("initialized", true);
-        try{
-        visionPort = new SerialPort(BAUD_RATE, SerialPort.Port.kUSB1);
-        } catch(Exception e){
-            logger.log("Vision data initialization failed", "FAILED");
-        }
+        tryConnect();
         processor = new VisionDataProcessor();
     }
 
@@ -47,10 +44,26 @@ public class VisionSubsystem extends BaseSubsystem {
         visionData = processor.getCurrentVisionData();
         logger.log("Vertical offset", visionData.getVerticalOffset());
         logger.log("Horizontal Offset", visionData.getLateralOffset());
+
     }
 
     public VisionData getVisionData() {
         return visionData;
+    }
+
+    public void tryConnect(){
+        try{
+            visionPort = new SerialPort(BAUD_RATE, SerialPort.Port.kUSB1);
+            visionPort.setTimeout(1);
+            logger.driverinfo("Vision connection initialization succeded", "SUCCESS");
+            isConnected = true;
+        } catch(Exception e){
+            logger.driverinfo("Vision connection initialization failed", "FAILED");
+        }
+    }
+
+    public boolean isConnected(){
+        return isConnected;
     }
 
 }
