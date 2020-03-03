@@ -2,8 +2,8 @@ language: java
 install: true
 
 os: linux
-dist: trusty
-jdk: oraclejdk11
+dist: bionic
+jdk: openjdk11 
 
 script:
   - ./gradlew build check
