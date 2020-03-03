@@ -7,11 +7,12 @@ public class HoodHomingCommand extends EntechCommandBase{
     
     ShooterSubsystem shooter;
     private boolean initializationCompleted;
-    private State currentState = State.GoToLimitSwitch;
+    private State currentState;
     public HoodHomingCommand(ShooterSubsystem shooter){
         super(shooter);
         this.shooter = shooter;
         initializationCompleted = false;
+        currentState = State.GoToLimitSwitch;
     }
 
     @Override

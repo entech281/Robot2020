@@ -181,6 +181,14 @@ public class ShooterSubsystem extends BaseSubsystem {
         };
     }
     
+    public boolean atShootSpeed(){
+        return shooterMotorController.getActualSpeed() < -5100;
+    }
+    
+    public boolean atHoodPosition(){
+        return Math.abs(HOOD_POSITION - hoodMotorController.getActualPosition()) < 100;
+    }
+    
     public void adjustHoodForward(){
         double desired = hoodMotorController.getActualPosition() - 50;
         if(!autoAdjust){
@@ -214,6 +222,15 @@ public class ShooterSubsystem extends BaseSubsystem {
 
     public void disableAutoAdjust() {
         autoAdjust = false;
+    }
+    
+    public Command goToPreset2(){
+        return new SingleShotCommand(this) {
+            @Override
+            public void doCommand() {
+                setStartingLinePreset();
+            }
+        };
     }
 
     @Override
@@ -257,8 +274,12 @@ public class ShooterSubsystem extends BaseSubsystem {
         logger.log("Current command", getCurrentCommand());
         ShooterConfiguration config;
         logger.log("Shooter is on", shootOn);
-        logger.log("Hood current position", hoodMotorController.getActualPosition());
-        logger.log("Hood Desired Position", hoodMotorController.getDesiredPosition());
+        logger.log("Hood current position1", hoodMotorController.getActualPosition());
+        logger.log("Hood Desired Position1", hoodMotorController.getDesiredPosition());
+        logger.log("Preset on ", preset2);
+        logger.log("SHOOT", atShootSpeed() && atHoodPosition());
+        logger.log("Shooter at speed", atShootSpeed());
+        logger.log("Hood at pose", atHoodPosition());
         if(shootOn){
             if (autoAdjust) {
                 if(rPose.getVisionDataValidity()){
@@ -268,12 +289,12 @@ public class ShooterSubsystem extends BaseSubsystem {
             } else {
                 if(preset1){
                     config = processor.calculateShooterConfiguration(RobotConstants.SHOOT_PRESETS.PRESET_1);
-                    setDesiredShooterConfiguration(RobotConstants.SHOOT_PRESETS.CLOSER_PRESET);
+                    setShooterPreset1();
                     preset1 = false;
                 }
                 else if(preset2){
                     config = processor.calculateShooterConfiguration(RobotConstants.SHOOT_PRESETS.PRESET_2);
-                    setDesiredShooterConfiguration(RobotConstants.SHOOT_PRESETS.FARTHER_PRESET);
+                    setShooterPreset2();
                     preset2 = false;
                 }
             }
@@ -300,7 +321,19 @@ public class ShooterSubsystem extends BaseSubsystem {
             shooterMotorController.setDesiredSpeed(-1 * desiredSpeed);
         }
     }
+    
+    public void setStartingLinePreset(){
+        adjustHoodPosition(-940);
+    }
+    
+    public void setShooterPreset2(){
+        adjustHoodPosition(-930);
+    }
 
+    public void setShooterPreset1(){
+        adjustHoodPosition(-375);
+    }
+    
     public void adjustHoodPosition(double desiredPosition) {
         this.HOOD_POSITION = desiredPosition;
         if (hoodMotorMounted) {
@@ -349,17 +382,26 @@ public class ShooterSubsystem extends BaseSubsystem {
     public double getDesiredPositon() {
         return this.HOOD_POSITION;
     }
+    
+    public Command goTo10Degrees(){
+        return new SingleShotCommand(this) {
+            @Override
+            public void doCommand() {
+                setDesiredShooterConfiguration(new ShooterConfiguration(10, 0));
+            }
+        };
+    }
 
     public void setDesiredShooterConfiguration(ShooterConfiguration configuration) {
 
-        double desiredPosition = -(((90 - configuration.getDesiredHoodAngle()) / 360) * HOOD_MOTOR.ENCODER_CLICKS_PER_HOOD_MOTOR_REVOLUTION * HOOD_MOTOR.HOOD_GEAR_RATIO - HOME_OFFSET);
+        double desiredPosition = -(Math.abs((configuration.getDesiredHoodAngle() / 360) * HOOD_MOTOR.ENCODER_CLICKS_PER_HOOD_MOTOR_REVOLUTION * HOOD_MOTOR.HOOD_GEAR_RATIO - HOME_OFFSET));
         logger.log("Configuration angle", configuration.getDesiredHoodAngle());
         logger.log("encoder clicks", desiredPosition);
         if (hoodMotorMounted) {
             adjustHoodPosition(desiredPosition);
         }
         if (shootMotorMounted) {
-            adjustShooterSpeed(500);
+            adjustShooterSpeed(5350);
         }
     }
 

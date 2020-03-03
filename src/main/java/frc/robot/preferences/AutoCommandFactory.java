@@ -12,7 +12,7 @@ public class AutoCommandFactory{
             case LeftSevenBall:
                 return new AutonomousPathCommand(pathFactory.leftEightBallAuto());
             case ShootAndBackUp:
-                return new AutonomousPathCommand(pathFactory.simplePath());
+                return new AutonomousPathCommand(pathFactory.backUp());
         }
 
         return null;
