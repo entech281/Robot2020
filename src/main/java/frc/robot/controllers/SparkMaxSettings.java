@@ -102,6 +102,10 @@ public class SparkMaxSettings {
         }
     }
 
+    
+    public ControlType getControlType(){
+        return this.ctrlType;
+    }
     public void setControlType(ControlType ctrlType) {
         this.follow = false;
         this.ctrlType = ctrlType;

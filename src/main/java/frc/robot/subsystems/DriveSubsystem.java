@@ -176,10 +176,8 @@ public class DriveSubsystem extends BaseSubsystem {
         return latestRobotPose;
     }
 
-    public void drive(DriveInstruction di) {
-        if (drive) {
-            robotDrive.arcadeDrive(di.getFoward(), di.getRotation());
-        }
+    public void drive(double forward, double rotation) {
+            robotDrive.arcadeDrive(forward, rotation);
     }
 
     public void startAutonomous() {

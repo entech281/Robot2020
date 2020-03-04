@@ -62,7 +62,7 @@ public class SnapToYawCommand extends EntechCommandBase{
         logger.log("Offset", controller.getPositionError());
         logger.log("NAV", rPose.getRobotPosition().getTheta());
         output = PIDControlOutputProcessor.constrain(output, 0.6);
-        drive.drive(new DriveInstruction(0, output));
+        drive.drive(0, output);
 
     }
 

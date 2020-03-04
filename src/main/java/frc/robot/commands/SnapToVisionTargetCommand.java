@@ -49,7 +49,7 @@ public class SnapToVisionTargetCommand extends EntechCommandBase {
             output = controller.calculate(offset);
             output = PIDControlOutputProcessor.constrain(output, 0.4);
             logger.log("Output", output);
-            drive.drive(new DriveInstruction(0, output));
+            drive.drive(0, output);
         }
 
     }

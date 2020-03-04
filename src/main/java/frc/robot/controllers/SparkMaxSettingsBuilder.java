@@ -56,6 +56,7 @@ public class SparkMaxSettingsBuilder {
     public interface PositionControlSettings {
 
         Finish withGains(double f, double p, double i, double d);
+                
     }
 
     public interface SpeedControlSettings {
@@ -103,6 +104,8 @@ public class SparkMaxSettingsBuilder {
         public interface GainSettings {
 
             public StrategySettings withPositionGains(double f, double p, double i, double d);
+        
+            
         }
 
         public interface StrategySettings {
