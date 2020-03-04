@@ -4,6 +4,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -23,7 +24,8 @@ public class IntakeSubsystem extends BaseSubsystem {
     private double CURRENT_INTAKE_SPEED = 1;
 
     private double FULL_SPEED_FWD = 1;
-    private double FULL_SPEED_BWD = -1;
+    private double HALF_SPEED_FWD = 0.5;
+    private double FULL_SPEED_BWD = -0.5;
     private double STOP_SPEED = 0;
     private double ELEVATOR_INTAKE_SPEED = 0.3;
     private double INTAKE_REVERSE = -0.2;
@@ -40,8 +42,7 @@ public class IntakeSubsystem extends BaseSubsystem {
     private WPI_TalonSRX elevatorMotor;
     private TalonSpeedController elevatorMotorController;
 
-    private Solenoid deployIntake1;
-    private Solenoid deployIntake2;
+    private DoubleSolenoid deployIntakeSolenoids;
     
     private boolean intakeOn = false;
     
@@ -49,11 +50,17 @@ public class IntakeSubsystem extends BaseSubsystem {
     private boolean timerRunning = false;
 
     private DigitalInput beam;
+    private boolean lastBallEntered = false;
+    
+    private boolean checkSensor = true;
+    
+    private boolean elevatorSpinning = false;
 
     public Command startIntake() {
         return new SingleShotCommand(this) {
             @Override
             public void doCommand() {
+                deployIntakeArms();
                 intakeOn = true;
             }
         }.withTimeout(EntechCommandBase.DEFAULT_TIMEOUT_SECONDS);
@@ -72,7 +79,9 @@ public class IntakeSubsystem extends BaseSubsystem {
         return new SingleShotCommand(this) {
             @Override
             public void doCommand() {
+                raiseIntakeArms();
                 intakeOn = false;
+                setIntakeMotorSpeed(0);
             }
         }.withTimeout(EntechCommandBase.DEFAULT_TIMEOUT_SECONDS);
     }
@@ -83,10 +92,22 @@ public class IntakeSubsystem extends BaseSubsystem {
             @Override
             public void doCommand() {
                 setIntakeMotorSpeed(FULL_SPEED_BWD);
+                setElevatorSpeed(FULL_SPEED_BWD);
+                
             }
         }.withTimeout(EntechCommandBase.DEFAULT_TIMEOUT_SECONDS);
     }
 
+    public Command stopEverything() {
+        return new SingleShotCommand(this) {
+            @Override
+            public void doCommand() {
+                setIntakeMotorSpeed(STOP_SPEED);
+                setElevatorSpeed(STOP_SPEED);
+            }
+        };
+    }
+    
     
     public Command stopElevator() {
         return new SingleShotCommand(this) {
@@ -96,6 +117,16 @@ public class IntakeSubsystem extends BaseSubsystem {
             }
         }.withTimeout(EntechCommandBase.DEFAULT_TIMEOUT_SECONDS);
     }
+    
+    public Command shiftElevatorBack(){
+        return new SingleShotCommand(this) {
+            @Override
+            public void doCommand() {
+                shiftElevatorBackToAllowForRoom();
+            }
+        };
+    }
+    
     @Override
     public void initialize() {
         if (intake) {
@@ -111,11 +142,10 @@ public class IntakeSubsystem extends BaseSubsystem {
         }
         
         if(PNEUMATICS_MOUNTED){
-            deployIntake1 = new Solenoid(RobotConstants.CAN.PCM_ID, RobotConstants.CAN.INTAKE_SOL_1);
-            deployIntake2 = new Solenoid(RobotConstants.CAN.PCM_ID, RobotConstants.CAN.INTAKE_SOL_2);
             
-            deployIntake1.set(false);
-            deployIntake2.set(false);
+            deployIntakeSolenoids = new DoubleSolenoid(RobotConstants.CAN.FORWARD, RobotConstants.CAN.REVERSE);
+            
+            deployIntakeSolenoids.set(DoubleSolenoid.Value.kReverse);
         }
         
         if (elevator) {
@@ -136,15 +166,13 @@ public class IntakeSubsystem extends BaseSubsystem {
 
     public void deployIntakeArms(){
         if(PNEUMATICS_MOUNTED){
-            deployIntake1.set(true);
-            deployIntake2.set(true);
+            deployIntakeSolenoids.set(DoubleSolenoid.Value.kForward);
         }
     }
 
     public void raiseIntakeArms(){
         if(PNEUMATICS_MOUNTED){
-            deployIntake1.set(false);
-            deployIntake2.set(false);
+            deployIntakeSolenoids.set(DoubleSolenoid.Value.kReverse);
         }
     }
     
@@ -155,40 +183,29 @@ public class IntakeSubsystem extends BaseSubsystem {
     @Override
     public void customPeriodic(RobotPose rPose, FieldPose fPose) {
         logger.log("Current command", getCurrentCommand());
+        logger.log("Ball sensor", beam.get());
+        logger.log("TIMER IS RUNNING", timerRunning);
     }
     
-    public boolean hasBallEntedElevator(){
-        return false;
-    }
     
-    public boolean isTimerRunning(){
-        if(timerRunning){
-            timerRunning = !timer.hasElapsed(0.5);
-            if(!timerRunning){
-                timer.stop();
-            }
+    public void shiftElevatorBackToAllowForRoom(){
+        setElevatorSpeed(-0.2);
+        timer.start();
+        while(!timer.hasElapsed(0.5)){
+            
         }
-        return timerRunning;
+        setElevatorSpeed(0);
     }
     
-    public void startTimer(){
-        if(timerRunning){
-            timer.stop();
-            timer.start();
-        } else {
-            timer.start();
+    
+    public boolean sensorReadingValue(){
+        if(BALL_SENSOR){
+            return !beam.get();
+        } else{
+            return true;
         }
     }
     
-    public void startElevatorIntakeAndStopIntake(){
-        setElevatorSpeed(ELEVATOR_INTAKE_SPEED);
-        setIntakeMotorSpeed(INTAKE_REVERSE);
-    }
-
-    public void stopElevatorAndStartIntake(){
-        setElevatorSpeed(STOP_SPEED);
-        setIntakeMotorSpeed(FULL_SPEED_FWD);
-    }    
     
     public void setIntakeMotorSpeed(double desiredSpeed) {
         logger.log("Intake Motor speed", desiredSpeed);
@@ -205,10 +222,5 @@ public class IntakeSubsystem extends BaseSubsystem {
         }
     }
 
-    public boolean isBeamBroken(){
-        if(BALL_SENSOR){
-            return beam.get();
-        } else return false;
-    }
 
 }

@@ -1,4 +1,4 @@
-import sensor, image, time
+import sensor, image, time, ubinascii
 
 def draw_lines(x, y):
     centerX = 80
@@ -9,41 +9,58 @@ def draw_lines(x, y):
     img.draw_line(centerX, centerY - 20, centerX, centerY + 20, color = (255, 0, 0), thickness = 5)
     img.draw_line(centerX - 20, centerY, centerX + 20, centerY, color = (255, 0, 0), thickness = 5)
 
-sensor.reset()
-sensor.set_pixformat(sensor.RGB565) # grayscale is faster (160x120 max on OpenMV-M7)
-#GRAYSCALE, RGB565,BAYER
-sensor.set_framesize(sensor.QQVGA)
-sensor.skip_frames(time = 2000)
-RANGES = [(9, 100, -128, -12, -47, 40)]
-RANGES2 = [ (0,100,-100,100,-100,100)]
+def initialize():
+    sensor.reset()
+    sensor.set_pixformat(sensor.RGB565) # grayscale is faster (160x120 max on OpenMV-M7)
+    #GRAYSCALE, RGB565,BAYER
+    sensor.set_framesize(sensor.QQVGA)
+    sensor.skip_frames(time = 2000)
+    sensor.set_auto_whitebal(False)
+    sensor.set_auto_gain(False)
+    sensor.set_auto_exposure(False, exposure_us=100) # make smaller to go faster
+
+def gather_data(blob):
+    return (True, b.cx(), b.cy(), b.w(), clock.fps())
+
+def transmit_data(data):
+
+    print("d", end="")
+    print(data)
+
+def encode_frame(frame):
+    return ubinascii.b2a_base64(frame)
+
+def send_frame(encoded_frame):
+    print("f", end="")
+    print(encoded_frame)
+
+def valid_target(blob):
+    return blob.compactness() < 0.5
+
+COUNTER = 0
+def should_send_frame():
+    global COUNTER
+    COUNTER += 1
+    return COUNTER % 30 == 0
+
+
+
+FILTER_RANGES = [(9, 100, -128, -12, -47, 40)]
+DEFAULT_TRANSMIT = "False -1 -1 -1 0 -"
 
 clock = time.clock()
-sensor.set_auto_whitebal(False)
-sensor.set_auto_gain(False)
-sensor.set_auto_exposure(False, exposure_us=100) # make smaller to go faster
-
-def save( img, num_blobs, num_compact, counter):
-    img.save(f"img-{str(counter)}-{str(num_blobs)}-{str(num_compact)}.jpg")
-counter = 0
+initialize()
 while(True):
-    num_blobs = 0
-    num_compact = 0
     clock.tick()
     img = sensor.snapshot()
-    target_found = False
-    x = -1
-    y = -1
-    width = -1
-    for b in img.find_blobs( RANGES ):
-      if b.compactness() < 0.5:
-          target_found = True
-          x = b.cx()
-          y = b.cy()
-          width = abs(b.x() - b.w())
-          height = abs(b.y() - b.h())
-          draw_lines(x, y)
-          img.draw_rectangle( b.rect(), color = (0, 0, 255), thickness = 3)
-    output = f"{str(target_found)} {str(x)} {str(y)} {str(width)} {str(clock.fps())} -"
-    if counter % 50 == 0:
-        save(img, num_blobs, num_compact, counter)
-    print(output)
+    for b in img.find_blobs( FILTER_RANGES ):
+        if valid_target(b):
+            data = gather_data(b)
+            transmit_data(data)
+            #draw_lines(x, y)
+            #img.draw_rectangle( b.rect(), color = (0, 0, 255), thickness = 3)
+    if should_send_frame():
+        send_frame(encode_frame(img))
+    print(clock.fps())
+
+

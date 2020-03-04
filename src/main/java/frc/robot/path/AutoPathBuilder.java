@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.robot.commands.CommandGroupFactory;
 import frc.robot.commands.DelayCommand;
 import frc.robot.commands.DriveForwardSetDistance;
+import frc.robot.commands.HoodHomingCommand;
 import frc.robot.commands.SnapAndShootCommand;
 import frc.robot.commands.SnapToVisionTargetCommand;
 import frc.robot.commands.SnapToYawCommand;
@@ -52,8 +53,8 @@ public class AutoPathBuilder {
         return new SnapToVisionTargetCommand(drive);
     }
     
-    public static Command snapToTargetShoot(DriveSubsystem drive, ShooterSubsystem shooter){
-        return new SnapAndShootCommand(drive, shooter);
+    public static Command snapToTargetShoot(DriveSubsystem drive, ShooterSubsystem shooter, IntakeSubsystem intakeSubsystem){
+        return new SnapAndShootCommand(drive, shooter, intakeSubsystem);
     }
     
     public static Command fireBalls(IntakeSubsystem intake){
@@ -62,6 +63,10 @@ public class AutoPathBuilder {
     
     public static Command delay(double seconds){
         return new DelayCommand(seconds);
+    }
+    
+    public static Command gotToPreset1(ShooterSubsystem shooter){
+        return shooter.selectPreset2();
     }
     
     public static Command zeroNavXAngle(NavXSubsystem navX, boolean inverted){
@@ -115,6 +120,10 @@ public class AutoPathBuilder {
         BasicMoves stopJustSpinningShooterWheel();
         
         BasicMoves startShooterAndHomeHood();
+        
+        BasicMoves turnOffEverything();
+        
+        BasicMoves preset();
         
         @Override
         public boolean equals(Object obj);
@@ -234,7 +243,7 @@ public static class Builder implements BasicMoves{
 
         @Override
         public BasicMoves hoodHoming() {
-            parallelCommands.add(commandFactory.getHoodHomingCommandGroup());
+            parallelCommands.add(new HoodHomingCommand(shooter));
             return this;
         }
 
@@ -265,6 +274,18 @@ public static class Builder implements BasicMoves{
         @Override
         public BasicMoves startShooterAndHomeHood() {
             parallelCommands.add(commandFactory.hoodHomeAndStartShooter());
+            return this;
+        }
+
+        @Override
+        public BasicMoves preset() {
+            parallelCommands.add(gotToPreset1(shooter));
+            return this;
+        }
+
+        @Override
+        public BasicMoves turnOffEverything() {
+            parallelCommands.add(commandFactory.turnOffAllSubsystems());
             return this;
         }
 

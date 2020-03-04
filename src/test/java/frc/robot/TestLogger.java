@@ -71,4 +71,40 @@ class FakeDataLogger extends DataLogger {
         counter++;
 
     }
+
+    @Override
+    public void driverinfo(String key, Object value) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void driverinfo(String key, double value) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void driverinfo(String key, int value) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void driverinfo(String key, String value) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void driverinfo(String key, long value) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void driverinfo(String key, boolean value) {
+        // TODO Auto-generated method stub
+
+    }
 }
