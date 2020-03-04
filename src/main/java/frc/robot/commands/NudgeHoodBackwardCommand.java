@@ -20,8 +20,11 @@ public class NudgeHoodBackwardCommand extends EntechCommandBase{
 
     @Override
     public void execute() {
+    if (shooter.isLowerLimitHit() == true){
+        shooter.setHoodMotorSpeed(0.0);
+    }else {
         shooter.setHoodMotorSpeed(-0.1);
-    
+    }
     }
 
     
