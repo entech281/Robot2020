@@ -63,13 +63,13 @@ public class CommandGroupFactory {
                 .getSequentialCommandGroup();
     }
     
-    public SequentialCommandGroup getStartIntakeCommandGroup(){
-        return new EntechCommandGroup()
-                .addCommand(subsystemManager.getShooterSubsystem().turnOffShooter())
-                .addCommand(subsystemManager.getIntakeSubsystem().startIntake())
-                .addCommand(new IntakeOnCommand(subsystemManager.getIntakeSubsystem()))
-                .getSequentialCommandGroup();
-    }
+//    public SequentialCommandGroup getStartIntakeCommandGroup(){
+//        return new EntechCommandGroup()
+//                .addCommand(subsystemManager.getShooterSubsystem().turnOffShooter())
+//                .addCommand(subsystemManager.getIntakeSubsystem().startIntake())
+//                .addCommand(new IntakeOnCommand(subsystemManager.getIntakeSubsystem()))
+//                .getSequentialCommandGroup();
+//    }
     
     public SequentialCommandGroup getSnapToGoalAndStartShooter(){
         return new EntechCommandGroup()

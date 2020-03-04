@@ -15,6 +15,10 @@ public class SparkSpeedController extends BaseSparkController {
         return this.getSpark().getEncoder().getVelocity();
     }
 
+    public boolean isSpeedWithinTolerance(double tolerance){
+        return Math.abs(getActualSpeed() - getDesiredSpeed()) < tolerance;
+    }
+    
     public void setDesiredSpeed(double desiredSpeed) {
         this.getSpark().getPIDController().setReference(desiredSpeed, ControlType.kVelocity);
     }
@@ -23,3 +27,4 @@ public class SparkSpeedController extends BaseSparkController {
         super(spark, settings);
     }
 }
+ 

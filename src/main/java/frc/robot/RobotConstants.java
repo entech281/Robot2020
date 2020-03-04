@@ -1,5 +1,11 @@
 package frc.robot;
 
+import com.revrobotics.CANPIDController;
+import frc.robot.controllers.SparkMaxSettings;
+import frc.robot.controllers.SparkMaxSettingsBuilder;
+import frc.robot.controllers.SparkSpeedController;
+import frc.robot.controllers.TalonSettings;
+import frc.robot.controllers.TalonSettingsBuilder;
 import frc.robot.pose.*;
 
 public class RobotConstants {
@@ -8,6 +14,51 @@ public class RobotConstants {
         public static final int BALL_SENSOR = 0;
     }
 
+    public interface MOTOR_SETTINGS {
+        public static TalonSettings INTAKE = TalonSettingsBuilder.defaults()
+                .withCurrentLimits(20, 15, 200)
+                .brakeInNeutral()
+                .withDirections(false, false)
+                .noMotorOutputLimits()
+                .noMotorStartupRamping()
+                .useSpeedControl()
+                .build();
+        
+        public static TalonSettings ELEVATOR = TalonSettingsBuilder.defaults()
+                .withCurrentLimits(20, 15, 200)
+                .brakeInNeutral()
+                .withDirections(false, false)
+                .noMotorOutputLimits()
+                .noMotorStartupRamping()
+                .useSpeedControl()
+                .build();
+        
+        public static TalonSettings HOOD = TalonSettingsBuilder.defaults()
+                .withCurrentLimits(1, 1, 1)
+                .brakeInNeutral()
+                .withDirections(false, false)
+                .noMotorOutputLimits()
+                .noMotorStartupRamping()
+                .usePositionControl()
+                .withGains(4, 2.56 * 3, 0, 0)
+                .withMotionProfile(1000, 1000, 5).build();
+        
+        public static SparkMaxSettings SHOOTER = SparkMaxSettingsBuilder.defaults()
+                .withCurrentLimits(30)
+                .coastInNeutral()
+                .withDirections(false, false)
+                .limitMotorOutputs(1, -1)
+                .withMotorRampUpOnStart(0.5)
+                .useSmartMotionControl()
+                .withPositionGains(0.000015, 12, 4e-4, 0.0)
+                .useAccelerationStrategy(CANPIDController.AccelStrategy.kSCurve)
+                .withMaxVelocity(6000)
+                .withMaxAcceleration(3000)
+                .withClosedLoopError(15)
+                .build();
+     
+    }
+    
     public interface CAN {
 
         public static final int FRONT_LEFT_MOTOR = 3;
@@ -118,38 +169,6 @@ public class RobotConstants {
         public static final boolean PNEUMATICS_MOUNTED = true;
         public static final boolean BALL_SENSOR = true;
 
-    }
-
-    public interface MOTORCONTROLLER_VALUES {
-
-        public interface SHOOTER_MOTOR {
-
-            public static final double SHOOTER_PID_P = 12;
-            public static final double SHOOTER_PID_I = 4e-4;
-            public static final double SHOOTER_PID_D = 0;
-            public static final double SHOOTER_PID_F = 0.000015;
-            public static final double SHOOTER_MAXOUTPUT = 1;
-            public static final double SHOOTER_MINOUTPUT = -1;
-            public static final int CURRENT_LIMIT = 35;
-            public static final double SHOOTER_MOTOR_RAMPUP = 0.5;
-            public static final int SHOOTER_MAX_ACCEL = 3000;
-            public static final int SHOOTER_TOLERANCE = 15;
-            public static final int SHOOTER_MAX_RPM = 6000;
-        }
-
-        public interface HOOD_MOTOR {
-
-            public int HOOD_CRUISE_VELOCITY = 1000;
-            public int HOOD_ACCELERATION = 1000;
-            public int ALLOWABLE_ERROR = 5;
-            public double ENCODER_CLICKS_PER_HOOD_MOTOR_REVOLUTION = 2100;
-            public final double HOOD_PID_F = 4;
-            public final double HOOD_PID_P = 2.56 * 3;
-            public final double HOOD_PID_I = 0;
-            public final double HOOD_PID_D = 0;
-            public final double HOOD_GEAR_RATIO = 4;
-
-        }
     }
     
     public interface SHOOT_PRESETS{

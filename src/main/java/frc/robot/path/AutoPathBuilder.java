@@ -58,7 +58,8 @@ public class AutoPathBuilder {
     }
     
     public static Command fireBalls(IntakeSubsystem intake){
-        return intake.startElevator();
+        return null;
+        //return intake.startElevator();
     }
     
     public static Command delay(double seconds){

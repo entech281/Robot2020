@@ -20,9 +20,6 @@ import java.util.*;
 public class VisionSubsystem extends BaseSubsystem {
 
     private static final int BAUD_RATE = 115200;
-
-    
-    
     private SerialPort visionPort;
 
     private VisionData visionData = VisionData.DEFAULT_VISION_DATA;
@@ -38,7 +35,7 @@ public class VisionSubsystem extends BaseSubsystem {
     }
 
     @Override
-    public void customPeriodic(RobotPose rPose, FieldPose fPose) {
+    public void periodic() {
         if(isConnected){
             String reading = visionPort.readString();
             logger.log("Input", reading);
