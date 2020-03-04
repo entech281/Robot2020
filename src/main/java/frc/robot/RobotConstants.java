@@ -47,6 +47,10 @@ public class RobotConstants {
         public static final int SELECT_PRESET_2 = 7;
         public static final int SNAP_TO_TARGET = 2;
         public static final int OUTAKE = 7;
+        public static final int NUDGE_YAW_RIGHT = 14;
+        public static final int NUDGE_YAW_LEFT = 15;
+        public static final int NUDGE_FORWARD = 16;
+        public static final int NUDGE_BACKWARD = 17;
         
     }
 

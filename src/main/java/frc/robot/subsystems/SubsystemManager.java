@@ -46,7 +46,6 @@ public class SubsystemManager {
     private NavXSubsystem navXSubsystem;
     private ShooterSubsystem shootSubsystem;
     private ClimbSubsystem climbSubsystem;
-    private ColorSubsystem colorSubsystem;
     private VisionSubsystem visionSubsystem;
 
     private final RobotPoseManager robotPoseManager = new RobotPoseManager();
@@ -60,7 +59,6 @@ public class SubsystemManager {
         navXSubsystem = new NavXSubsystem();
         shootSubsystem = new ShooterSubsystem();
         climbSubsystem = new ClimbSubsystem();
-        colorSubsystem = new ColorSubsystem();
         visionSubsystem = new VisionSubsystem();
 
         Collections.addAll(allSubsystems, driveSubsystem, intakeSubsystem, navXSubsystem, visionSubsystem, shootSubsystem);
@@ -81,7 +79,6 @@ public class SubsystemManager {
         robotPoseManager.updateEncoders(driveSubsystem.getEncoderValues());
         robotPoseManager.updateNavxAngle(navXSubsystem.updateNavXAngle());
         robotPoseManager.updateVisionData(visionSubsystem.getVisionData());
-        robotPoseManager.updateWheelColor(colorSubsystem.getRobotColorSensorReading());
         robotPoseManager.update();
     }
 
