@@ -4,7 +4,6 @@ import edu.wpi.first.wpilibj.Joystick;
 import frc.robot.commands.AdjustBackwardHoodCommand;
 import frc.robot.commands.AdjustRaiseHoodCommand;
 import frc.robot.commands.CommandGroupFactory;
-import frc.robot.commands.DriveForwardSetDistance;
 import frc.robot.commands.HoodHomingCommand;
 import frc.robot.commands.SnapToVisionTargetCommand;
 import frc.robot.commands.SnapToYawCommand;

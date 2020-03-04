@@ -6,10 +6,10 @@
 package frc.robot.path;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.robot.commands.CommandGroupFactory;
 import frc.robot.commands.DelayCommand;
-import frc.robot.commands.DriveForwardSetDistance;
 import frc.robot.commands.HoodHomingCommand;
 import frc.robot.commands.SnapAndShootCommand;
 import frc.robot.commands.SnapToVisionTargetCommand;
@@ -30,12 +30,11 @@ import java.util.List;
 public class AutoPathBuilder {
     
     public static Command goForward(DriveSubsystem drive, double inches) {
-        return new DriveForwardSetDistance(drive, inches);
+        return new InstantCommand(()->drive.driveToPosition(inches));
     }
     
     public static Command goBackward(DriveSubsystem drive, double inches) {
-        return new DriveForwardSetDistance(drive, -inches);
-    }
+        return new InstantCommand(()->drive.driveToPosition(-inches));    }
 
     public static Command turnRight(DriveSubsystem drive, double degrees) {
         return new SnapToYawCommand(drive, degrees, true);

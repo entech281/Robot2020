@@ -25,10 +25,4 @@ public class TalonSpeedController extends BaseTalonController implements SpeedCo
         this.desiredSpeed = desiredSpeed;
         talon.set(settings.getControlMode(), correctDirection(desiredSpeed));
     }
-
-    @Override
-    public void init() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
 }

@@ -1,3 +1,4 @@
+package frc.robot.controllers;
 
 import com.revrobotics.CANError;
 import com.revrobotics.CANSparkMax;
@@ -9,8 +10,8 @@ public class SparkSpeedController extends BaseSparkController implements SpeedCo
 
     private double desiredSpeed = 0.0;
     private boolean enabled = true;
-    public static int CAN_TIMEOUT_MILLIS = 1000;
-    public static double SPEED_NOT_ENABLED=-1;
+    public static final int CAN_TIMEOUT_MILLIS = 1000;
+    public static final double SPEED_NOT_ENABLED=-1;
     public double getDesiredSpeed() {
         return desiredSpeed;
     }
@@ -40,7 +41,7 @@ public class SparkSpeedController extends BaseSparkController implements SpeedCo
     }
 
     @Override
-    public void init() {
+    public void configure() {
         settings.configureSparkMax(spark);
         CANError err = spark.setCANTimeout(CAN_TIMEOUT_MILLIS);
         if ( err == err.kOk ){

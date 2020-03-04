@@ -11,8 +11,8 @@ public class SparkPositionController extends BaseSparkController implements Posi
     }    
     
     private double desiredPosition = 0.0;
-    public static int CAN_TIMEOUT_MILLIS = 1000;
-    public static double POSITION_NOT_ENABLED=-1;
+    public static final int CAN_TIMEOUT_MILLIS = 1000;
+    public static final double POSITION_NOT_ENABLED=-1;
     private boolean enabled = true;
 
     public double getDesiredPosition() {

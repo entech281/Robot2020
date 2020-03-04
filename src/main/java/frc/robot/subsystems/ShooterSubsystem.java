@@ -243,7 +243,7 @@ public class ShooterSubsystem extends BaseSubsystem {
                     .withMotorRampUpOnStart(SHOOTER_MOTOR.SHOOTER_MOTOR_RAMPUP).useSmartMotionControl()
                     .withPositionGains(SHOOTER_MOTOR.SHOOTER_PID_F, SHOOTER_MOTOR.SHOOTER_PID_P, SHOOTER_MOTOR.SHOOTER_PID_I, SHOOTER_MOTOR.SHOOTER_PID_D)
                     .useAccelerationStrategy(AccelStrategy.kSCurve).withMaxVelocity(SHOOTER_MOTOR.SHOOTER_MAX_RPM).withMaxAcceleration(SHOOTER_MOTOR.SHOOTER_MAX_ACCEL).withClosedLoopError(SHOOTER_MOTOR.SHOOTER_TOLERANCE).build();
-            shooterMotorController = new SparkSpeedController(shootMotor, shooterSettings);
+            shooterMotorController = new SparkSpeedController(shootMotor, shooterSettings, false);
             shooterMotorController.configure();
 
         }
@@ -252,9 +252,9 @@ public class ShooterSubsystem extends BaseSubsystem {
             TalonSettings hoodSettings = TalonSettingsBuilder.defaults().withCurrentLimits(1, 1, 1).brakeInNeutral()
                     .withDirections(false, false).noMotorOutputLimits().noMotorStartupRamping().usePositionControl()
                     .withGains(HOOD_MOTOR.HOOD_PID_F, HOOD_MOTOR.HOOD_PID_P, HOOD_MOTOR.HOOD_PID_I, HOOD_MOTOR.HOOD_PID_D)
-                    .withMotionProfile(HOOD_MOTOR.HOOD_CRUISE_VELOCITY, HOOD_MOTOR.HOOD_ACCELERATION, HOOD_MOTOR.ALLOWABLE_ERROR).build();
+                    .withMotionProfile(HOOD_MOTOR.HOOD_CRUISE_VELOCITY, HOOD_MOTOR.HOOD_ACCELERATION, HOOD_MOTOR.ALLOWABLE_ERROR).enableLimitSwitch(true).build();
 
-            hoodMotorController = new TalonPositionController(hoodMotor, hoodSettings);
+            hoodMotorController = new TalonPositionController(hoodMotor, hoodSettings, true);
             hoodMotorController.configure();
             hoodMotor.configForwardLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen,
                     0);
@@ -336,23 +336,15 @@ public class ShooterSubsystem extends BaseSubsystem {
     
     public void adjustHoodPosition(double desiredPosition) {
         this.HOOD_POSITION = desiredPosition;
-        if (hoodMotorMounted) {
-            hoodMotorController.setDesiredPosition(desiredPosition);
-        }
+        hoodMotorController.setDesiredPosition(desiredPosition);
     }
 
     public boolean isUpperLimitHit() {
-        if (hoodMotorMounted) {
-            return hoodMotor.getSensorCollection().isFwdLimitSwitchClosed();
-        }
-        return true;
+        return hoodMotorController.isAtUpperLimit();
     }
 
     public boolean isLowerLimitHit() {
-        if (shootMotorMounted) {
-            return hoodMotor.getSensorCollection().isRevLimitSwitchClosed();
-        }
-        return true;
+        return hoodMotorController.isAtLowerLimit();    
     }
 
     public void shoot() {

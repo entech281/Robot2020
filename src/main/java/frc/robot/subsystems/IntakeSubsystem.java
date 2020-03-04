@@ -129,35 +129,27 @@ public class IntakeSubsystem extends BaseSubsystem {
     
     @Override
     public void initialize() {
-        if (intake) {
-            
             intakeMotor = new WPI_TalonSRX(RobotConstants.CAN.INTAKE_MOTOR);
-            TalonSettings motorSettings = TalonSettingsBuilder.defaults().withCurrentLimits(20, 15, 200).brakeInNeutral()
+            TalonSettings intakeMotorSettings = TalonSettingsBuilder.defaults().withCurrentLimits(20, 15, 200).brakeInNeutral()
                     .withDirections(false, false).noMotorOutputLimits().noMotorStartupRamping().useSpeedControl().build();
 
-            intakeMotorController = new TalonSpeedController(intakeMotor, motorSettings);
+            intakeMotorController = new TalonSpeedController(intakeMotor, intakeMotorSettings, false);
             intakeMotorController.configure();
             intakeMotor.set(ControlMode.PercentOutput, 0);
-            
-        }
-        
         if(PNEUMATICS_MOUNTED){
-            
             deployIntakeSolenoids = new DoubleSolenoid(RobotConstants.CAN.FORWARD, RobotConstants.CAN.REVERSE);
-            
             deployIntakeSolenoids.set(DoubleSolenoid.Value.kReverse);
         }
-        
-        if (elevator) {
-            TalonSettings motorSettings = TalonSettingsBuilder.defaults()
-                    .withCurrentLimits(maxCurrent, maxSustainedCurrent, maxCurrentTime).brakeInNeutral()
-                    .withDirections(false, false).noMotorOutputLimits().noMotorStartupRamping().useSpeedControl().build();
 
-            elevatorMotor = new WPI_TalonSRX(RobotConstants.CAN.ELEVATOR_MOTOR);
-            elevatorMotorController = new TalonSpeedController(elevatorMotor, motorSettings);
-            elevatorMotorController.configure();
-            elevatorMotor.set(ControlMode.PercentOutput, 0);
-        }
+        TalonSettings elevatorMotorSettings = TalonSettingsBuilder.defaults()
+                .withCurrentLimits(maxCurrent, maxSustainedCurrent, maxCurrentTime).brakeInNeutral()
+                .withDirections(false, false).noMotorOutputLimits().noMotorStartupRamping().useSpeedControl().build();
+
+        elevatorMotor = new WPI_TalonSRX(RobotConstants.CAN.ELEVATOR_MOTOR);
+        elevatorMotorController = new TalonSpeedController(elevatorMotor, intakeMotorSettings, true);
+        elevatorMotorController.configure();
+        elevatorMotorController.setDesiredSpeed(STOP_SPEED);
+        
         timer = new Timer();
         if(BALL_SENSOR){
             beam = new DigitalInput(RobotConstants.DIGITIAL_INPUT.BALL_SENSOR);
