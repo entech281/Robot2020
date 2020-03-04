@@ -1,7 +1,6 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.Joystick;
-import frc.robot.DriveInstruction;
 import frc.robot.subsystems.DriveSubsystem;
 
 public class TankDriveCommand extends EntechCommandBase {

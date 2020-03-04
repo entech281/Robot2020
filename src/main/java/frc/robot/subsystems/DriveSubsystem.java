@@ -3,10 +3,8 @@ package frc.robot.subsystems;
 import frc.robot.controllers.SparkMaxSettings;
 import frc.robot.controllers.SparkMaxSettingsBuilder;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-import frc.robot.DriveInstruction;
 import frc.robot.RobotConstants;
 import frc.robot.controllers.SparkPositionController;
-import frc.robot.path.PositionBuffer;
 
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
@@ -19,7 +17,6 @@ import frc.robot.commands.EntechCommandBase;
 import frc.robot.commands.SingleShotCommand;
 import frc.robot.pose.*;
 import frc.robot.utils.EncoderInchesConverter;
-import static frc.robot.RobotConstants.AVAILABILITY.*;
 import frc.robot.path.Position;
 import frc.robot.path.PositionCalculator;
 import java.util.ArrayList;
