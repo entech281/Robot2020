@@ -102,4 +102,14 @@ public class Robot extends TimedRobot {
         subsystemManager.getDriveSubsystem().setSpeedMode();
     }
 
+    @Override
+    public void testInit(){
+
+    }
+
+    @Override
+    public void testPeriodic() {
+
+    }
+    
 }

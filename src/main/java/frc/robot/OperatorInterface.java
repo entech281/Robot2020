@@ -60,7 +60,14 @@ public class OperatorInterface {
         operatorPanelManager.addButton(RobotConstants.BUTTONS.SELECT_PRESET_2)
                 .whenPressed(subsystemManager.getShooterSubsystem().selectPreset2())
                 .add();
+
+        operatorPanelManager.addButton(RobotConstants.BUTTONS.NUDGE_HOOD_FORWARD)
+                .whenPressed(subsystemManager.getShooterSubsystem().nudgeHoodForward())
+                .add();
         
+        operatorPanelManager.addButton(RobotConstants.BUTTONS.NUDGE_HOOD_BACKWARD)
+                .whenPressed(subsystemManager.getShooterSubsystem().nudgeHoodBackward())
+                .add();        
         drive = subsystemManager.getDriveSubsystem();
         
         joystickManager.addButton(RobotConstants.BUTTONS.SNAP_TO_TARGET)

@@ -49,8 +49,8 @@ public class RobotConstants {
         public static final int OUTAKE = 7;
         public static final int NUDGE_YAW_RIGHT = 14;
         public static final int NUDGE_YAW_LEFT = 15;
-        public static final int NUDGE_FORWARD = 16;
-        public static final int NUDGE_BACKWARD = 17;
+        public static final int NUDGE_HOOD_FORWARD = 16;
+        public static final int NUDGE_HOOD_BACKWARD = 17;
         
     }
 
