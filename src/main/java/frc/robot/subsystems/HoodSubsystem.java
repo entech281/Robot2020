@@ -20,10 +20,10 @@ public class HoodSubsystem extends BaseSubsystem {
 
     private WPI_TalonSRX hoodMotor;
     private TalonPositionController hoodMotorController;
-    private PositionAngleConverter positionConverter = new PositionAngleConverter();
+    private final PositionAngleConverter positionConverter = new PositionAngleConverter();
     public static final double HOOD_TOLERANCE_COUNTS = 50;
 
-    private ClampedDouble desiredHoodPositionDegrees = ClampedDouble.builder()
+    private final ClampedDouble desiredHoodPositionDegrees = ClampedDouble.builder()
             .bounds(0, 90)
             .withIncrement(5.0)
             .withValue(0.0).build();
@@ -82,7 +82,6 @@ public class HoodSubsystem extends BaseSubsystem {
     }
 
     private static class LimitSwitchState {
-
         public static int closed = 1;
         public static int open = 0;
     }

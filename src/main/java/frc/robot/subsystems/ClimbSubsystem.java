@@ -37,10 +37,5 @@ public class ClimbSubsystem extends BaseSubsystem {
         }
     }
 
-    public void raiseHook() {
-        engageWinchSolenoid.set(false);
-        attachHookSolenoid.set(true);
-    }
-
 
 }
