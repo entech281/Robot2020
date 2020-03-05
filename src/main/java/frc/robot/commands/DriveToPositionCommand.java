@@ -6,6 +6,7 @@
 package frc.robot.commands;
 
 import frc.robot.path.Position;
+import frc.robot.path.PositionCalculator;
 import frc.robot.pose.EncoderValues;
 import frc.robot.pose.PoseSource;
 import frc.robot.pose.RobotPose;
@@ -29,6 +30,11 @@ public class DriveToPositionCommand extends EntechCommandBase{
         super(drive);
         this.drive = drive;
         this.targetPosition = targetPosition;
+    }
+    public DriveToPositionCommand(DriveSubsystem drive, double distanceInches){
+        super(drive);
+        this.drive = drive;
+        this.targetPosition = PositionCalculator.goForward(distanceInches);
     }
     
    @Override
