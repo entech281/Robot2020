@@ -1,10 +1,14 @@
 package frc.robot.subsystems;
 
+import frc.robot.pose.FieldPose;
+import frc.robot.pose.FieldPoseManager;
+import frc.robot.pose.PoseSource;
+import frc.robot.pose.RobotPose;
+import frc.robot.pose.RobotPoseManager;
 import java.util.*;
 
-import frc.robot.logger.DataLoggerFactory;
 
-public class SubsystemManager {
+public class SubsystemManager implements PoseSource{
 
     boolean hasClimb = false;
 
@@ -48,6 +52,9 @@ public class SubsystemManager {
     private VisionSubsystem visionSubsystem;
     private HoodSubsystem hoodSubsystem;
 
+    private final RobotPoseManager robotPoseManager = new RobotPoseManager();
+    private final FieldPoseManager fieldPoseManager = new FieldPoseManager();
+    
     public void setHoodSubsystem(HoodSubsystem hoodSubsystem) {
         this.hoodSubsystem = hoodSubsystem;
     }
@@ -71,5 +78,21 @@ public class SubsystemManager {
             hoodSubsystem).forEach(subsystem -> subsystem.initialize());
  
     }
+    public void updatePoses() {
+        robotPoseManager.updateEncoders(driveSubsystem.getEncoderValues());
+        robotPoseManager.updateNavxAngle(navXSubsystem.updateNavXAngle());
+        robotPoseManager.updateVisionData(visionSubsystem.getVisionData());
+        robotPoseManager.updateWheelColor(colorSubsystem.getRobotColorSensorReading());
+        robotPoseManager.update();
+    }
 
+    @Override
+    public RobotPose getRobotPose() {
+        return robotPoseManager.getCurrentPose();
+    }
+
+    @Override
+    public FieldPose getFieldPose() {
+        return fieldPoseManager.getCurrentPose();
+    }
 }

@@ -12,14 +12,10 @@ import com.revrobotics.CANPIDController.AccelStrategy;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
-import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.commands.EntechCommandBase;
-import frc.robot.commands.SingleShotCommand;
 import frc.robot.pose.*;
 import frc.robot.utils.EncoderInchesConverter;
 import frc.robot.path.Position;
 import frc.robot.path.PositionCalculator;
-import java.util.ArrayList;
 
 public class DriveSubsystem extends BaseSubsystem {
 
@@ -45,18 +41,12 @@ public class DriveSubsystem extends BaseSubsystem {
     private DifferentialDrive robotDrive;
 
     private EncoderInchesConverter encoderConverter = new EncoderInchesConverter(1 / RobotConstants.DIMENSIONS.MOTOR_REVOLUTIONS_PER_INCH);
-     
-    public static final boolean frontRightPositionInverse = true;
-    public static final boolean frontLeftPositionInverse = false;
-    public static final boolean rearRightPositionInverse = true;
-    public static final boolean rearLeftPositionInverse = false;
 
     
-    private ArrayList<SparkPositionController> positionControllers = new ArrayList<>();
-
-    
-    private RobotPose latestRobotPose = RobotConstants.ROBOT_DEFAULTS.START_POSE;
-
+    public static final boolean FRONT_RIGHT_POSITION_INVERSE = true;
+    public static final boolean FRONT_LEFT_POSITION_INVERSE = false;
+    public static final boolean REAR_RIGHT_POSITION_INVERSE = true;
+    public static final boolean REAR_LEFT_POSITION_INVERSE = false;
 
     private SparkMaxSettings speedSettings = SparkMaxSettingsBuilder.defaults()
             .withCurrentLimits(35)
@@ -84,60 +74,47 @@ public class DriveSubsystem extends BaseSubsystem {
             .withClosedLoopError(RobotConstants.AUTONOMOUS.ACCEPTABLE_ERROR)
             .build();
 
-    public Command reset() {
-        return new SingleShotCommand(this) {
-
-            @Override
-            public void doCommand() {
-                frontLeftPositionController.resetPosition();
-                frontRightPositionController.resetPosition();
-                rearLeftPositionController.resetPosition();
-                rearRightPositionController.resetPosition();
-                logger.log("Clicks per rotation", rearRightEncoder.getCountsPerRevolution());
-            }
-        }.withTimeout(EntechCommandBase.DEFAULT_TIMEOUT_SECONDS);
-
+    public void resetPosition() {
+        frontLeftPositionController.resetPosition();
+        frontRightPositionController.resetPosition();
+        rearLeftPositionController.resetPosition();
+        rearRightPositionController.resetPosition();        
     }
 
     
     @Override
     public void initialize() {
         performInitialization();
-        reset();
+        
     }
 
     private void performInitialization(){
-            frontLeftSpark = new CANSparkMax(RobotConstants.CAN.FRONT_LEFT_MOTOR, MotorType.kBrushless);
-            rearLeftSpark = new CANSparkMax(RobotConstants.CAN.REAR_LEFT_MOTOR, MotorType.kBrushless);
-            leftSpeedController = new SpeedControllerGroup(frontLeftSpark, rearLeftSpark);
+        frontLeftSpark = new CANSparkMax(RobotConstants.CAN.FRONT_LEFT_MOTOR, MotorType.kBrushless);
+        rearLeftSpark = new CANSparkMax(RobotConstants.CAN.REAR_LEFT_MOTOR, MotorType.kBrushless);
+        leftSpeedController = new SpeedControllerGroup(frontLeftSpark, rearLeftSpark);
 
-            frontRightSpark = new CANSparkMax(RobotConstants.CAN.FRONT_RIGHT_MOTOR, MotorType.kBrushless);
-            rearRightSpark = new CANSparkMax(RobotConstants.CAN.REAR_RIGHT_MOTOR, MotorType.kBrushless);
-            rightSpeedController = new SpeedControllerGroup(frontRightSpark, rearRightSpark);
+        frontRightSpark = new CANSparkMax(RobotConstants.CAN.FRONT_RIGHT_MOTOR, MotorType.kBrushless);
+        rearRightSpark = new CANSparkMax(RobotConstants.CAN.REAR_RIGHT_MOTOR, MotorType.kBrushless);
+        rightSpeedController = new SpeedControllerGroup(frontRightSpark, rearRightSpark);
 
-            frontLeftEncoder = frontLeftSpark.getEncoder();
-            frontRightEncoder = frontRightSpark.getEncoder();
-            rearLeftEncoder = rearLeftSpark.getEncoder();
-            rearRightEncoder = rearRightSpark.getEncoder();
+        frontLeftEncoder = frontLeftSpark.getEncoder();
+        frontRightEncoder = frontRightSpark.getEncoder();
+        rearLeftEncoder = rearLeftSpark.getEncoder();
+        rearRightEncoder = rearRightSpark.getEncoder();
 
-            robotDrive = new DifferentialDrive(leftSpeedController, rightSpeedController);
-            frontLeftPositionController = new SparkPositionController(frontLeftSpark, smartMotionSettings, frontLeftPositionInverse);
-            frontRightPositionController = new SparkPositionController(frontRightSpark, smartMotionSettings, frontRightPositionInverse);
-            rearLeftPositionController = new SparkPositionController(rearLeftSpark, smartMotionSettings, rearLeftPositionInverse);
-            rearRightPositionController = new SparkPositionController(rearRightSpark, smartMotionSettings, rearRightPositionInverse);
-            
-            positionControllers.add(frontLeftPositionController);
-            positionControllers.add(frontRightPositionController);
-            positionControllers.add(rearLeftPositionController);
-            positionControllers.add(rearRightPositionController);
+        robotDrive = new DifferentialDrive(leftSpeedController, rightSpeedController);
+        frontLeftPositionController = new SparkPositionController(frontLeftSpark, smartMotionSettings, FRONT_LEFT_POSITION_INVERSE);
+        frontRightPositionController = new SparkPositionController(frontRightSpark, smartMotionSettings, FRONT_RIGHT_POSITION_INVERSE);
+        rearLeftPositionController = new SparkPositionController(rearLeftSpark, smartMotionSettings, REAR_LEFT_POSITION_INVERSE);
+        rearRightPositionController = new SparkPositionController(rearRightSpark, smartMotionSettings, REAR_RIGHT_POSITION_INVERSE);
 
     }
     
     public void setSpeedMode() {
-            speedSettings.configureSparkMax(frontLeftSpark);
-            speedSettings.configureSparkMax(frontRightSpark);
-            speedSettings.configureSparkMax(rearLeftSpark);
-            speedSettings.configureSparkMax(rearRightSpark);
+        speedSettings.configureSparkMax(frontLeftSpark);
+        speedSettings.configureSparkMax(frontRightSpark);
+        speedSettings.configureSparkMax(rearLeftSpark);
+        speedSettings.configureSparkMax(rearRightSpark);
     }
 
     public void setPositionMode() {
@@ -160,7 +137,7 @@ public class DriveSubsystem extends BaseSubsystem {
     }
 
     @Override
-    public void customPeriodic(RobotPose rp, FieldPose fp) {
+    public void periodic() {
             logger.log("Front Left Encoder Ticks", frontLeftEncoder.getPosition());
             logger.log("Front Right Encoder Ticks", frontRightEncoder.getPosition());
             logger.log("Rear Left Encoder Ticks", rearLeftEncoder.getPosition());
@@ -169,35 +146,24 @@ public class DriveSubsystem extends BaseSubsystem {
             if (getCurrentCommand() != null) {
                 logger.log("current command", getCurrentCommand().getName());
             }
-        latestRobotPose = rp;
     }
-    
-    public RobotPose getLatestRobotPose(){
-        return latestRobotPose;
-    }
+
 
     public void drive(double forward, double rotation) {
         robotDrive.arcadeDrive(forward, rotation);
     }
-
-    public void startAutonomous() {
-        inAuto = true;
-        robotDrive.setSafetyEnabled(false);
-    }
-
     
     public void driveToPosition(double distance){
         setPositionMode();
         Position pose = PositionCalculator.goForward(distance);
         double encoderLeft = encoderConverter.toCounts(pose.getLeftInches());
         double encoderRight = encoderConverter.toCounts(pose.getRightInches());
+        
         frontLeftPositionController.setDesiredPosition(encoderLeft);
         frontRightPositionController.setDesiredPosition(encoderRight);
         rearLeftPositionController.setDesiredPosition(encoderLeft);
         rearRightPositionController.setDesiredPosition(encoderRight);
     }
 
-    public void endAutonomous() {
-        robotDrive.setSafetyEnabled(true);
-    }
+
 }

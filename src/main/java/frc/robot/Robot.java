@@ -6,9 +6,6 @@
 /*----------------------------------------------------------------------------*/
 package frc.robot;
 
-import edu.wpi.cscore.MjpegServer;
-import edu.wpi.cscore.UsbCamera;
-import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -16,7 +13,8 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
 import frc.robot.logger.DataLogger;
 import frc.robot.logger.DataLoggerFactory;
-import frc.robot.path.AutoPathFactory;
+import frc.robot.pose.FieldPoseManager;
+import frc.robot.pose.RobotPoseManager;
 import frc.robot.preferences.AutoCommandFactory;
 import frc.robot.preferences.SmartDashboardPathChooser;
 import frc.robot.subsystems.CommandFactory;
@@ -32,8 +30,9 @@ import frc.robot.subsystems.SubsystemManager;
 public class Robot extends TimedRobot {
 
     private DataLogger logger;
-    private SubsystemManager subsystemManager = new SubsystemManager();
+    private SubsystemManager  subsystemManager;
     private CommandFactory commandFactory;
+
 
     private SmartDashboardPathChooser optionChooser;
     OperatorInterface oi;
@@ -49,16 +48,19 @@ public class Robot extends TimedRobot {
         
         DataLoggerFactory.configureForMatch();
         this.logger = DataLoggerFactory.getLoggerFactory().createDataLogger("Robot Main Loop");
+        subsystemManager = new SubsystemManager();
         subsystemManager.initAll();
 
         optionChooser = new SmartDashboardPathChooser();
+
         oi = new OperatorInterface(subsystemManager);
         commandFactory = new CommandFactory(subsystemManager);
     }
 
     @Override
     public void robotPeriodic() {
-        //runs after everything eles
+        //runs after everything else
+        subsystemManager.updatePoses();
         CommandScheduler.getInstance().run();
     }
 

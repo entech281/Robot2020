@@ -24,4 +24,9 @@ public class TankDriveCommand extends EntechCommandBase {
     public void execute() {
         drive.drive(-driveStick.getY(), driveStick.getX());
     }
+    
+    @Override
+    public boolean isFinished(){
+        return false;
+    }
 }

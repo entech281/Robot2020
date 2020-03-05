@@ -7,6 +7,8 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import frc.robot.commands.SnapToVisionTargetCommand;
+import frc.robot.commands.SnapToYawCommand;
+import frc.robot.pose.PoseSource;
 
 
 /**
@@ -26,11 +28,14 @@ public class CommandFactory {
     public static final double ELEVATOR_INTAKE_SPEED = 0.3;
     public static final double INTAKE_REVERSE = -0.2;
     
-    private SubsystemManager sm;
+    private final SubsystemManager sm;
     public CommandFactory(SubsystemManager subsystemManager){
         this.sm = subsystemManager;
     }
     
+    public Command zeroYawOfNavX(boolean inverted){
+        return new InstantCommand ( () -> sm.getNavXSubsystem().zeroYawMethod(inverted));
+    }
     public Command middleSixBallAuto(){
         throw new UnsupportedOperationException("Not yet Implemented");
     }
@@ -65,7 +70,10 @@ public class CommandFactory {
         throw new UnsupportedOperationException("Not yet Implemented");        
     }
     public Command snapToVisionTargetCommand(){
-        return new SnapToVisionTargetCommand(sm.getDriveSubsystem());
+        return new SnapToVisionTargetCommand(sm.getDriveSubsystem(),sm);
+    }
+    public Command snapToYawCommand(double desiredAngle, boolean relative){
+        return new SnapToYawCommand(sm.getDriveSubsystem(),  desiredAngle,  relative, sm );
     }
     public Command hoodAutoAdjustCommand(){
 //        VisionData vd = vision.getVisionData();

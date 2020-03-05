@@ -61,7 +61,7 @@ public class OperatorInterface {
         drive = subsystemManager.getDriveSubsystem();
         
         joystickManager.addButton(RobotConstants.BUTTONS.SNAP_TO_TARGET)
-                .whenPressed(new SnapToVisionTargetCommand(drive).withTimeout(5))
+                .whenPressed(commandFactory.snapToVisionTargetCommand().withTimeout(5))
                 .add();
         
         joystickManager.addButton(RobotConstants.BUTTONS.DRIVER_SHOOT)
@@ -88,11 +88,11 @@ public class OperatorInterface {
                 .add();
         
         joystickManager.addButton(6)
-                .whenPressed(new SnapToYawCommand(drive, 2.5, true).withTimeout(0.25))
+                .whenPressed(commandFactory.snapToYawCommand( 2.5, true).withTimeout(0.25))
                 .add();
         
         joystickManager.addButton(5)
-                .whenPressed(new SnapToYawCommand(drive, -2.5, true).withTimeout(0.25))
+                .whenPressed(commandFactory.snapToYawCommand( -2.5, true).withTimeout(0.25))
                 .add();
         
         drive.setDefaultCommand(new TankDriveCommand(drive, driveStick));
