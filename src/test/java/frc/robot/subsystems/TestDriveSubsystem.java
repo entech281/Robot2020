@@ -12,21 +12,21 @@ import static org.mockito.Mockito.*;
 public class TestDriveSubsystem {
  
     protected CommandScheduler scheduler= CommandScheduler.getInstance();
-//    @Test
+    @Test
     public void testDriveSubsystemPosition(){
 
         DriveSubsystem drive = Mockito.mock(DriveSubsystem.class);
  
         Command d = new RunWhenDisabledCommandDecorator ( 
-                new InstantCommand ( () -> drive.driveToPosition(10))
+                new InstantCommand ( () -> drive.setSpeedMode())
         );
 
-        d.schedule();
+        scheduler.schedule(d);
         
         for ( int i=0;i<5;i++){
              scheduler.run();
         }
-        verify(drive).driveToPosition(10);
+        verify(drive).setSpeedMode();
     }
    
 }
