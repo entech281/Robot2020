@@ -28,10 +28,10 @@ public class TargetLocationProvider{
      * That function is not invertable. It has two branches which are. So there are two answers
      * to what the distance away actually is, that result from the same image. 
      * 
-     * I got the functions from Mathematica.
+     * I solved the problem and got the functions from Mathematica.
     */
 
-    private static double branchOne(double h,double d,double k){
+    private static double closerBranch(double h,double d,double k){
         return Complex.I.multiply(4 * 1 / Math.tan(k))
             .subtract(4)
             .reciprocal()
@@ -53,5 +53,32 @@ public class TargetLocationProvider{
                 )
             ).getReal()
             * 1 / Math.pow(Math.cos(k), 2);   
+    }
+
+    private static double furtherBranch(double h,double d,double k){
+        return Complex.I.add( 1 / Math.tan(k))
+            .multiply(4)
+            .reciprocal()
+            .multiply(
+                Complex.I.multiply(2 * k).exp().multiply(h)
+                .add(h)
+                .add(
+                    Complex.I.multiply(
+                        Complex.I.multiply(- 2 * k).exp()
+                            .multiply(4 * d * d + 4 * d * h + h * h * (1 + Math.cos(2 * k)) )
+                            .getArgument()
+                    )
+                    .multiply(1/2)
+                    .exp()
+                    .multiply(Math.sqrt(2))
+                    .multiply(Complex.I)
+                    .multiply(Math.pow(8 * d * d + 8 * d * h + h * h * (1 + Math.cos(2 * k) ), 1 / 4))
+                )
+            ).getReal()
+            * 1 / Math.pow(Math.cos(k), 2);   
+    }
+
+    private static boolean isImageTooBig(){
+        return true;
     }
 }
