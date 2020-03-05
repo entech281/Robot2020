@@ -6,7 +6,6 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.controller.PIDController;
-import frc.robot.DriveInstruction;
 import frc.robot.RobotConstants;
 import frc.robot.pose.RobotPose;
 import frc.robot.subsystems.DriveSubsystem;
@@ -49,7 +48,7 @@ public class SnapToVisionTargetCommand extends EntechCommandBase {
             output = controller.calculate(offset);
             output = PIDControlOutputProcessor.constrain(output, 0.4);
             logger.log("Output", output);
-            drive.drive(new DriveInstruction(0, output));
+            drive.drive(0, output);
         }
 
     }

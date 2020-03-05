@@ -80,7 +80,7 @@ public class ClimbSubsystem extends BaseSubsystem {
             winch = new CANSparkMax(RobotConstants.CAN.INTAKE_MOTOR, MotorType.kBrushless);
             attachHookSolenoid = new Solenoid(RobotConstants.CAN.PCM_ID, RobotConstants.PNEUMATICS.ATTACH_SOLENOID);
             engageWinchSolenoid = new Solenoid(RobotConstants.CAN.PCM_ID, RobotConstants.PNEUMATICS.ENGAGE_WINCH);
-            winchController = new SparkSpeedController(winch, motorSettings);
+            winchController = new SparkSpeedController(winch, motorSettings, false);
             winchController.configure();
 
             // The solenoid that controls the hook needs to be disengaged where as the

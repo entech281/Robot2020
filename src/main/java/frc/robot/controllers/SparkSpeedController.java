@@ -1,18 +1,25 @@
 package frc.robot.controllers;
 
+import com.revrobotics.CANError;
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.ControlType;
 
-public class SparkSpeedController extends BaseSparkController {
+public class SparkSpeedController extends BaseSparkController implements SpeedController{
 
     private double desiredSpeed = 0.0;
-
+    private boolean enabled = true;
+    public static final int CAN_TIMEOUT_MILLIS = 1000;
+    public static final double SPEED_NOT_ENABLED=-1;
     public double getDesiredSpeed() {
         return desiredSpeed;
     }
 
     public double getActualSpeed() {
-        return this.getSpark().getEncoder().getVelocity();
+        if ( enabled ){
+            return correctDirection( spark.getEncoder().getVelocity());
+        }
+        else{
+            return SPEED_NOT_ENABLED;
+        }
     }
 
     public boolean isSpeedWithinTolerance(double tolerance){
@@ -20,11 +27,34 @@ public class SparkSpeedController extends BaseSparkController {
     }
     
     public void setDesiredSpeed(double desiredSpeed) {
-        this.getSpark().getPIDController().setReference(desiredSpeed, ControlType.kVelocity);
+        if (enabled){
+            spark.getPIDController().setReference(correctDirection(this.desiredSpeed), settings.getControlType());
+        }
     }
 
-    public SparkSpeedController(CANSparkMax spark, SparkMaxSettings settings) {
-        super(spark, settings);
+    public SparkSpeedController(CANSparkMax spark, SparkMaxSettings settings, boolean reversed) {
+        super(spark, settings,reversed);
     }
+
+    @Override
+    public boolean isEnabled() {
+        return this.enabled;
+    }
+
+
+    @Override
+    public void configure() {
+        settings.configureSparkMax(spark);
+        CANError err = spark.setCANTimeout(CAN_TIMEOUT_MILLIS);
+        if ( err == err.kOk ){
+            settings.configureSparkMax(spark);
+            this.enabled = true;
+        }
+        else{
+            this.enabled = false;
+        }
+    }
+
+
 }
- 
+

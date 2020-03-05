@@ -1,56 +1,37 @@
 package frc.robot.controllers;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.ErrorCode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
-public abstract class BaseTalonController {
+public abstract class BaseTalonController extends BaseController{
 
-    private TalonSRX talon = null;
-    private TalonSettings settings = null;
-
-    public BaseTalonController(TalonSRX talon, TalonSettings settings) {
+    protected TalonSRX talon = null;
+    protected TalonSettings settings = null;
+    protected boolean reversed = false;
+    private boolean enabled = true;
+    public BaseTalonController(TalonSRX talon, TalonSettings settings, boolean reversed) {
+        super(reversed);
         this.talon = talon;
         this.settings = settings;
+    }
+    
+    public boolean isEnabled(){
+        return enabled;
+    }
+    
+    public boolean isReversed(){
+        return reversed;
     }
 
     public void configure() {
         settings.configureTalon(talon);
-    }
-
-    public void resetPosition() {
-        talon.setSelectedSensorPosition(0, TalonSettings.PID_SLOT, TalonSettings.TIMEOUT_MS);
-    }
-
-    /**
-     * A little tricky-- this is an Integer so that we can return Null if this
-     * talon is a follower. That's because a follower is configured because its
-     * encoder is broken!
-     *
-     * @return
-     */
-    public Integer getActualPosition() {
-        if (talon.getControlMode().equals(ControlMode.Follower)) {
-            return null;
-        } else {
-            return (int) this.getTalon().getSelectedSensorPosition(TalonSettings.PID_SLOT);
+        ErrorCode err = talon.configPeakCurrentLimit(0);
+        if ( err ==  ErrorCode.OK){
+            settings.configureTalon(talon);
+            this.enabled = true;
         }
-
+        else{
+            this.enabled = false;
+        }
     }
-
-    public void resetMode() {
-        settings.setMode(talon);
-    }
-
-    public void resetMode(double settingValue) {
-        settings.setMode(talon, settingValue);
-    }
-
-    public TalonSRX getTalon() {
-        return talon;
-    }
-
-    public TalonSettings getSettings() {
-        return settings;
-    }
-
 }

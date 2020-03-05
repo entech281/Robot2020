@@ -1,6 +1,5 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -24,7 +23,7 @@ public class IntakeSubsystem extends BaseSubsystem {
 
             
         intakeMotor = new WPI_TalonSRX(RobotConstants.CAN.INTAKE_MOTOR);
-        intakeMotorController = new TalonSpeedController(intakeMotor, MOTOR_SETTINGS.INTAKE);
+        intakeMotorController = new TalonSpeedController(intakeMotor, MOTOR_SETTINGS.INTAKE,false);
         intakeMotorController.configure();
         intakeMotorController.setDesiredSpeed(0);
 
@@ -33,10 +32,9 @@ public class IntakeSubsystem extends BaseSubsystem {
         deployIntakeSolenoids.set(DoubleSolenoid.Value.kReverse);
 
         elevatorMotor = new WPI_TalonSRX(RobotConstants.CAN.ELEVATOR_MOTOR);
-        elevatorMotorController = new TalonSpeedController(elevatorMotor, MOTOR_SETTINGS.ELEVATOR);
+        elevatorMotorController = new TalonSpeedController(elevatorMotor, MOTOR_SETTINGS.ELEVATOR,true);
         elevatorMotorController.configure();
         elevatorMotorController.setDesiredSpeed(0);
-
 
         intakeBallSensor = new DigitalInput(RobotConstants.DIGITIAL_INPUT.BALL_SENSOR);
    
@@ -48,6 +46,7 @@ public class IntakeSubsystem extends BaseSubsystem {
         }
         else if ( deployIntakeSolenoids.get() == DoubleSolenoid.Value.kForward ){
             deployIntakeSolenoids.set(DoubleSolenoid.Value.kReverse);
+
         }
     }
     
@@ -78,9 +77,7 @@ public class IntakeSubsystem extends BaseSubsystem {
     }
     
     public void setElevatorSpeed(double desiredSpeed) {
-        //TODO: set this controller up to be reversed, and
-        //use a positivel value
-       elevatorMotorController.setDesiredSpeed(-desiredSpeed);
+       elevatorMotorController.setDesiredSpeed(desiredSpeed);
     }
 
 

@@ -41,7 +41,8 @@ public class RobotConstants {
                 .noMotorStartupRamping()
                 .usePositionControl()
                 .withGains(4, 2.56 * 3, 0, 0)
-                .withMotionProfile(1000, 1000, 5).build();
+                .withMotionProfile(1000, 1000, 5)
+                .enableLimitSwitch(false).build();
         
         public static SparkMaxSettings SHOOTER = SparkMaxSettingsBuilder.defaults()
                 .withCurrentLimits(30)

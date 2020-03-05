@@ -1,13 +1,12 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
-import frc.robot.RobotConstants;
-import frc.robot.commands.EntechCommandBase;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
+import frc.robot.commands.SnapToVisionTargetCommand;
 
 
 /**
@@ -32,33 +31,73 @@ public class CommandFactory {
         this.sm = subsystemManager;
     }
     
-    public Command hoodAutoAdjustCommand(Vision){
-        if(rPose.getVisionDataValidity()){
-            config = processor.calculateShooterConfiguration(rPose.getTargetLocation());
-            setDesiredShooterConfiguration(config);                    
-        }        
+    public Command middleSixBallAuto(){
+        throw new UnsupportedOperationException("Not yet Implemented");
+    }
+    
+    public Command leftEightBallAuto(){
+        throw new UnsupportedOperationException("Not yet Implemented");
+    }
+    
+    public Command doNothing(){
+        return new PrintCommand("Doing Nothing Skipper!");
+    }
+    public Command simpleBackupAuto(){
+        throw new UnsupportedOperationException("Not yet Implemented");
+    }
+    
+    public Command startIntakeCommand(){
+        //addCommands(intake.startIntake(), intake.stopElevator(), shoot.turnOffShooter());
+        throw new UnsupportedOperationException("Not yet Implemented");
+    }
+    
+    public Command startShooterCommand(){
+        // addCommands(intake.shiftElevatorBack() ,shoot.turnOnShooter());
+        throw new UnsupportedOperationException("Not yet Implemented");
+    }
+    public Command stopIntakeCommand(){
+        //addCommands(intake.stopIntake(), intake.stopElevator());
+        throw new UnsupportedOperationException("Not yet Implemented");
+    }
+    
+    public Command snapAndShootCommand(){
+        //addCommands(shoot.enableAutoShooting() , new StartShooterCommand(shoot, intakeSubsystem), new SnapToVisionTargetCommand(drive));  
+        throw new UnsupportedOperationException("Not yet Implemented");        
+    }
+    public Command snapToVisionTargetCommand(){
+        return new SnapToVisionTargetCommand(sm.getDriveSubsystem());
+    }
+    public Command hoodAutoAdjustCommand(){
+//        VisionData vd = vision.getVisionData();
+//        if(vd.getVisionDataValidity()){
+//            ShooterConfiguration config = processor.calculateShooterConfiguration(rPose.getTargetLocation());
+//            setDesiredShooterConfiguration(config);                    
+//        }           
+        //return new HoodAutoAdjustCommand(sm.getVisionSubsystem(),sm.getHoodSubsystem());
+        throw new UnsupportedOperationException("Not yet Implemented");
     }
     
     public Command hoodAdjustToAngleCommand(double angle){
-        return new InstantCommand ( () -> sm.getHoodSubsystem().setHoodPosition(angle) , sm.getHoodSubsystem());
+        return new InstantCommand ( () -> sm.getHoodSubsystem().setHoodAngle(angle) , sm.getHoodSubsystem());
     }
-                if(preset1){
-                    config = processor.calculateShooterConfiguration(RobotConstants.SHOOT_PRESETS.PRESET_1);
-                    setShooterPreset1();
-                    preset1 = false;
-                }
-                else if(preset2){
-                    config = processor.calculateShooterConfiguration(RobotConstants.SHOOT_PRESETS.PRESET_2);
-                    setShooterPreset2();
-                    preset2 = false;        
-    }
+//                if(preset1){
+//                    config = processor.calculateShooterConfiguration(RobotConstants.SHOOT_PRESETS.PRESET_1);
+//                    setShooterPreset1();
+//                    preset1 = false;
+//                }
+//                else if(preset2){
+//                    config = processor.calculateShooterConfiguration(RobotConstants.SHOOT_PRESETS.PRESET_2);
+//                    setShooterPreset2();
+//                    preset2 = false;        
+//    }
     
     public Command hoodParkCommand(){
         return hoodAdjustToAngleCommand(1.0);
         
     }
     public Command hoodHomeCommand(){
-        
+        //return new HoodHomingCommand( sm.getHoodSubsystem() );
+        throw new UnsupportedOperationException("Not yet Implemented");
     }
     
     public Command intakeOnCommand(){
@@ -79,60 +118,34 @@ public class CommandFactory {
 
     public Command fireCommand(){
         return new SequentialCommandGroup(
-            new WaitUntilCommand ( sm.getShooterSubsystem())
-        
+            new WaitUntilCommand ( () ->  
+                    sm.getShooterSubsystem().atShootSpeed() &&
+                    sm.getHoodSubsystem().atHoodPosition() ),
+            new InstantCommand(() -> sm.getIntakeSubsystem().setElevatorSpeed(ELEVEATOR_SLOW_SPEED) )        
         );
     }
 
     public Command nudgeHoodForward(){
-        return new SingleShotCommandSingleShotCommand(this) {
-            @Override
-            public void doCommand(){
-                double desired = hoodMotorController.getActualPosition() - 50;
-                if(!autoAdjust){
-                    hoodMotorController.setDesiredPosition(desired);
-                }
-            }
-        };
-    }
-    public void setStartingLinePreset(){
-        adjustHoodPosition(-940);
-    }
-    
-    public void setShooterPreset2(){
-        adjustHoodPosition(-930);
-    }
-
-    public void setShooterPreset1(){
-        adjustHoodPosition(-375);
+        return new InstantCommand( sm.getHoodSubsystem()::adjustHoodForward, sm.getHoodSubsystem());
     }
     public Command nudgeHoodBackward(){
-        return new SingleShotCommandSingleShotCommand(this) {
-            @Override
-            public void doCommand(){
-                double desired = hoodMotorController.getActualPosition() + 50;
-                if(!autoAdjust){
-                    hoodMotorController.setDesiredPosition(desired);
-                }
-            }
-        };
-    }   
+        return new InstantCommand( sm.getHoodSubsystem()::adjustHoodBackward, sm.getHoodSubsystem());
+    }    
+    public Command setStartingLinePreset(){
+        //adjustHoodPosition(-940);
+        return new InstantCommand( () -> sm.getHoodSubsystem().setHoodAngle( 10.0), sm.getHoodSubsystem());
+        
+    }
+    
+    public Command setShooterPreset2(){
+        //adjustHoodPosition(-930);
+        return new InstantCommand( () -> sm.getHoodSubsystem().setHoodAngle( 10.2), sm.getHoodSubsystem());
+    }
 
-   public Command goToUpperLimit() {
-        return new SingleShotCommandSingleShotCommand(this) {
-
-            @Override
-            public void doCommand() {
-                hoodMotorController.resetPosition();
-                hoodMotorController.setDesiredPosition(hoodMotorController.getActualPosition());
-                while (!isUpperLimitHit()) {
-                    hoodMotor.set(ControlMode.PercentOutput, 0.3);
-                    logger.log("POSE", hoodMotorController.getActualPosition());
-                }
-                hoodMotor.set(ControlMode.Position, hoodMotorController.getActualPosition());
-            }
-        }.withTimeout(EntechCommandBase.DEFAULT_TIMEOUT_SECONDS);
-    } 
+    public Command setShooterPreset1(){
+        //adjustHoodPosition(-375);
+        return new InstantCommand( () -> sm.getHoodSubsystem().setHoodAngle( 5.0), sm.getHoodSubsystem());
+    }
     
     public Command startShooter() {
         return new InstantCommand(
@@ -195,4 +208,69 @@ public class CommandFactory {
             new InstantCommand ( () ->    sm.getIntakeSubsystem().setElevatorSpeed(0)  )
         ).withTimeout(1.0);  
     }  
+    
+    public Command getStopShooterCommandGroup(){
+//        return new EntechCommandGroup()
+//                .addCommand(subsystemManager.getIntakeSubsystem().stopElevator())
+//                .addCommand(subsystemManager.getShooterSubsystem().turnOffShooter())
+//                .addCommand(new HoodHomingCommand(subsystemManager.getShooterSubsystem()))
+//                .getSequentialCommandGroup();
+        throw new UnsupportedOperationException("Not yet Implemented");
+    }
+    
+//    public SequentialCommandGroup getStartIntakeCommandGroup(){
+//        return new EntechCommandGroup()
+//                .addCommand(subsystemManager.getShooterSubsystem().turnOffShooter())
+//                .addCommand(subsystemManager.getIntakeSubsystem().startIntake())
+//                .addCommand(new IntakeOnCommand(subsystemManager.getIntakeSubsystem()))
+//                .getSequentialCommandGroup();
+//    }
+    
+    public Command getSnapToGoalAndStartShooter(){
+//        return new EntechCommandGroup()
+//                .addCommand(subsystemManager.getShooterSubsystem().enableAutoShooting())
+//                .addCommand(startShooterCommandGroup)
+//                .addCommand(new SnapToVisionTargetCommand(subsystemManager.getDriveSubsystem()))
+//                .getSequentialCommandGroup();
+        throw new UnsupportedOperationException("Not yet Implemented");
+    }
+    
+    public Command getStartShooterCommandGroup(){
+//        return new EntechCommandGroup()
+//                .addCommand(getStopIntakeCommandGroup())
+//                .addCommand(subsystemManager.getIntakeSubsystem().shiftElevatorBack())
+//                .addCommand(subsystemManager.getShooterSubsystem().turnOnShooter())
+//                .getSequentialCommandGroup();
+        throw new UnsupportedOperationException("Not yet Implemented");
+    }
+    
+    public Command turnOffAllSubsystems(){
+//        return new EntechCommandGroup()
+//                .addCommand(getStopIntakeCommandGroup())
+//                .addCommand(subsystemManager.getIntakeSubsystem().stopElevator())
+//                .addCommand(getStopShooterCommandGroup())
+//                .getSequentialCommandGroup();
+         throw new UnsupportedOperationException("Not yet Implemented");       
+    }
+    
+//    public SequentialCommandGroup getHoodHomingCommandGroup(){
+//        return new EntechCommandGroup()
+//                .addCommand(subsystemManager.getShooterSubsystem().goToUpperLimit())
+//                .addCommand(subsystemManager.getShooterSubsystem().returnToStartPos())
+//                .getSequentialCommandGroup();
+//    }
+    
+    public SequentialCommandGroup hoodHomeAndStartShooter(){
+//        SequentialCommandGroup hoodHomingCommand = new EntechCommandGroup()
+//                .addCommand(subsystemManager.getShooterSubsystem().goToUpperLimit())
+//                .addCommand(subsystemManager.getShooterSubsystem().returnToStartPos())
+//                .getSequentialCommandGroup();
+//        
+//        return new EntechCommandGroup()
+//                .addCommand(subsystemManager.getShooterSubsystem().turnOnShooter())
+//                .addCommand(hoodHomingCommand)
+//                .getSequentialCommandGroup();
+        throw new UnsupportedOperationException("Not yet Implemented");
+    }    
+    
 }

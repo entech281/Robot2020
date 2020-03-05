@@ -5,10 +5,12 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import frc.robot.RobotConstants;
 import frc.robot.controllers.*;
 import frc.robot.pose.ShooterConfiguration;
+import frc.robot.utils.ClampedDouble;
 
 public class ShooterSubsystem extends BaseSubsystem {
 
     public static final int SHOOTER_FIRE_RPM = 5350;
+    public static final int SHOOTER_MAX_RPM = 5400;
     public static final int SHOOTER_RPM_TOLERANCE=100;
     public static final int SHOOTER_RPM_INCREMENT=100;
 
@@ -16,8 +18,19 @@ public class ShooterSubsystem extends BaseSubsystem {
     private SparkSpeedController shooterMotorController;
 
     
+    private ClampedDouble desiredShooterSpeed = ClampedDouble.builder()
+            .bounds(0, SHOOTER_MAX_RPM)
+            .withIncrement(SHOOTER_RPM_INCREMENT)
+            .withValue(0.0).build();
+    
+    
+    private void update(){
+        shooterMotorController.setDesiredSpeed(desiredShooterSpeed.getValue());
+    }
+    
     public void setShooterSpeedRPM(double desiredSpeed){
-        shooterMotorController.setDesiredSpeed(desiredSpeed);
+        desiredShooterSpeed.setValue(desiredSpeed);
+        update();
     }
     
     public void startShooter(){
@@ -33,17 +46,19 @@ public class ShooterSubsystem extends BaseSubsystem {
    
     
     public void decreaseRPMSpeed() {
-        //use clamped double
+        desiredShooterSpeed.decrement();
+        update();
     }
 
     public void increaseRPMSpeed() {
-        //use clamped double        
+        desiredShooterSpeed.increment();
+        update();      
     }
 
     @Override
     public void initialize() {
         shootMotor = new CANSparkMax(RobotConstants.CAN.SHOOTER_MOTOR, MotorType.kBrushless);
-        shooterMotorController = new SparkSpeedController(shootMotor, frc.robot.RobotConstants.MOTOR_SETTINGS.SHOOTER);
+        shooterMotorController = new SparkSpeedController(shootMotor, frc.robot.RobotConstants.MOTOR_SETTINGS.SHOOTER,true);
         shooterMotorController.configure();
     }
 
@@ -57,9 +72,7 @@ public class ShooterSubsystem extends BaseSubsystem {
         logger.log("Current Speed", shooterMotorController.getActualSpeed());
         logger.log("Desired Speed", shooterMotorController.getDesiredSpeed());
         logger.log("AtSpeed", atShootSpeed());
-
     }
-
 
     public double getActualSpeed() {
         return shooterMotorController.getActualSpeed();

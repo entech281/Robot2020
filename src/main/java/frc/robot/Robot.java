@@ -13,14 +13,13 @@ import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.commands.AutoCommand;
-import frc.robot.commands.CommandGroupFactory;
-import frc.robot.commands.EntechCommandGroup;
+
 import frc.robot.logger.DataLogger;
 import frc.robot.logger.DataLoggerFactory;
 import frc.robot.path.AutoPathFactory;
 import frc.robot.preferences.AutoCommandFactory;
 import frc.robot.preferences.SmartDashboardPathChooser;
+import frc.robot.subsystems.CommandFactory;
 import frc.robot.subsystems.SubsystemManager;
 
 /**
@@ -34,7 +33,7 @@ public class Robot extends TimedRobot {
 
     private DataLogger logger;
     private SubsystemManager subsystemManager = new SubsystemManager();
-    private CommandGroupFactory commandFactor;
+    private CommandFactory commandFactory;
 
     private SmartDashboardPathChooser optionChooser;
     OperatorInterface oi;
@@ -54,11 +53,13 @@ public class Robot extends TimedRobot {
 
         optionChooser = new SmartDashboardPathChooser();
         oi = new OperatorInterface(subsystemManager);
-        commandFactor = new CommandGroupFactory((subsystemManager));
+        commandFactory = new CommandFactory(subsystemManager);
     }
 
     @Override
     public void robotPeriodic() {
+        //runs after everything eles
+        CommandScheduler.getInstance().run();
     }
 
     @Override
@@ -67,39 +68,41 @@ public class Robot extends TimedRobot {
         if (autoCommand != null) {
             autoCommand.cancel();
         }
-        if(!subsystemManager.getVisionSubsystem().isConnected()){
-            subsystemManager.getVisionSubsystem().tryConnect();
-        }
-        subsystemManager.getDriveSubsystem().setSpeedMode();
-        CommandScheduler.getInstance().schedule(commandFactor.getStopShooterCommandGroup());
+        subsystemManager.getVisionSubsystem().ensureConnected();
+
     }
 
     @Override
     public void teleopPeriodic() {
-        subsystemManager.periodicAll();
-        CommandScheduler.getInstance().run();
     }
 
     @Override
     public void autonomousInit() {
-        if(!subsystemManager.getVisionSubsystem().isConnected()){
-            subsystemManager.getVisionSubsystem().tryConnect();
-        }
-        AutoPathFactory factory = new AutoPathFactory(subsystemManager, new CommandGroupFactory(subsystemManager));
-        autoCommand = AutoCommandFactory.getSelectedCommand(optionChooser.getSelected(),factory);
+        subsystemManager.getVisionSubsystem().ensureConnected();
+
+        autoCommand = new AutoCommandFactory(commandFactory).getSelectedCommand(optionChooser.getSelected());
         CommandScheduler.getInstance().schedule(autoCommand);
     }
 
     @Override
     public void autonomousPeriodic() {
-        subsystemManager.periodicAll();
-        CommandScheduler.getInstance().run();
+
 
     }
 
     @Override
     public void disabledInit() {
         subsystemManager.getDriveSubsystem().setSpeedMode();
+    }
+
+    @Override
+    public void testPeriodic() {
+        
+    }
+    
+    @Override
+    public void testInit() {
+        
     }
 
 }

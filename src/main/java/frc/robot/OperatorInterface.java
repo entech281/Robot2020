@@ -1,11 +1,7 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.Joystick;
-import frc.robot.commands.AdjustBackwardHoodCommand;
-import frc.robot.commands.AdjustRaiseHoodCommand;
-import frc.robot.commands.CommandGroupFactory;
-import frc.robot.commands.DriveForwardSetDistance;
-import frc.robot.commands.HoodHomingCommand;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.commands.SnapToVisionTargetCommand;
 import frc.robot.commands.SnapToYawCommand;
 import frc.robot.commands.TankDriveCommand;
@@ -36,10 +32,10 @@ public class OperatorInterface {
                 .whenReleased(commandFactory.stopShooter())
                 .add();
         
-        operatorPanelManager.addButton(RobotConstants.BUTTONS.ENABLE_AUTO_HOOD)
-                .whenPressed(subsystemManager.getShooterSubsystem().enableAutoShooting())
-                .whenReleased(subsystemManager.getShooterSubsystem().disableAutoShooting())
-                .add();
+        //operatorPanelManager.addButton(RobotConstants.BUTTONS.ENABLE_AUTO_HOOD)
+        //        .whenPressed(subsystemManager.getShooterSubsystem().enableAutoShooting())
+        //        .whenReleased(subsystemManager.getShooterSubsystem().disableAutoShooting())
+        //        .add();
         
         operatorPanelManager.addButton(RobotConstants.BUTTONS.DEPLOY_INTAKE)
                 .whileHeld(commandFactory.startIntake())
@@ -47,20 +43,20 @@ public class OperatorInterface {
                 .add();
         
         operatorPanelManager.addButton(RobotConstants.BUTTONS.HOOD_FORWARD_ADJUST)
-                .whileHeld(new AdjustRaiseHoodCommand(subsystemManager.getShooterSubsystem()))
+                .whileHeld(commandFactory.nudgeHoodForward())
                 .add();
         
         operatorPanelManager.addButton(RobotConstants.BUTTONS.HOOD_BACKWARD_ADJUST)
-                .whileHeld(new AdjustBackwardHoodCommand(subsystemManager.getShooterSubsystem()))
+                .whileHeld(commandFactory.nudgeHoodBackward())
                 .add();
                 
-        operatorPanelManager.addButton(RobotConstants.BUTTONS.SELECT_PRESET_1)
-                .whenPressed(subsystemManager.getShooterSubsystem().selectPreset1())
-                .add();
+        //operatorPanelManager.addButton(RobotConstants.BUTTONS.SELECT_PRESET_1)
+        //        .whenPressed(subsystemManager.getShooterSubsystem().selectPreset1())
+        //        .add();
         
-        operatorPanelManager.addButton(RobotConstants.BUTTONS.SELECT_PRESET_2)
-                .whenPressed(subsystemManager.getShooterSubsystem().selectPreset2())
-                .add();
+        //operatorPanelManager.addButton(RobotConstants.BUTTONS.SELECT_PRESET_2)
+        //        .whenPressed(subsystemManager.getShooterSubsystem().selectPreset2())
+        //        .add();
         
         drive = subsystemManager.getDriveSubsystem();
         
@@ -73,7 +69,7 @@ public class OperatorInterface {
                 .add();
         
         joystickManager.addButton(12)
-                .whenPressed(new HoodHomingCommand(subsystemManager.getShooterSubsystem()))
+                .whenPressed(commandFactory.hoodHomeCommand())
                 .add();
 
         
@@ -83,11 +79,12 @@ public class OperatorInterface {
                 .add();
         
         joystickManager.addButton(8)
-                .whenPressed(new HoodHomingCommand(subsystemManager.getShooterSubsystem()))
+                .whenPressed(commandFactory.hoodHomeCommand())
                 .add();
         
         joystickManager.addButton(9)
-                .whenPressed(subsystemManager.getShooterSubsystem().goTo10Degrees())
+                .whenPressed( new InstantCommand(
+                        () -> subsystemManager.getHoodSubsystem().setHoodAngle(10.0)))
                 .add();
         
         joystickManager.addButton(6)
