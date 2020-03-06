@@ -16,7 +16,9 @@ public class IntakeSubsystem extends BaseSubsystem {
     private TalonSpeedController elevatorMotorController;
     private DoubleSolenoid deployIntakeSolenoids;
     private DigitalInput intakeBallSensor;
-
+    
+    public static final double INTAKE_ON= 1.0;
+    public static final double INTAKE_OFF=0.0;
     
     @Override
     public void initialize() {
@@ -40,22 +42,23 @@ public class IntakeSubsystem extends BaseSubsystem {
    
     }
 
+    public void intakeOn(){
+        intakeMotorController.setDesiredSpeed(INTAKE_ON);
+    }
+    
+    public void intakeOff(){
+        intakeMotorController.setDesiredSpeed(INTAKE_OFF);
+    }
+    
+  
     public void toggleIntakeArms(){
         if ( deployIntakeSolenoids.get() == DoubleSolenoid.Value.kForward){
             deployIntakeSolenoids.set(DoubleSolenoid.Value.kReverse);
         }
-        else if ( deployIntakeSolenoids.get() == DoubleSolenoid.Value.kForward ){
-            deployIntakeSolenoids.set(DoubleSolenoid.Value.kReverse);
+        else if ( deployIntakeSolenoids.get() == DoubleSolenoid.Value.kReverse ){
+            deployIntakeSolenoids.set(DoubleSolenoid.Value.kForward);
 
         }
-    }
-    
-    public void deployIntakeArms(){
-        deployIntakeSolenoids.set(DoubleSolenoid.Value.kReverse);
-    }
-    
-    public void retractIntakeArms(){
-        deployIntakeSolenoids.set(DoubleSolenoid.Value.kForward);
     }
     
     public boolean isIntakeOn(){

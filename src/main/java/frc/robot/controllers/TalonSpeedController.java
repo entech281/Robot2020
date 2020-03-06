@@ -23,6 +23,6 @@ public class TalonSpeedController extends BaseTalonController implements SpeedCo
     @Override
     public void setDesiredSpeed(double desiredSpeed) {
         this.desiredSpeed = desiredSpeed;
-        talon.set(settings.getControlMode(), correctDirection(desiredSpeed));
+        talon.set(settings.controlMode, correctDirection(desiredSpeed));
     }
 }

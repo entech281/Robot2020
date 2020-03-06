@@ -4,12 +4,12 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.subsystems.DriveSubsystem;
 
-public class TankDriveCommand extends EntechCommandBase {
+public class TankDriveCurvatureCommand extends EntechCommandBase {
 
     private DriveSubsystem drive;
     private Joystick driveStick;
     private JoystickButton tightButton;
-    public TankDriveCommand(DriveSubsystem drive, Joystick driveStick) {
+    public TankDriveCurvatureCommand(DriveSubsystem drive, Joystick driveStick, JoystickButton tightButton) {
         super(drive);
         this.driveStick = driveStick;
         this.drive = drive;
@@ -23,7 +23,8 @@ public class TankDriveCommand extends EntechCommandBase {
     
     @Override
     public void execute() {
-        drive.drive(-driveStick.getY(), driveStick.getX());        
+        //drive.drive(-driveStick.getY(), driveStick.getX());
+        drive.curveDrive(driveStick.getY(), driveStick.getX(), tightButton.get());
     }
     
     @Override

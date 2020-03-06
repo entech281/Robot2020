@@ -5,6 +5,7 @@
  */
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
 import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
@@ -20,45 +21,69 @@ public class HoodSubsystem extends BaseSubsystem {
 
     private WPI_TalonSRX hoodMotor;
     private TalonPositionController hoodMotorController;
-    private final PositionAngleConverter positionConverter = new PositionAngleConverter();
     public static final double HOOD_TOLERANCE_COUNTS = 50;
-
-    private final ClampedDouble desiredHoodPositionDegrees = ClampedDouble.builder()
-            .bounds(0, 90)
-            .withIncrement(5.0)
+    public static final double HOME_OFFSET = 15.0;
+    public static final double CLOSE_PRESET = 375;
+    private boolean hoodHomedAlready = false;
+    
+    private final ClampedDouble desiredHoodPositionEncoder = ClampedDouble.builder()
+            .bounds(0, 1000)
+            .withIncrement(15.0)
             .withValue(0.0).build();
 
     @Override
     public void initialize() {
         hoodMotor = new WPI_TalonSRX(RobotConstants.CAN.HOOD_MOTOR);
 
-        hoodMotorController = new TalonPositionController(hoodMotor, frc.robot.RobotConstants.MOTOR_SETTINGS.HOOD, false);
+        hoodMotorController = new TalonPositionController(hoodMotor, frc.robot.RobotConstants.MOTOR_SETTINGS.HOOD, true);
         hoodMotorController.configure();
-        hoodMotor.configForwardLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen, 0);
-        hoodMotor.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen, 0);
-        hoodMotor.overrideLimitSwitchesEnable(true);
+        
+        hoodMotor.configForwardLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen,
+                0);
+        hoodMotor.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen,
+                0);
 
+        hoodMotor.overrideLimitSwitchesEnable(true);
     }
 
     public boolean isUpperLimitHit() {
         return hoodMotor.getSensorCollection().isFwdLimitSwitchClosed();
     }
+    
+    public boolean knowsHome(){
+        return hoodHomedAlready;
+    }
 
+    public void reset(){
+        hoodMotorController.resetPosition();
+        desiredHoodPositionEncoder.setValue(0.0);
+    }
+    
     public boolean isLowerLimitHit() {
         return hoodMotor.getSensorCollection().isRevLimitSwitchClosed();
     }
 
+    public void goToHomePosition(){
+        hoodMotor.set(ControlMode.PercentOutput, 0.2);
+        hoodHomedAlready = true;
+    }
+    
+    public void goToHomeOffset(){
+        setHoodPosition(HOME_OFFSET);
+    }
+    
     private void update() {
-        hoodMotorController.setDesiredPosition(positionConverter.positionFromAngle(desiredHoodPositionDegrees.getValue()));
+        hoodMotorController.setDesiredPosition(desiredHoodPositionEncoder.getValue());
     }
 
-    public void setHoodAngle(double desiredAngle) {
-        desiredHoodPositionDegrees.setValue(desiredAngle);
+    public void setHoodPosition(double desiredAngle) {
+        desiredHoodPositionEncoder.setValue(desiredAngle);
         update();
     }
-
-    public double getHoodAngle() {
-        return positionConverter.angleFromPosition(hoodMotorController.getActualPosition());
+    
+    public void park(){
+        desiredHoodPositionEncoder.setValue(HOME_OFFSET);
+        update();
     }
 
     public boolean atHoodPosition() {
@@ -66,12 +91,17 @@ public class HoodSubsystem extends BaseSubsystem {
     }
 
     public void adjustHoodForward() {
-        desiredHoodPositionDegrees.increment();
+        desiredHoodPositionEncoder.increment();
+        update();
+    }
+    
+    public void upAgainstTargetPreset(){
+        desiredHoodPositionEncoder.setValue(CLOSE_PRESET);
         update();
     }
 
     public void adjustHoodBackward() {
-        desiredHoodPositionDegrees.decrement();
+        desiredHoodPositionEncoder.decrement();
         update();
     }
 
@@ -79,6 +109,10 @@ public class HoodSubsystem extends BaseSubsystem {
     public void periodic() {
         logger.log("Hood current position1", hoodMotorController.getActualPosition());
         logger.log("Hood Desired Position1", hoodMotorController.getDesiredPosition());
+        logger.log("Hood Current Command", getCurrentCommand());
+        logger.log("Control Mode", RobotConstants.MOTOR_SETTINGS.INTAKE.getControlMode());
+        logger.log("upper limit switch", isUpperLimitHit());
+        logger.log("Clamped double", desiredHoodPositionEncoder.getValue());
     }
 
     private static class LimitSwitchState {

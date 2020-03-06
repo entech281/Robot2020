@@ -65,14 +65,19 @@ public class Robot extends TimedRobot {
     public void robotPeriodic() {
         //runs after everything else
         subsystemManager.updatePoses();
+
         CommandScheduler.getInstance().run();
     }
 
     @Override
     public void teleopInit() {
+        subsystemManager.getDriveSubsystem().setSpeedMode();
         subsystemManager.getNavXSubsystem().zeroYawMethod(false);
         if (autoCommand != null) {
             autoCommand.cancel();
+        }
+        if(!subsystemManager.getHoodSubsystem().knowsHome()){
+            commandFactory.hoodHomeCommand().schedule();
         }
         subsystemManager.getVisionSubsystem().ensureConnected();
 
@@ -86,13 +91,19 @@ public class Robot extends TimedRobot {
     public void autonomousInit() {
         subsystemManager.getVisionSubsystem().ensureConnected();
 
+        subsystemManager.getDriveSubsystem().setPositionMode();
+
+        if(!subsystemManager.getHoodSubsystem().knowsHome()){
+            commandFactory.hoodHomeCommand().schedule();
+        }
+
         autoCommand = new AutoCommandFactory(commandFactory).getSelectedCommand(optionChooser.getSelected());
         CommandScheduler.getInstance().schedule(autoCommand);
     }
 
     @Override
     public void autonomousPeriodic() {
-
+        subsystemManager.getDriveSubsystem().feedWatchDog();
 
     }
 
@@ -118,4 +129,6 @@ public class Robot extends TimedRobot {
     public void testPeriodic() {
     }
 
+    }
+    
 }

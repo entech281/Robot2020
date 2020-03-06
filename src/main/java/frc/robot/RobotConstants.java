@@ -44,7 +44,17 @@ public class RobotConstants {
                 .withMotionProfile(1000, 1000, 5)
                 .enableLimitSwitch(false).build();
         
-        public static SparkMaxSettings SHOOTER = SparkMaxSettingsBuilder.defaults()
+        public static TalonSettings HOOD_HOMING_SPEED = TalonSettingsBuilder.defaults()
+                .withCurrentLimits(1, 1, 1)
+                .brakeInNeutral()
+                .withDirections(false, false)
+                .limitMotorOutputs(0.3, 0)
+                .noMotorStartupRamping()
+                .useSpeedControl()
+                .build();
+        
+        
+        public static SparkMaxSettings SHOOTER_CLOSED_LOOP = SparkMaxSettingsBuilder.defaults()
                 .withCurrentLimits(30)
                 .coastInNeutral()
                 .withDirections(false, false)
@@ -56,6 +66,15 @@ public class RobotConstants {
                 .withMaxVelocity(6000)
                 .withMaxAcceleration(3000)
                 .withClosedLoopError(15)
+                .build();
+        
+        public static SparkMaxSettings SHOOTER_OPEN_LOOP = SparkMaxSettingsBuilder.defaults()
+                .withCurrentLimits(35)
+                .coastInNeutral()
+                .withDirections(false, false)
+                .limitMotorOutputs(0, 1)
+                .noMotorStartupRamping()
+                .useSpeedControl()
                 .build();
      
     }
@@ -84,9 +103,14 @@ public class RobotConstants {
     public interface GAMEPAD {
 
         public static final int DRIVER_JOYSTICK = 0;
-        public static final int OPERATOR_PANEL = 1;
+         public static final int OPERATOR_PANEL = 1;
+        public static final int DRIVER_JOYSTICK2 = 2;
     }
 
+    public interface JOYSTICK_BUTTONS{
+        public static final int CURVATURE_DRIVE_PIVOT=12;
+    }
+    
     public interface BUTTONS {
         public static final int TURN_SHOOTER_ON = 8;
         public static final int ENABLE_AUTO_HOOD = 9;
@@ -99,6 +123,11 @@ public class RobotConstants {
         public static final int SELECT_PRESET_2 = 7;
         public static final int SNAP_TO_TARGET = 2;
         public static final int OUTAKE = 7;
+        public static final int TOGGLE_INTAKE=12;
+        public static final int NUDGE_YAW_RIGHT = 14;
+        public static final int NUDGE_YAW_LEFT = 15;
+        public static final int NUDGE_HOOD_FORWARD = 16;
+        public static final int NUDGE_HOOD_BACKWARD = 17;
         
     }
 

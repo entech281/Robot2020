@@ -1,6 +1,8 @@
 package frc.robot.controllers;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class TalonPositionController extends BaseTalonController implements PositionController {
 
@@ -8,7 +10,7 @@ public class TalonPositionController extends BaseTalonController implements Posi
 
     @Override
     public double getDesiredPosition() {
-        return desiredPosition;
+        return this.desiredPosition;
     }
 
     /**
@@ -18,15 +20,23 @@ public class TalonPositionController extends BaseTalonController implements Posi
      */
     @Override
     public void setDesiredPosition(double desiredPosition) {
+        SmartDashboard.putNumber("Input to controller", desiredPosition);
         this.desiredPosition = desiredPosition;
         talon.set(settings.controlMode, correctDirection(desiredPosition));
-
     }
 
     public TalonPositionController(TalonSRX talon, TalonSettings settings, boolean reversed) {
         super(talon, settings,reversed);
     }
 
+    @Override
+    public void resetPosition() {
+        talon.setSelectedSensorPosition(0, TalonSettings.PID_SLOT, TalonSettings.TIMEOUT_MS);
+        PositionController.super.resetPosition(); 
+    }
+
+    
+    
     @Override
     public double getActualPosition() {
         return correctDirection((double)talon.getSelectedSensorPosition());

@@ -11,12 +11,12 @@ public class ShooterSubsystem extends BaseSubsystem {
 
     public static final int SHOOTER_FIRE_RPM = 5350;
     public static final int SHOOTER_MAX_RPM = 5400;
-    public static final int SHOOTER_RPM_TOLERANCE=100;
+    public static final int SHOOTER_RPM_TOLERANCE=200;
     public static final int SHOOTER_RPM_INCREMENT=100;
 
     private CANSparkMax shootMotor;
-    private SparkSpeedController shooterMotorController;
-
+    private SparkSpeedController shooterMotorClosedLoopController;
+    private SparkSpeedController shooterMotorOpenLoopController;
     
     private ClampedDouble desiredShooterSpeed = ClampedDouble.builder()
             .bounds(0, SHOOTER_MAX_RPM)
@@ -25,7 +25,7 @@ public class ShooterSubsystem extends BaseSubsystem {
     
     
     private void update(){
-        shooterMotorController.setDesiredSpeed(desiredShooterSpeed.getValue());
+        shooterMotorClosedLoopController.setDesiredSpeed(desiredShooterSpeed.getValue());
     }
     
     public void setShooterSpeedRPM(double desiredSpeed){
@@ -34,14 +34,17 @@ public class ShooterSubsystem extends BaseSubsystem {
     }
     
     public void startShooter(){
+        shooterMotorClosedLoopController.configure();
         setShooterSpeedRPM(SHOOTER_FIRE_RPM);
     }
+    
     public void stopShooter(){
-        setShooterSpeedRPM(0.0);
+        shootMotor.stopMotor();
+        logger.log("Stopped", true);
     }
     
     public boolean atShootSpeed(){
-        return shooterMotorController.isSpeedWithinTolerance(SHOOTER_RPM_TOLERANCE);
+        return shooterMotorClosedLoopController.isSpeedWithinTolerance(SHOOTER_RPM_TOLERANCE);
     }
    
     
@@ -58,8 +61,9 @@ public class ShooterSubsystem extends BaseSubsystem {
     @Override
     public void initialize() {
         shootMotor = new CANSparkMax(RobotConstants.CAN.SHOOTER_MOTOR, MotorType.kBrushless);
-        shooterMotorController = new SparkSpeedController(shootMotor, frc.robot.RobotConstants.MOTOR_SETTINGS.SHOOTER,true);
-        shooterMotorController.configure();
+        shooterMotorClosedLoopController = new SparkSpeedController(shootMotor, frc.robot.RobotConstants.MOTOR_SETTINGS.SHOOTER_CLOSED_LOOP,true);
+        shooterMotorClosedLoopController.configure();
+        shooterMotorOpenLoopController = new SparkSpeedController(shootMotor, frc.robot.RobotConstants.MOTOR_SETTINGS.SHOOTER_OPEN_LOOP, true);
     }
 
     //Current structure of shooter is in auto it will be dictated purely by vision
@@ -68,17 +72,17 @@ public class ShooterSubsystem extends BaseSubsystem {
     public void periodic() {
 
         logger.log("Current command", getCurrentCommand());
-        ShooterConfiguration config;
-        logger.log("Current Speed", shooterMotorController.getActualSpeed());
-        logger.log("Desired Speed", shooterMotorController.getDesiredSpeed());
+        logger.log("Current Speed", shooterMotorClosedLoopController.getActualSpeed());
+        logger.log("Desired Speed", shooterMotorClosedLoopController.getDesiredSpeed());
         logger.log("AtSpeed", atShootSpeed());
+        logger.log("Enabled", shooterMotorClosedLoopController.isEnabled());
     }
 
     public double getActualSpeed() {
-        return shooterMotorController.getActualSpeed();
+        return shooterMotorClosedLoopController.getActualSpeed();
     }
 
     public double getDesiredSpeed(){
-        return shooterMotorController.getDesiredSpeed();
+        return shooterMotorClosedLoopController.getDesiredSpeed();
     }
 }
