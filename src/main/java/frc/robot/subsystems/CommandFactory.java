@@ -6,6 +6,8 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
+import frc.robot.commands.AdjustHoodBackwardCommand;
+import frc.robot.commands.AdjustRaiseHoodCommand;
 import frc.robot.commands.SnapToVisionTargetCommand;
 import frc.robot.commands.SnapToYawCommand;
 import frc.robot.pose.PoseSource;
@@ -86,7 +88,7 @@ public class CommandFactory {
     }
     
     public Command hoodAdjustToAngleCommand(double angle){
-        return new InstantCommand ( () -> sm.getHoodSubsystem().setHoodAngle(angle) , sm.getHoodSubsystem());
+        return new InstantCommand ( () -> sm.getHoodSubsystem().setHoodPosition(angle) , sm.getHoodSubsystem());
     }
 //                if(preset1){
 //                    config = processor.calculateShooterConfiguration(RobotConstants.SHOOT_PRESETS.PRESET_1);
@@ -102,10 +104,6 @@ public class CommandFactory {
     public Command hoodParkCommand(){
         return hoodAdjustToAngleCommand(1.0);
         
-    }
-    public Command hoodHomeCommand(){
-        //return new HoodHomingCommand( sm.getHoodSubsystem() );
-        throw new UnsupportedOperationException("Not yet Implemented");
     }
     
     public Command intakeOnCommand(){
@@ -134,37 +132,48 @@ public class CommandFactory {
     }
 
     public Command nudgeHoodForward(){
-        return new InstantCommand( sm.getHoodSubsystem()::adjustHoodForward, sm.getHoodSubsystem());
+        return new AdjustRaiseHoodCommand(sm.getHoodSubsystem());
     }
+    
+    public Command hoodHomeCommand(){
+        return new SequentialCommandGroup(
+        new InstantCommand(() -> sm.getHoodSubsystem().goToHomePosition()),
+        new WaitUntilCommand(() -> sm.getHoodSubsystem().isUpperLimitHit()),
+        new InstantCommand(() -> sm.getHoodSubsystem().reset()),
+        new InstantCommand(() -> sm.getHoodSubsystem().adjustHoodForward()),
+        new WaitUntilCommand(() -> sm.getHoodSubsystem().atHoodPosition())
+        );                      
+    }
+    
     public Command nudgeHoodBackward(){
-        return new InstantCommand( sm.getHoodSubsystem()::adjustHoodBackward, sm.getHoodSubsystem());
+        return new AdjustHoodBackwardCommand(sm.getHoodSubsystem());
     }    
     public Command setStartingLinePreset(){
         //adjustHoodPosition(-940);
-        return new InstantCommand( () -> sm.getHoodSubsystem().setHoodAngle( 10.0), sm.getHoodSubsystem());
+        return new InstantCommand( () -> sm.getHoodSubsystem().setHoodPosition( 10.0), sm.getHoodSubsystem());
         
     }
     
     public Command setShooterPreset2(){
         //adjustHoodPosition(-930);
-        return new InstantCommand( () -> sm.getHoodSubsystem().setHoodAngle( 10.2), sm.getHoodSubsystem());
+        return new InstantCommand( () -> sm.getHoodSubsystem().upAgainstTargetPreset(), sm.getHoodSubsystem());
     }
 
     public Command setShooterPreset1(){
         //adjustHoodPosition(-375);
-        return new InstantCommand( () -> sm.getHoodSubsystem().setHoodAngle( 5.0), sm.getHoodSubsystem());
+        return new InstantCommand(() -> sm.getHoodSubsystem().upAgainstTargetPreset(), sm.getHoodSubsystem());
     }
     
     public Command startShooter() {
         return new InstantCommand(
             //todo: use controllers that reverse so we can use a positive here    
-            () ->  sm.getShooterSubsystem().setShooterSpeedRPM(5300), sm.getShooterSubsystem()
+            () ->  sm.getShooterSubsystem().startShooter(), sm.getShooterSubsystem()
         ).withTimeout(TINY_TIMEOUT_SECONDS);
     }
     public Command stopShooter() {
         return new InstantCommand(
-            () ->  sm.getShooterSubsystem().setShooterSpeedRPM(0), sm.getShooterSubsystem()
-        ).withTimeout(TINY_TIMEOUT_SECONDS);
+            () ->  sm.getShooterSubsystem().stopShooter(), sm.getShooterSubsystem()
+        ).alongWith(new InstantCommand(()-> sm.getHoodSubsystem().park(), sm.getHoodSubsystem()));
     }  
 
     public Command setElevatorSpeed(double desiredSpeed) {

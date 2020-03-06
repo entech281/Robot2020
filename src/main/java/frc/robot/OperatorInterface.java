@@ -50,13 +50,13 @@ public class OperatorInterface {
                 .whileHeld(commandFactory.nudgeHoodBackward())
                 .add();
                 
-        //operatorPanelManager.addButton(RobotConstants.BUTTONS.SELECT_PRESET_1)
-        //        .whenPressed(subsystemManager.getShooterSubsystem().selectPreset1())
-        //        .add();
-        
-        //operatorPanelManager.addButton(RobotConstants.BUTTONS.SELECT_PRESET_2)
-        //        .whenPressed(subsystemManager.getShooterSubsystem().selectPreset2())
-        //        .add();
+        operatorPanelManager.addButton(RobotConstants.BUTTONS.SELECT_PRESET_1)
+                .whenPressed(commandFactory.setShooterPreset1())
+                .add();
+
+        operatorPanelManager.addButton(RobotConstants.BUTTONS.SELECT_PRESET_2)
+                .whenPressed(commandFactory.setShooterPreset1())
+                .add();
         
         drive = subsystemManager.getDriveSubsystem();
         
@@ -64,27 +64,24 @@ public class OperatorInterface {
                 .whenPressed(commandFactory.snapToVisionTargetCommand().withTimeout(5))
                 .add();
         
+        joystickManager.addButton(12)
+                .whenPressed(commandFactory.hoodHomeCommand())
+                .add();
+        
         joystickManager.addButton(RobotConstants.BUTTONS.DRIVER_SHOOT)
                 .whileHeld(commandFactory.fireCommand())
                 .add();
         
-        joystickManager.addButton(12)
-                .whenPressed(commandFactory.hoodHomeCommand())
-                .add();
 
         
         joystickManager.addButton(RobotConstants.BUTTONS.OUTAKE)
                 .whenPressed(commandFactory.reverse())
                 .whenReleased(commandFactory.stopEverything())
                 .add();
-        
-        joystickManager.addButton(8)
-                .whenPressed(commandFactory.hoodHomeCommand())
-                .add();
-        
+                
         joystickManager.addButton(9)
                 .whenPressed( new InstantCommand(
-                        () -> subsystemManager.getHoodSubsystem().setHoodAngle(10.0)))
+                        () -> subsystemManager.getHoodSubsystem().setHoodPosition(10.0)))
                 .add();
         
         joystickManager.addButton(6)

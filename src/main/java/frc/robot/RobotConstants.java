@@ -44,7 +44,17 @@ public class RobotConstants {
                 .withMotionProfile(1000, 1000, 5)
                 .enableLimitSwitch(false).build();
         
-        public static SparkMaxSettings SHOOTER = SparkMaxSettingsBuilder.defaults()
+        public static TalonSettings HOOD_HOMING_SPEED = TalonSettingsBuilder.defaults()
+                .withCurrentLimits(1, 1, 1)
+                .brakeInNeutral()
+                .withDirections(false, false)
+                .limitMotorOutputs(0.3, 0)
+                .noMotorStartupRamping()
+                .useSpeedControl()
+                .build();
+        
+        
+        public static SparkMaxSettings SHOOTER_CLOSED_LOOP = SparkMaxSettingsBuilder.defaults()
                 .withCurrentLimits(30)
                 .coastInNeutral()
                 .withDirections(false, false)
@@ -56,6 +66,15 @@ public class RobotConstants {
                 .withMaxVelocity(6000)
                 .withMaxAcceleration(3000)
                 .withClosedLoopError(15)
+                .build();
+        
+        public static SparkMaxSettings SHOOTER_OPEN_LOOP = SparkMaxSettingsBuilder.defaults()
+                .withCurrentLimits(35)
+                .coastInNeutral()
+                .withDirections(false, false)
+                .limitMotorOutputs(0, 1)
+                .noMotorStartupRamping()
+                .useSpeedControl()
                 .build();
      
     }

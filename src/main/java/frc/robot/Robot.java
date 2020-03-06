@@ -70,6 +70,9 @@ public class Robot extends TimedRobot {
         if (autoCommand != null) {
             autoCommand.cancel();
         }
+        if(!subsystemManager.getHoodSubsystem().knowsHome()){
+            commandFactory.hoodHomeCommand().schedule();
+        }
         subsystemManager.getVisionSubsystem().ensureConnected();
 
     }
@@ -81,7 +84,9 @@ public class Robot extends TimedRobot {
     @Override
     public void autonomousInit() {
         subsystemManager.getVisionSubsystem().ensureConnected();
-
+        if(!subsystemManager.getHoodSubsystem().knowsHome()){
+            commandFactory.hoodHomeCommand().schedule();
+        }
         autoCommand = new AutoCommandFactory(commandFactory).getSelectedCommand(optionChooser.getSelected());
         CommandScheduler.getInstance().schedule(autoCommand);
     }
