@@ -33,6 +33,17 @@ public class CommandFactory {
         this.sm = subsystemManager;
     }
     
+    public Command toggleIntakeArms(){
+        return new InstantCommand( sm.getIntakeSubsystem()::toggleIntakeArms, sm.getIntakeSubsystem())
+                .andThen(new PrintCommand("Toggling Arms"));
+    }
+    public Command turnIntakeOn(){
+        return new InstantCommand ( sm.getIntakeSubsystem()::intakeOn, sm.getIntakeSubsystem());
+    }
+    public Command turnIntakeOff(){
+        return new InstantCommand ( sm.getIntakeSubsystem()::intakeOff, sm.getIntakeSubsystem());
+    }    
+    
     public Command zeroYawOfNavX(boolean inverted){
         return new InstantCommand ( () -> sm.getNavXSubsystem().zeroYawMethod(inverted));
     }
@@ -179,11 +190,11 @@ public class CommandFactory {
         ).withTimeout(TINY_TIMEOUT_SECONDS);        
     }
     
-    public Command startIntake() {
-        return new InstantCommand(
-            sm.getIntakeSubsystem()::deployIntakeArms, sm.getIntakeSubsystem()
-        ).withTimeout(TINY_TIMEOUT_SECONDS);
-    }
+//    public Command startIntake() {
+//        return new InstantCommand(
+//            sm.getIntakeSubsystem()::deployIntakeArms, sm.getIntakeSubsystem()
+//        ).withTimeout(TINY_TIMEOUT_SECONDS);
+//    }
 
     public Command stopIntake() {
         return setElevatorSpeed(STOP_SPEED);

@@ -126,21 +126,31 @@ public class DriveSubsystem extends BaseSubsystem {
                 rearRightEncoder.getPosition());
     }
 
+    public void feedWatchDog(){
+        robotDrive.feedWatchdog();
+    }
     @Override
     public void periodic() {
-            logger.log("Front Left Encoder Ticks", frontLeftEncoder.getPosition());
-            logger.log("Front Right Encoder Ticks", frontRightEncoder.getPosition());
-            logger.log("Rear Left Encoder Ticks", rearLeftEncoder.getPosition());
-            logger.log("Rear Right Encoder Ticks", rearRightEncoder.getPosition());
-            logger.log("isSafetyEnabled", robotDrive.isSafetyEnabled());
-            if (getCurrentCommand() != null) {
-                logger.log("current command", getCurrentCommand().getName());
-            }
+        logger.log("Front Left Encoder Ticks", frontLeftEncoder.getPosition());
+        logger.log("Front Right Encoder Ticks", frontRightEncoder.getPosition());
+        logger.log("Rear Left Encoder Ticks", rearLeftEncoder.getPosition());
+        logger.log("Rear Right Encoder Ticks", rearRightEncoder.getPosition());
+        logger.log("isSafetyEnabled", robotDrive.isSafetyEnabled());
+        if (getCurrentCommand() != null) {
+            logger.log("current command", getCurrentCommand().getName());
+        }
+    }
+    
+    public void doubleTankDrive(double forwardLeft, double forwardRight ){
+        robotDrive.tankDrive(forwardLeft, forwardRight);
     }
 
-
+    public void curveDrive(double forward, double rotation, boolean fastTurn){
+        robotDrive.curvatureDrive(-forward, rotation, fastTurn);
+    }
     public void drive(double forward, double rotation) {
         robotDrive.arcadeDrive(forward, rotation);
+        
     }
     
     public Position getCurrentPosition(){

@@ -61,11 +61,13 @@ public class Robot extends TimedRobot {
     public void robotPeriodic() {
         //runs after everything else
         subsystemManager.updatePoses();
+
         CommandScheduler.getInstance().run();
     }
 
     @Override
     public void teleopInit() {
+        subsystemManager.getDriveSubsystem().setSpeedMode();
         subsystemManager.getNavXSubsystem().zeroYawMethod(false);
         if (autoCommand != null) {
             autoCommand.cancel();
@@ -81,14 +83,14 @@ public class Robot extends TimedRobot {
     @Override
     public void autonomousInit() {
         subsystemManager.getVisionSubsystem().ensureConnected();
-
+        subsystemManager.getDriveSubsystem().setPositionMode();
         autoCommand = new AutoCommandFactory(commandFactory).getSelectedCommand(optionChooser.getSelected());
         CommandScheduler.getInstance().schedule(autoCommand);
     }
 
     @Override
     public void autonomousPeriodic() {
-
+        subsystemManager.getDriveSubsystem().feedWatchDog();
 
     }
 

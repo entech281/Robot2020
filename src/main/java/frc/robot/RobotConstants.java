@@ -84,9 +84,14 @@ public class RobotConstants {
     public interface GAMEPAD {
 
         public static final int DRIVER_JOYSTICK = 0;
-        public static final int OPERATOR_PANEL = 1;
+         public static final int OPERATOR_PANEL = 1;
+        public static final int DRIVER_JOYSTICK2 = 2;
     }
 
+    public interface JOYSTICK_BUTTONS{
+        public static final int CURVATURE_DRIVE_PIVOT=12;
+    }
+    
     public interface BUTTONS {
         public static final int TURN_SHOOTER_ON = 8;
         public static final int ENABLE_AUTO_HOOD = 9;
@@ -99,6 +104,7 @@ public class RobotConstants {
         public static final int SELECT_PRESET_2 = 7;
         public static final int SNAP_TO_TARGET = 2;
         public static final int OUTAKE = 7;
+        public static final int TOGGLE_INTAKE=12;
         public static final int NUDGE_YAW_RIGHT = 14;
         public static final int NUDGE_YAW_LEFT = 15;
         public static final int NUDGE_HOOD_FORWARD = 16;
