@@ -17,6 +17,7 @@ public interface SpeedController {
 
     void setDesiredSpeed(double desiredSpeed);
     
+    
     boolean isReversed();
     boolean isEnabled();
     void configure();

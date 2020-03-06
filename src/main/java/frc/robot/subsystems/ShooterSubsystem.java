@@ -16,7 +16,6 @@ public class ShooterSubsystem extends BaseSubsystem {
 
     private CANSparkMax shootMotor;
     private SparkSpeedController shooterMotorClosedLoopController;
-    private SparkSpeedController shooterMotorOpenLoopController;
     
     private ClampedDouble desiredShooterSpeed = ClampedDouble.builder()
             .bounds(0, SHOOTER_MAX_RPM)
@@ -34,13 +33,11 @@ public class ShooterSubsystem extends BaseSubsystem {
     }
     
     public void startShooter(){
-        shooterMotorClosedLoopController.configure();
         setShooterSpeedRPM(SHOOTER_FIRE_RPM);
     }
     
     public void stopShooter(){
-        shootMotor.stopMotor();
-        logger.log("Stopped", true);
+        shooterMotorClosedLoopController.stop();
     }
     
     public boolean atShootSpeed(){
@@ -63,7 +60,6 @@ public class ShooterSubsystem extends BaseSubsystem {
         shootMotor = new CANSparkMax(RobotConstants.CAN.SHOOTER_MOTOR, MotorType.kBrushless);
         shooterMotorClosedLoopController = new SparkSpeedController(shootMotor, frc.robot.RobotConstants.MOTOR_SETTINGS.SHOOTER_CLOSED_LOOP,true);
         shooterMotorClosedLoopController.configure();
-        shooterMotorOpenLoopController = new SparkSpeedController(shootMotor, frc.robot.RobotConstants.MOTOR_SETTINGS.SHOOTER_OPEN_LOOP, true);
     }
 
     //Current structure of shooter is in auto it will be dictated purely by vision

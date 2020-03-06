@@ -41,7 +41,11 @@ public class SparkSpeedController extends BaseSparkController implements SpeedCo
     public boolean isEnabled() {
         return this.enabled;
     }
-
+    
+    @Override
+    public void stop(){
+        spark.stopMotor();
+    }
 
     @Override
     public void configure() {
