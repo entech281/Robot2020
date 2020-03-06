@@ -1,14 +1,14 @@
-package frc.robot.utils;
+package frc.robot.vision;
 
 import frc.robot.RobotConstants;
 import frc.robot.pose.ShooterConfiguration;
 import frc.robot.pose.TargetLocation;
 import frc.robot.pose.VisionData;
+import frc.robot.utils.FixedStack;
 
 public class VisionDataProcessor {
 
     private String buffer = "";
-    private String retval;
     private int visionDataMemory = 5;
     private int num_consecutive_bad_data = 0;
     private final int TOLERANCE_CONSECUTIVE_BAD_DATA = 20;
