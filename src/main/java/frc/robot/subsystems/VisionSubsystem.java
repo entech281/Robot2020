@@ -6,12 +6,8 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.SerialPort;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.RobotConstants;
 import frc.robot.pose.*;
 import frc.robot.utils.VisionDataProcessor;
-import java.io.StringReader;
-import java.util.*;
 
 /**
  *
@@ -20,15 +16,12 @@ import java.util.*;
 public class VisionSubsystem extends BaseSubsystem {
 
     private static final int BAUD_RATE = 115200;
-
-    
-    
     private SerialPort visionPort;
 
     private VisionData visionData = VisionData.DEFAULT_VISION_DATA;
     private VisionDataProcessor processor;
 
-    private boolean isConnected = false;
+    private boolean connected = false;
 
     @Override
     public void initialize() {
@@ -38,8 +31,8 @@ public class VisionSubsystem extends BaseSubsystem {
     }
 
     @Override
-    public void customPeriodic(RobotPose rPose, FieldPose fPose) {
-        if(isConnected){
+    public void periodic() {
+        if(connected){
             String reading = visionPort.readString();
             logger.log("Input", reading);
             processor.addInput(reading);
@@ -53,19 +46,25 @@ public class VisionSubsystem extends BaseSubsystem {
         return visionData;
     }
 
-    public void tryConnect(){
+    public boolean ensureConnected(){
+        if ( ! connected){
+            tryConnect();
+        }
+        return connected;
+    }
+    
+    private void tryConnect(){
+        if ( ! connected){
+            
+        }
         try{
             visionPort = new SerialPort(BAUD_RATE, SerialPort.Port.kUSB1);
             visionPort.setTimeout(1);
             logger.driverinfo("Vision connection initialization succeded", "SUCCESS");
-            isConnected = true;
+            connected = true;
         } catch(Exception e){
             logger.driverinfo("Vision connection initialization failed", "FAILED");
         }
-    }
-
-    public boolean isConnected(){
-        return isConnected;
     }
 
 }
