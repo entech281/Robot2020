@@ -25,7 +25,9 @@ public class VisionSubsystem extends BaseSubsystem {
     private static final int TIMEOUT = 2;
     private static final String VISION_SCRIPT_LOCATION = Filesystem.getDeployDirectory() + "python/vision.py";
     private static final int WAIT_TO_DEPLOY_SCRIPT_SECONDS = 4; 
+    private static final int WAIT_TO_START_READING_VISION_DATA_SECONDS = 4;
     private static final int FRAME_RATE_FPS = 20;
+    private byte[] deployScript;
 
     private OpenMV openMV;
 
@@ -39,6 +41,12 @@ public class VisionSubsystem extends BaseSubsystem {
         logger.log("initialized", true);
         ensureConnected();
         processor = new VisionDataProcessor();
+        try{
+            deployScript = VisionSubsystem.class.getResourceAsStream("/vision.py").readAllBytes();
+        } catch(Exception e){
+            logger.warn("Could not read resource /vision.py");
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -59,28 +67,31 @@ public class VisionSubsystem extends BaseSubsystem {
                 }
             case STOPPED_SCRIPT:
                 if(timer.hasPeriodPassed(WAIT_TO_DEPLOY_SCRIPT_SECONDS)){
-                    
-                }
+                    try{
+                        openMV.execScript(deployScript);
+                    }catch (Exception e) {
+                        state = OpenMVState.ERROR;
+                    }
+                } 
                 break;
             case SCRIPT_RUNNING:
+                if(timer.hasPeriodPassed(WAIT_TO_START_READING_VISION_DATA_SECONDS)){
+                    try{
+                        String reading = openMV.getSerialOutput().toString();
+                        logger.log("Input", reading);
+                        logger.log("Script is running", openMV.scriptRunning());
+                        processor.addInput(reading);
+                        visionData = processor.getCurrentVisionData();
+                        logger.log("Vertical offset", visionData.getVerticalOffset());
+                        logger.driverinfo("Horizontal Offset", visionData.getLateralOffset());
+                    }catch (Exception e) {
+                        state = OpenMVState.ERROR;
+                    }
+                } 
                 break;
             case ERROR:
                 break;
         }
-
-        /*if(isConnected){
-            try{
-                String reading = openMV.getSerialOutput().toString();
-                logger.log("Input", reading);
-                logger.log("Script is running", openMV.scriptRunning());
-                processor.addInput(reading);
-                visionData = processor.getCurrentVisionData();
-                logger.log("Vertical offset", visionData.getVerticalOffset());
-                logger.driverinfo("Horizontal Offset", visionData.getLateralOffset());
-            } catch (Exception e){
-                isConnected = false;
-            }
-        }*/
     }
 
     public VisionData getVisionData() {

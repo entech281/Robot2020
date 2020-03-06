@@ -124,4 +124,8 @@ public class OpenMV {
         write(struct.pack("<BBI", (long)USBDBG_CMD, (long)USBDBG_FRAME_DUMP, numBytes));
         return read((int)numBytes);
     }
+
+	public byte[] getSerialOutput() throws Exception {
+		return txBuf(txBufLen());
+	}
 }
