@@ -12,7 +12,7 @@ public abstract class DataLoggerFactory {
 
     public abstract DataLogger createDataLogger(String name);
 
-    private static DataLoggerFactory factory;
+    private static DataLoggerFactory factory = new TestDataLoggerFactory();
 
     public static void setLoggerFactory(DataLoggerFactory factory) {
         DataLoggerFactory.factory = factory;
