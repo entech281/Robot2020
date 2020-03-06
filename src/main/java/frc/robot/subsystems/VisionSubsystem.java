@@ -6,19 +6,12 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.Filesystem;
-import edu.wpi.first.wpilibj.SerialPort;
 import frc.robot.pose.*;
-import frc.robot.utils.JStruct;
 import frc.robot.vision.OpenMV;
 import frc.robot.vision.VisionDataProcessor;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.SerialPort.Port;
 
-import java.io.FileOutputStream;
-import java.io.StringReader;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.*;
 
 /**
  *
