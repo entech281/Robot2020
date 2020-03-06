@@ -7,7 +7,7 @@ package frc.robot;
 
 import frc.robot.pose.VisionData;
 import frc.robot.utils.ByteConverter;
-import frc.robot.utils.VisionDataProcessor;
+import frc.robot.vision.VisionDataProcessor;
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
