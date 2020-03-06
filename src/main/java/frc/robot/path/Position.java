@@ -39,7 +39,6 @@ public class Position {
 
     @Override
     public String toString() {
-        //TODO: format nicer with 0.3f
         return String.format("L=%.2f, R=%.2f", leftInches, rightInches);
 
     }

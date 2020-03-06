@@ -28,7 +28,5 @@ public abstract class BaseSubsystem extends SubsystemBase {
 
     public abstract void initialize();
 
-    public void customPeriodic(RobotPose rPose, FieldPose fPose) {
 
-    }
 }

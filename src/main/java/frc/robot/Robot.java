@@ -6,21 +6,16 @@
 /*----------------------------------------------------------------------------*/
 package frc.robot;
 
-import edu.wpi.cscore.MjpegServer;
-import edu.wpi.cscore.UsbCamera;
-import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.commands.AutoCommand;
-import frc.robot.commands.CommandGroupFactory;
-import frc.robot.commands.EntechCommandGroup;
+
 import frc.robot.logger.DataLogger;
 import frc.robot.logger.DataLoggerFactory;
-import frc.robot.path.AutoPathFactory;
 import frc.robot.preferences.AutoCommandFactory;
 import frc.robot.preferences.SmartDashboardPathChooser;
+import frc.robot.subsystems.CommandFactory;
 import frc.robot.subsystems.SubsystemManager;
 
 /**
@@ -33,8 +28,9 @@ import frc.robot.subsystems.SubsystemManager;
 public class Robot extends TimedRobot {
 
     private DataLogger logger;
-    private SubsystemManager subsystemManager = new SubsystemManager();
-    private CommandGroupFactory commandFactor;
+    private SubsystemManager  subsystemManager;
+    private CommandFactory commandFactory;
+
 
     private SmartDashboardPathChooser optionChooser;
     OperatorInterface oi;
@@ -50,47 +46,58 @@ public class Robot extends TimedRobot {
         
         DataLoggerFactory.configureForMatch();
         this.logger = DataLoggerFactory.getLoggerFactory().createDataLogger("Robot Main Loop");
+        subsystemManager = new SubsystemManager();
         subsystemManager.initAll();
 
         optionChooser = new SmartDashboardPathChooser();
+
         oi = new OperatorInterface(subsystemManager);
-        commandFactor = new CommandGroupFactory((subsystemManager));
+        commandFactory = new CommandFactory(subsystemManager);
     }
 
     @Override
     public void robotPeriodic() {
+        //runs after everything else
+        subsystemManager.updatePoses();
+
+        CommandScheduler.getInstance().run();
     }
 
     @Override
     public void teleopInit() {
+        subsystemManager.getDriveSubsystem().setSpeedMode();
         subsystemManager.getNavXSubsystem().zeroYawMethod(false);
         if (autoCommand != null) {
             autoCommand.cancel();
         }
+        if(!subsystemManager.getHoodSubsystem().knowsHome()){
+            commandFactory.hoodHomeCommand().schedule();
+        }
         subsystemManager.getVisionSubsystem().ensureConnected();
-        subsystemManager.getDriveSubsystem().setSpeedMode();
-        CommandScheduler.getInstance().schedule(commandFactor.getStopShooterCommandGroup());
+
     }
 
     @Override
     public void teleopPeriodic() {
-        subsystemManager.periodicAll();
-        CommandScheduler.getInstance().run();
     }
 
     @Override
     public void autonomousInit() {
         subsystemManager.getVisionSubsystem().ensureConnected();
-        
-        AutoPathFactory factory = new AutoPathFactory(subsystemManager, new CommandGroupFactory(subsystemManager));
-        autoCommand = AutoCommandFactory.getSelectedCommand(optionChooser.getSelected(),factory);
+
+        subsystemManager.getDriveSubsystem().setPositionMode();
+
+        if(!subsystemManager.getHoodSubsystem().knowsHome()){
+            commandFactory.hoodHomeCommand().schedule();
+        }
+
+        autoCommand = new AutoCommandFactory(commandFactory).getSelectedCommand(optionChooser.getSelected());
         CommandScheduler.getInstance().schedule(autoCommand);
     }
 
     @Override
     public void autonomousPeriodic() {
-        subsystemManager.periodicAll();
-        CommandScheduler.getInstance().run();
+        subsystemManager.getDriveSubsystem().feedWatchDog();
 
     }
 
@@ -99,4 +106,14 @@ public class Robot extends TimedRobot {
         subsystemManager.getDriveSubsystem().setSpeedMode();
     }
 
+    @Override
+    public void testInit(){
+
+    }
+
+    @Override
+    public void testPeriodic() {
+
+    }
+    
 }

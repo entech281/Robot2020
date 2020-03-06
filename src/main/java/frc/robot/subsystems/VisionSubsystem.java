@@ -7,8 +7,6 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.SerialPort;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.RobotConstants;
 import frc.robot.pose.*;
 import frc.robot.utils.JStruct;
 import frc.robot.vision.OpenMV;
@@ -51,7 +49,7 @@ public class VisionSubsystem extends BaseSubsystem {
     }
 
     @Override
-    public void customPeriodic(RobotPose rPose, FieldPose fPose) {
+    public void periodic() {
         logger.driverinfo("Vision Status", state);
 
         switch (state) {

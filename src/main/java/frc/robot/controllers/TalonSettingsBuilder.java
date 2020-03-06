@@ -81,7 +81,11 @@ public class TalonSettingsBuilder {
 
         public interface ProfileSettings {
 
-            Finish withMotionProfile(int cruiseEncoderClicksPerSecond, int accelerationEncoderClicksPerSecond2, int allowableError);
+            LimitSwitch withMotionProfile(int cruiseEncoderClicksPerSecond, int accelerationEncoderClicksPerSecond2, int allowableError);
+        }
+        
+        public interface LimitSwitch{
+            Finish enableLimitSwitch(boolean enable);
         }
 
         public interface Finish {
@@ -89,6 +93,8 @@ public class TalonSettingsBuilder {
             public TalonSettings build();
         }
     }
+    
+
 
     // things you do when you are setting up for speed control
     public interface SpeedControlSettings {
@@ -139,7 +145,7 @@ public class TalonSettingsBuilder {
     public static class Builder
             implements TalonControlMode, PositionControlSettings, PositionControlSettings.GainSettings,
             PositionControlSettings.ProfileSettings, PositionControlSettings.Finish, SpeedControlSettings,
-            SafetySettings, SafetySettings.BrakeMode, DirectionSettings, MotorOutputLimits, MotorRamping {
+            SafetySettings, SafetySettings.BrakeMode, DirectionSettings, MotorOutputLimits, MotorRamping, PositionControlSettings.LimitSwitch {
 
         private TalonSettings settings = new TalonSettings();
 
@@ -220,7 +226,7 @@ public class TalonSettingsBuilder {
         }
 
         @Override
-        public Finish withMotionProfile(int cruiseEncoderClicksPerSecond, int accelerationEncoderClicksPerSecond2, int allowableError) {
+        public LimitSwitch withMotionProfile(int cruiseEncoderClicksPerSecond, int accelerationEncoderClicksPerSecond2, int allowableError) {
             settings.profile.accelerationEncoderClicksPerSecond2 = accelerationEncoderClicksPerSecond2;
             settings.profile.cruiseVelocityEncoderClicksPerSecond = cruiseEncoderClicksPerSecond;
             settings.profile.allowableClosedLoopError = allowableError;
@@ -251,6 +257,14 @@ public class TalonSettingsBuilder {
             settings.currentLimits.instantaneousPeak = 5;
             settings.currentLimits.continuousPeak = 3;
             settings.currentLimits.continuousPeakMilliseconds = 200;
+            return this;
+        }
+
+        @Override
+        public Finish enableLimitSwitch(boolean enable) {
+            if(enable){
+                settings.limitSwitches = true;
+            }
             return this;
         }
 

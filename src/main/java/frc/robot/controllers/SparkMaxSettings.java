@@ -22,7 +22,7 @@ public class SparkMaxSettings {
     public MotorOutputLimits outputLimits = new MotorOutputLimits();
     public IdleMode brakeMode = IdleMode.kBrake;
     public MotionProfile profile = new MotionProfile();
-    private ControlType ctrlType = ControlType.kDutyCycle;
+    public ControlType ctrlType = ControlType.kDutyCycle;
     public double demand = DEFAULT_DEMAND;
     public boolean follow = false;
 
@@ -102,6 +102,10 @@ public class SparkMaxSettings {
         }
     }
 
+    
+    public ControlType getControlType(){
+        return this.ctrlType;
+    }
     public void setControlType(ControlType ctrlType) {
         this.follow = false;
         this.ctrlType = ctrlType;

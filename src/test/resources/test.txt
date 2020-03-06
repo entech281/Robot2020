@@ -4,14 +4,17 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.subsystems.DriveSubsystem;
 
-public class TankDriveCommand extends EntechCommandBase {
+public class TankDriveCommandTwoJoysticks extends EntechCommandBase {
 
+    
     private DriveSubsystem drive;
-    private Joystick driveStick;
+    private Joystick driveStick1;
+    private Joystick driveStick2;
     private JoystickButton tightButton;
-    public TankDriveCommand(DriveSubsystem drive, Joystick driveStick) {
+    public TankDriveCommandTwoJoysticks(DriveSubsystem drive, Joystick driveStick1, Joystick driveStick2) {
         super(drive);
-        this.driveStick = driveStick;
+        this.driveStick1 = driveStick1;
+        this.driveStick2 = driveStick2;
         this.drive = drive;
         this.tightButton = tightButton;
     }
@@ -19,15 +22,4 @@ public class TankDriveCommand extends EntechCommandBase {
     @Override
     public void initialize(){
         drive.setSpeedMode();
-    }
-    
-    @Override
-    public void execute() {
-        drive.drive(-driveStick.getY(), driveStick.getX());        
-    }
-    
-    @Override
-    public boolean isFinished(){
-        return false;
-    }
-}
+

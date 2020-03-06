@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import frc.robot.RobotConstants;
-import frc.robot.commands.FollowPositionPathCommand;
 
 public class PositionCalculator {
 
@@ -55,9 +54,6 @@ public class PositionCalculator {
         return b;
     }
 
-    public static FollowPositionPathCommand mirrorCommand(FollowPositionPathCommand f) {
-        return new FollowPositionPathCommand(f.driveSubsystem, mirror(f.path));
-    }
 
     public static class Builder implements BasicMoves {
 
