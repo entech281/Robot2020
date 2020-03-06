@@ -21,7 +21,7 @@ import java.util.*;
 
 /**
  *
- * @author aryan
+ * @author aryan and plaba
  */
 public class VisionSubsystem extends BaseSubsystem {
 
@@ -29,27 +29,34 @@ public class VisionSubsystem extends BaseSubsystem {
     private static final int TIMEOUT = 2;
     private static final String VISION_SCRIPT_LOCATION = Filesystem.getDeployDirectory() + "python/vision.py";
     private static final int FRAME_RATE = 20;
-
-    
     
     private OpenMV openMV;
 
     private VisionData visionData = VisionData.DEFAULT_VISION_DATA;
     private VisionDataProcessor processor;
 
-    private boolean isConnected = false;
+    private State state = State.OPENMV_NOT_CONNECTED;
 
     @Override
     public void initialize() {
         logger.log("initialized", true);
-        tryConnect();
+        ensureConnected();
         processor = new VisionDataProcessor();
     }
 
     @Override
     public void customPeriodic(RobotPose rPose, FieldPose fPose) {
-        logger.driverinfo("Vision Status", isConnected);
-        if(isConnected){
+        logger.driverinfo("Vision Status", state);
+
+        switch(state){
+            case OPENMV_NOT_CONNECTED:
+                break; // We could try reconnecting just in case we get vision halfway through the match
+            case OPENMV_CONNECTED:
+
+
+        }
+
+        /*if(isConnected){
             try{
                 String reading = openMV.getSerialOutput().toString();
                 logger.log("Input", reading);
@@ -61,28 +68,35 @@ public class VisionSubsystem extends BaseSubsystem {
             } catch (Exception e){
                 isConnected = false;
             }
-        }
+        }*/
     }
 
     public VisionData getVisionData() {
         return visionData;
     }
 
-    public void tryConnect(){
-        try{
-            openMV = new OpenMV(BAUD_RATE, TIMEOUT);
-            logger.driverinfo("Vision connection initialization", "SUCCESS");
-            openMV.stopScript();
-            openMV.enableFb(1);
-            openMV.execScript(Files.readAllBytes(Paths.get(VISION_SCRIPT_LOCATION)));
-            isConnected = true;
-        } catch(Exception e){
-            logger.driverinfo("Vision connection initialization", "FAILED");
+    public void ensureConnected(){
+        if(state == State.OPENMV_NOT_CONNECTED){
+            try{
+                openMV = new OpenMV(BAUD_RATE, TIMEOUT);
+                logger.driverinfo("Vision connection initialization", "SUCCESS");
+                state = State.OPENMV_CONNECTED;
+            } catch(Exception e){
+                logger.driverinfo("Vision connection initialization", "FAILED");
+            }
         }
     }
 
     public boolean isConnected(){
-        return isConnected;
+        return state != State.OPENMV_NOT_CONNECTED;
+    }
+
+    private enum State{
+        OPENMV_NOT_CONNECTED,
+        OPENMV_CONNECTED,
+        STOPPED_SCRIPT,
+        STARTED_SCRIPT,
+        SCRIPT_RUNNING
     }
 
     private class OpenMV{

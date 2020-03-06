@@ -82,9 +82,8 @@ public class Robot extends TimedRobot {
 
     @Override
     public void autonomousInit() {
-        if(!subsystemManager.getVisionSubsystem().isConnected()){
-            subsystemManager.getVisionSubsystem().tryConnect();
-        }
+        subsystemManager.getVisionSubsystem().ensureConnected();
+        
         AutoPathFactory factory = new AutoPathFactory(subsystemManager, new CommandGroupFactory(subsystemManager));
         autoCommand = AutoCommandFactory.getSelectedCommand(optionChooser.getSelected(),factory);
         CommandScheduler.getInstance().schedule(autoCommand);
