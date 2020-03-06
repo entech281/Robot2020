@@ -67,9 +67,7 @@ public class Robot extends TimedRobot {
         if (autoCommand != null) {
             autoCommand.cancel();
         }
-        if(!subsystemManager.getVisionSubsystem().isConnected()){
-            subsystemManager.getVisionSubsystem().tryConnect();
-        }
+        subsystemManager.getVisionSubsystem().ensureConnected();
         subsystemManager.getDriveSubsystem().setSpeedMode();
         CommandScheduler.getInstance().schedule(commandFactor.getStopShooterCommandGroup());
     }
