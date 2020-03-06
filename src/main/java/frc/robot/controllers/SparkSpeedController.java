@@ -28,7 +28,8 @@ public class SparkSpeedController extends BaseSparkController implements SpeedCo
     
     public void setDesiredSpeed(double desiredSpeed) {
         if (enabled){
-            spark.getPIDController().setReference(correctDirection(this.desiredSpeed), settings.getControlType());
+            this.desiredSpeed = desiredSpeed;
+            spark.getPIDController().setReference(correctDirection(this.desiredSpeed), settings.ctrlType);
         }
     }
 

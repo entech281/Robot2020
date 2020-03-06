@@ -13,7 +13,8 @@ public class ColorSubsystem extends BaseSubsystem {
     }
 
     public WheelColorValue getRobotColorSensorReading() {
-        throw new UnsupportedOperationException("Not Implemented Yet");
+        return WheelColorValue.BLUE;
+//        throw new UnsupportedOperationException("Not Implemented Yet");
     }
 
 }

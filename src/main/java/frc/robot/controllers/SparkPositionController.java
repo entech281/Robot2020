@@ -27,7 +27,7 @@ public class SparkPositionController extends BaseSparkController implements Posi
     public void setDesiredPosition(double desiredPosition) {
         this.desiredPosition = desiredPosition;
         if(enabled)
-            spark.getPIDController().setReference(correctDirection(desiredPosition), settings.getControlType());
+            spark.getPIDController().setReference(correctDirection(desiredPosition), settings.ctrlType);
     }
 
     @Override
