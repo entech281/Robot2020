@@ -39,8 +39,6 @@ public class DriveToPositionCommand extends EntechCommandBase{
     
    @Override
     public void initialize(){
-        drive.setPositionMode();
-        drive.resetPosition();
         drive.driveToPosition(targetPosition);
     }
     
