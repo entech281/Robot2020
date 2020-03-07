@@ -1,3 +1,5 @@
+package frc.robot.vision;
+
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfByte;
 import org.opencv.imgcodecs.Imgcodecs;
@@ -18,7 +20,6 @@ public class OpenMVCameraServer {
     public static final String SOURCE_NAME = "OpenMVCam";
     private int width;
     private int height;
-    private static final int PORT;
     private  int frameRate;
     private boolean enabled;
     private int counter = 0;
@@ -33,7 +34,7 @@ public class OpenMVCameraServer {
 
     public void initialize(OpenMV openMV, int width, int height, int fps, int port) {
         source = CameraServer.getInstance().putVideo(SOURCE_NAME, width, height);
-        MjpegServer server = CameraServer.getInstance().addServer(SOURCE_NAME, PORT);
+        MjpegServer server = CameraServer.getInstance().addServer(SOURCE_NAME, port);
         server.setSource(source);
         server.setFPS(fps);
         server.setCompression(0);
