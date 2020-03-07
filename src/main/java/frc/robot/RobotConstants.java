@@ -55,17 +55,17 @@ public class RobotConstants {
         
         
         public static SparkMaxSettings SHOOTER_CLOSED_LOOP = SparkMaxSettingsBuilder.defaults()
-                .withCurrentLimits(30)
+                .withCurrentLimits(35)
                 .coastInNeutral()
                 .withDirections(false, false)
                 .limitMotorOutputs(1, -1)
                 .withMotorRampUpOnStart(0.5)
-                .useSmartMotionControl()
-                .withPositionGains(0.000015, 12, 4e-4, 0.0)
+                .useSmartVelocityControl()
+                .withPositionGains(0.000015, 8e-4, 4e-7, 0.0)
                 .useAccelerationStrategy(CANPIDController.AccelStrategy.kSCurve)
-                .withMaxVelocity(6000)
+                .withMaxVelocity(5700)
                 .withMaxAcceleration(3000)
-                .withClosedLoopError(15)
+                .withClosedLoopError(150)
                 .build();
         
         public static SparkMaxSettings SHOOTER_OPEN_LOOP = SparkMaxSettingsBuilder.defaults()
@@ -108,7 +108,7 @@ public class RobotConstants {
     }
 
     public interface JOYSTICK_BUTTONS{
-        public static final int CURVATURE_DRIVE_PIVOT=12;
+        public static final int CURVATURE_DRIVE_PIVOT=2;
     }
     
     public interface BUTTONS {
@@ -121,7 +121,6 @@ public class RobotConstants {
         public static final int HOOD_BACKWARD_ADJUST = 5;
         public static final int SELECT_PRESET_1 = 10;
         public static final int SELECT_PRESET_2 = 7;
-        public static final int SNAP_TO_TARGET = 2;
         public static final int OUTAKE = 7;
         public static final int TOGGLE_INTAKE=12;
         public static final int NUDGE_YAW_RIGHT = 14;
@@ -157,8 +156,8 @@ public class RobotConstants {
 
     public interface PID{
         public interface AUTO_STRAIGHT{
-            public static final double P = 4e-4;
-            public static final double I = 2e-7;
+            public static final double P = 64e-4;
+            public static final double I = 0;
             public static final double D = 0;
             public static final double F = 0;
         }

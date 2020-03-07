@@ -46,6 +46,11 @@ public class SparkPositionController extends BaseSparkController implements Posi
     public boolean isAtUpperLimit() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+    
+    @Override
+    public void resetPosition(){
+        spark.getEncoder().setPosition(0);
+    }
 
     
     @Override

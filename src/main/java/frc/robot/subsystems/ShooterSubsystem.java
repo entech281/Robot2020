@@ -2,9 +2,9 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.ControlType;
 import frc.robot.RobotConstants;
 import frc.robot.controllers.*;
-import frc.robot.pose.ShooterConfiguration;
 import frc.robot.utils.ClampedDouble;
 
 public class ShooterSubsystem extends BaseSubsystem {
@@ -15,25 +15,12 @@ public class ShooterSubsystem extends BaseSubsystem {
     public static final int SHOOTER_RPM_INCREMENT=100;
 
     private CANSparkMax shootMotor;
-    private SparkSpeedController shooterMotorClosedLoopController;
+    private SparkSpeedController shooterMotorClosedLoopController;  
+    private SparkSpeedController shooterMotorOpenLoopController;
     
-    private ClampedDouble desiredShooterSpeed = ClampedDouble.builder()
-            .bounds(0, SHOOTER_MAX_RPM)
-            .withIncrement(SHOOTER_RPM_INCREMENT)
-            .withValue(0.0).build();
-    
-    
-    private void update(){
-        shooterMotorClosedLoopController.setDesiredSpeed(desiredShooterSpeed.getValue());
-    }
-    
-    public void setShooterSpeedRPM(double desiredSpeed){
-        desiredShooterSpeed.setValue(desiredSpeed);
-        update();
-    }
-    
+       
     public void startShooter(){
-        setShooterSpeedRPM(SHOOTER_FIRE_RPM);
+        shooterMotorClosedLoopController.setDesiredSpeed(SHOOTER_FIRE_RPM);
     }
     
     public void stopShooter(){
@@ -41,19 +28,9 @@ public class ShooterSubsystem extends BaseSubsystem {
     }
     
     public boolean atShootSpeed(){
-        return shooterMotorClosedLoopController.isSpeedWithinTolerance(SHOOTER_RPM_TOLERANCE);
+        return shooterMotorClosedLoopController.isSpeedWithinTolerance(SHOOTER_RPM_TOLERANCE, SHOOTER_FIRE_RPM);
     }
    
-    
-    public void decreaseRPMSpeed() {
-        desiredShooterSpeed.decrement();
-        update();
-    }
-
-    public void increaseRPMSpeed() {
-        desiredShooterSpeed.increment();
-        update();      
-    }
 
     @Override
     public void initialize() {
@@ -72,8 +49,17 @@ public class ShooterSubsystem extends BaseSubsystem {
         logger.log("Desired Speed", shooterMotorClosedLoopController.getDesiredSpeed());
         logger.log("AtSpeed", atShootSpeed());
         logger.log("Enabled", shooterMotorClosedLoopController.isEnabled());
+        logger.log("Stop controller config", RobotConstants.MOTOR_SETTINGS.SHOOTER_OPEN_LOOP.ctrlType);
+        logger.log("Start controller config", RobotConstants.MOTOR_SETTINGS.SHOOTER_CLOSED_LOOP.ctrlType);
+        logger.log("Output Bus voltage", shootMotor.getBusVoltage());
+        logger.log("Applied output", shootMotor.getAppliedOutput());
+        logger.log("Output Current", shootMotor.getOutputCurrent());
+        logger.log("Faults", shootMotor.getFaults());
+        logger.log("Stick Faults", shootMotor.getStickyFaults());
+        logger.log("Last error", shootMotor.getLastError());
     }
 
+    
     public double getActualSpeed() {
         return shooterMotorClosedLoopController.getActualSpeed();
     }

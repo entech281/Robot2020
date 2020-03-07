@@ -76,6 +76,7 @@ public class Robot extends TimedRobot {
             commandFactory.hoodHomeCommand().schedule();
         }
         subsystemManager.getVisionSubsystem().ensureConnected();
+        subsystemManager.getShooterSubsystem().initialize();
 
     }
 
@@ -95,6 +96,7 @@ public class Robot extends TimedRobot {
 
         autoCommand = new AutoCommandFactory(commandFactory).getSelectedCommand(optionChooser.getSelected());
         CommandScheduler.getInstance().schedule(autoCommand);
+        subsystemManager.getShooterSubsystem().initialize();
     }
 
     @Override

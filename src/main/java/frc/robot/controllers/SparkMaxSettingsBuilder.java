@@ -48,7 +48,9 @@ public class SparkMaxSettingsBuilder {
 
         public PositionControlSettings usePositionControl();
 
-        public SmartMotionControl.GainSettings useSmartMotionControl();
+        public SmartMotionControl.GainSettings useSmartPositionControl();
+        
+        public SmartMotionControl.GainSettings useSmartVelocityControl();
 
         public SpeedControlSettings useSpeedControl();
     }
@@ -233,15 +235,17 @@ public class SparkMaxSettingsBuilder {
 
         @Override
         public SpeedControlSettings useSpeedControl() {
-            settings.setControlType(ControlType.kVelocity);
+            settings.setControlType(ControlType.kDutyCycle);
             return this;
         }
 
         @Override
-        public GainSettings useSmartMotionControl() {
+        public GainSettings useSmartPositionControl() {
             settings.setControlType(ControlType.kSmartMotion);
             return this;
         }
+        
+        
 
         @Override
         public VelocityLimits useAccelerationStrategy(AccelStrategy strategy) {
@@ -273,6 +277,12 @@ public class SparkMaxSettingsBuilder {
         @Override
         public AllowedError withMaxAcceleration(int maxAccel) {
             settings.profile.maxAccel = maxAccel;
+            return this;
+        }
+
+        @Override
+        public GainSettings useSmartVelocityControl() {
+            settings.setControlType(ControlType.kSmartVelocity);
             return this;
         }
 

@@ -2,12 +2,14 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.PerpetualCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import frc.robot.commands.AdjustHoodBackwardCommand;
 import frc.robot.commands.AdjustRaiseHoodCommand;
+import frc.robot.commands.DriveToPositionCommand;
 import frc.robot.commands.SnapToVisionTargetCommand;
 import frc.robot.commands.SnapToYawCommand;
 import frc.robot.pose.PoseSource;
@@ -39,10 +41,32 @@ public class CommandFactory {
         return new InstantCommand( sm.getIntakeSubsystem()::toggleIntakeArms, sm.getIntakeSubsystem())
                 .andThen(new PrintCommand("Toggling Arms"));
     }
-    public Command turnIntakeOn(){
+
+    public Command deployIntakeArms(){
+        return new InstantCommand( sm.getIntakeSubsystem()::deployIntakeArms, sm.getIntakeSubsystem())
+                .andThen(new PrintCommand("Deploying Arms"));
+    }
+
+    public Command raiseIntakeArms(){
+        return new InstantCommand( sm.getIntakeSubsystem()::raiseIntakeArms, sm.getIntakeSubsystem())
+                .andThen(new PrintCommand("Raising Arms"));
+    }
+    
+    
+    public Command spinIntake(){
         return new InstantCommand ( sm.getIntakeSubsystem()::intakeOn, sm.getIntakeSubsystem());
     }
-    public Command turnIntakeOff(){
+    
+    public Command deployAndStartIntake(){
+        return new SequentialCommandGroup(deployIntakeArms(), intakeOnCommand());
+    }
+
+    public Command raiseAndStopIntake(){
+        return new SequentialCommandGroup(raiseIntakeArms(), stopIntake());
+    }
+
+    
+    public Command stopSpinningIntake(){
         return new InstantCommand ( sm.getIntakeSubsystem()::intakeOff, sm.getIntakeSubsystem());
     }    
     
@@ -50,7 +74,18 @@ public class CommandFactory {
         return new InstantCommand ( () -> sm.getNavXSubsystem().zeroYawMethod(inverted));
     }
     public Command middleSixBallAuto(){
-        throw new UnsupportedOperationException("Not yet Implemented");
+        return zeroYawOfNavX(false)
+                .andThen(startShooter().alongWith(hoodStartingLinePreset()))
+                .andThen(fireCommand())
+                .andThen(delay(3))
+                .andThen(driveForward(-100).alongWith(stopShooter()).alongWith(stopElevator()))
+                .andThen(turnRight(90))
+                .andThen(driveForward(100))
+                .andThen(turnRight(90))
+                .andThen(deployAndStartIntake().alongWith(driveForward(100)))
+                .andThen(raiseAndStopIntake().alongWith(driveForward(-100).alongWith(startShooter())).alongWith(hoodTrenchPreset()))
+                .andThen(turnRight(135))
+                .andThen(fireCommand());
     }
     
     public Command leftEightBallAuto(){
@@ -60,27 +95,35 @@ public class CommandFactory {
     public Command doNothing(){
         return new PrintCommand("Doing Nothing Skipper!");
     }
-    public Command simpleBackupAuto(){
-        throw new UnsupportedOperationException("Not yet Implemented");
+        
+    public Command simpleForwardShoot3Auto(){
+        return zeroYawOfNavX(false)
+                .andThen(driveForward(120.0)
+                .alongWith(startShooter())
+                .alongWith(hoodUpAgainstTargetPreset())
+                .andThen(fireCommand()));
     }
     
-    public Command startIntakeCommand(){
-        //addCommands(intake.startIntake(), intake.stopElevator(), shoot.turnOffShooter());
-        throw new UnsupportedOperationException("Not yet Implemented");
+    public Command driveForward(double inches){
+        return new DriveToPositionCommand(sm.getDriveSubsystem(), inches);
     }
     
-    public Command startShooterCommand(){
-        // addCommands(intake.shiftElevatorBack() ,shoot.turnOnShooter());
-        throw new UnsupportedOperationException("Not yet Implemented");
+    public Command turnRight(double degrees){
+        return new SnapToYawCommand(sm.getDriveSubsystem(), degrees, true, sm);
     }
-    public Command stopIntakeCommand(){
-        //addCommands(intake.stopIntake(), intake.stopElevator());
-        throw new UnsupportedOperationException("Not yet Implemented");
+
+    public Command turnLeft(double degrees){
+        return new SnapToYawCommand(sm.getDriveSubsystem(), -degrees, true, sm);
+    }
+
+    public Command turnToDirection(double degrees){
+        return new SnapToYawCommand(sm.getDriveSubsystem(), degrees, false, sm);        
     }
     
+        
     public Command snapAndShootCommand(){
-        //addCommands(shoot.enableAutoShooting() , new StartShooterCommand(shoot, intakeSubsystem), new SnapToVisionTargetCommand(drive));  
-        throw new UnsupportedOperationException("Not yet Implemented");        
+        return snapToVisionTargetCommand()
+                .alongWith(fireCommand());
     }
     public Command snapToVisionTargetCommand(){
         return new SnapToVisionTargetCommand(sm.getDriveSubsystem(),sm);
@@ -89,47 +132,25 @@ public class CommandFactory {
         return new SnapToYawCommand(sm.getDriveSubsystem(),  desiredAngle,  relative, sm );
     }
     public Command hoodAutoAdjustCommand(){
-//        VisionData vd = vision.getVisionData();
-//        if(vd.getVisionDataValidity()){
-//            ShooterConfiguration config = processor.calculateShooterConfiguration(rPose.getTargetLocation());
-//            setDesiredShooterConfiguration(config);                    
-//        }           
-        //return new HoodAutoAdjustCommand(sm.getVisionSubsystem(),sm.getHoodSubsystem());
         throw new UnsupportedOperationException("Not yet Implemented");
     }
     
     public Command hoodAdjustToAngleCommand(double angle){
         return new InstantCommand ( () -> sm.getHoodSubsystem().setHoodPosition(angle) , sm.getHoodSubsystem());
     }
-//                if(preset1){
-//                    config = processor.calculateShooterConfiguration(RobotConstants.SHOOT_PRESETS.PRESET_1);
-//                    setShooterPreset1();
-//                    preset1 = false;
-//                }
-//                else if(preset2){
-//                    config = processor.calculateShooterConfiguration(RobotConstants.SHOOT_PRESETS.PRESET_2);
-//                    setShooterPreset2();
-//                    preset2 = false;        
-//    }
-    
-    public Command hoodParkCommand(){
-        return hoodAdjustToAngleCommand(1.0);
         
-    }
-    
     public Command intakeOnCommand(){
         double DELAY1 = 0.5;
         double DELAY2 = 0.25;    
-        return  new SequentialCommandGroup(
+        return new SequentialCommandGroup(
+            spinIntake(),
             new WaitUntilCommand ( sm.getIntakeSubsystem()::isBallAtIntake),
             setIntakeSpeed(0.4),
             setElevatorSpeed(0.3),
             new WaitCommand( DELAY1),
             setIntakeSpeed(0.0),
             setElevatorSpeed(0.5),  
-            new WaitCommand( DELAY2),     
-            setIntakeSpeed(0.0),
-            setElevatorSpeed(1.0)
+            new WaitCommand(DELAY2)
         );
     }
 
@@ -141,7 +162,7 @@ public class CommandFactory {
             new InstantCommand(() -> sm.getIntakeSubsystem().setElevatorSpeed(ELEVEATOR_SLOW_SPEED) )        
         );
     }
-
+    
     public Command nudgeHoodForward(){
         return new AdjustRaiseHoodCommand(sm.getHoodSubsystem());
     }
@@ -156,36 +177,41 @@ public class CommandFactory {
         );                      
     }
     
+    public Command delay(double seconds){
+        return new WaitCommand(seconds);
+    }
+    
     public Command nudgeHoodBackward(){
         return new AdjustHoodBackwardCommand(sm.getHoodSubsystem());
     }    
-    public Command setStartingLinePreset(){
-        //adjustHoodPosition(-940);
-        return new InstantCommand( () -> sm.getHoodSubsystem().setHoodPosition( 10.0), sm.getHoodSubsystem());
+
+    public Command hoodStartingLinePreset(){
+        return new InstantCommand( () -> sm.getHoodSubsystem().startinfLinePreset(), sm.getHoodSubsystem());
         
     }
     
-    public Command setShooterPreset2(){
-        //adjustHoodPosition(-930);
-        return new InstantCommand( () -> sm.getHoodSubsystem().upAgainstTargetPreset(), sm.getHoodSubsystem());
+    public Command hoodTrenchPreset(){
+        return new InstantCommand( () -> sm.getHoodSubsystem().trenchPreset(), sm.getHoodSubsystem());
     }
 
-    public Command setShooterPreset1(){
-        //adjustHoodPosition(-375);
+    public Command hoodUpAgainstTargetPreset(){
         return new InstantCommand(() -> sm.getHoodSubsystem().upAgainstTargetPreset(), sm.getHoodSubsystem());
     }
     
     public Command startShooter() {
-        return new InstantCommand(
-            //todo: use controllers that reverse so we can use a positive here    
-            () ->  sm.getShooterSubsystem().startShooter(), sm.getShooterSubsystem()
-        ).withTimeout(TINY_TIMEOUT_SECONDS);
+        return shiftElevatorBack()
+                .andThen(new InstantCommand(() ->  sm.getShooterSubsystem().startShooter(), sm.getShooterSubsystem()
+            ));
     }
     public Command stopShooter() {
         return new InstantCommand(
             () ->  sm.getShooterSubsystem().stopShooter(), sm.getShooterSubsystem()
-        ).alongWith(new InstantCommand(()-> sm.getHoodSubsystem().park(), sm.getHoodSubsystem()));
-    }  
+        ).alongWith(parkHood());
+    }
+    
+    public Command parkHood(){
+        return new InstantCommand(()-> sm.getHoodSubsystem().park(), sm.getHoodSubsystem());
+    }
 
     public Command setElevatorSpeed(double desiredSpeed) {
         return new InstantCommand(
@@ -199,17 +225,11 @@ public class CommandFactory {
         ).withTimeout(TINY_TIMEOUT_SECONDS);        
     }
     
-//    public Command startIntake() {
-//        return new InstantCommand(
-//            sm.getIntakeSubsystem()::deployIntakeArms, sm.getIntakeSubsystem()
-//        ).withTimeout(TINY_TIMEOUT_SECONDS);
-//    }
-
     public Command stopIntake() {
-        return setElevatorSpeed(STOP_SPEED);
+        return setIntakeSpeed(STOP_SPEED);
     }    
     public Command stopElevator(){
-        return setIntakeSpeed(STOP_SPEED);
+        return setElevatorSpeed(STOP_SPEED);
     }
     public Command stopIntakeAndElevator(){
         return new SequentialCommandGroup ( stopIntake(), stopElevator() );
@@ -235,70 +255,5 @@ public class CommandFactory {
             new WaitCommand( 0.5 ),
             new InstantCommand ( () ->    sm.getIntakeSubsystem().setElevatorSpeed(0)  )
         ).withTimeout(1.0);  
-    }  
-    
-    public Command getStopShooterCommandGroup(){
-//        return new EntechCommandGroup()
-//                .addCommand(subsystemManager.getIntakeSubsystem().stopElevator())
-//                .addCommand(subsystemManager.getShooterSubsystem().turnOffShooter())
-//                .addCommand(new HoodHomingCommand(subsystemManager.getShooterSubsystem()))
-//                .getSequentialCommandGroup();
-        throw new UnsupportedOperationException("Not yet Implemented");
-    }
-    
-//    public SequentialCommandGroup getStartIntakeCommandGroup(){
-//        return new EntechCommandGroup()
-//                .addCommand(subsystemManager.getShooterSubsystem().turnOffShooter())
-//                .addCommand(subsystemManager.getIntakeSubsystem().startIntake())
-//                .addCommand(new IntakeOnCommand(subsystemManager.getIntakeSubsystem()))
-//                .getSequentialCommandGroup();
-//    }
-    
-    public Command getSnapToGoalAndStartShooter(){
-//        return new EntechCommandGroup()
-//                .addCommand(subsystemManager.getShooterSubsystem().enableAutoShooting())
-//                .addCommand(startShooterCommandGroup)
-//                .addCommand(new SnapToVisionTargetCommand(subsystemManager.getDriveSubsystem()))
-//                .getSequentialCommandGroup();
-        throw new UnsupportedOperationException("Not yet Implemented");
-    }
-    
-    public Command getStartShooterCommandGroup(){
-//        return new EntechCommandGroup()
-//                .addCommand(getStopIntakeCommandGroup())
-//                .addCommand(subsystemManager.getIntakeSubsystem().shiftElevatorBack())
-//                .addCommand(subsystemManager.getShooterSubsystem().turnOnShooter())
-//                .getSequentialCommandGroup();
-        throw new UnsupportedOperationException("Not yet Implemented");
-    }
-    
-    public Command turnOffAllSubsystems(){
-//        return new EntechCommandGroup()
-//                .addCommand(getStopIntakeCommandGroup())
-//                .addCommand(subsystemManager.getIntakeSubsystem().stopElevator())
-//                .addCommand(getStopShooterCommandGroup())
-//                .getSequentialCommandGroup();
-         throw new UnsupportedOperationException("Not yet Implemented");       
-    }
-    
-//    public SequentialCommandGroup getHoodHomingCommandGroup(){
-//        return new EntechCommandGroup()
-//                .addCommand(subsystemManager.getShooterSubsystem().goToUpperLimit())
-//                .addCommand(subsystemManager.getShooterSubsystem().returnToStartPos())
-//                .getSequentialCommandGroup();
-//    }
-    
-    public SequentialCommandGroup hoodHomeAndStartShooter(){
-//        SequentialCommandGroup hoodHomingCommand = new EntechCommandGroup()
-//                .addCommand(subsystemManager.getShooterSubsystem().goToUpperLimit())
-//                .addCommand(subsystemManager.getShooterSubsystem().returnToStartPos())
-//                .getSequentialCommandGroup();
-//        
-//        return new EntechCommandGroup()
-//                .addCommand(subsystemManager.getShooterSubsystem().turnOnShooter())
-//                .addCommand(hoodHomingCommand)
-//                .getSequentialCommandGroup();
-        throw new UnsupportedOperationException("Not yet Implemented");
-    }    
-    
+    }      
 }

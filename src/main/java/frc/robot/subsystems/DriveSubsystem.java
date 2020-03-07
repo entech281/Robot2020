@@ -61,7 +61,7 @@ public class DriveSubsystem extends BaseSubsystem {
             .withDirections(false, false)
             .limitMotorOutputs(1.0, -1.0)
             .withMotorRampUpOnStart(0.1)
-            .useSmartMotionControl()
+            .useSmartPositionControl()
             .withPositionGains(RobotConstants.PID.AUTO_STRAIGHT.F,
                     RobotConstants.PID.AUTO_STRAIGHT.P,
                     RobotConstants.PID.AUTO_STRAIGHT.I,
@@ -139,6 +139,12 @@ public class DriveSubsystem extends BaseSubsystem {
         if (getCurrentCommand() != null) {
             logger.log("current command", getCurrentCommand().getName());
         }
+        logger.log("Output Bus voltage", frontLeftSpark.getBusVoltage());
+        logger.log("Applied output", frontLeftSpark.getAppliedOutput());
+        logger.log("Output Current", frontLeftSpark.getOutputCurrent());
+        logger.log("Faults", frontLeftSpark.getFaults());
+        logger.log("Stick Faults", frontLeftSpark.getStickyFaults());
+        logger.log("Last error", frontLeftSpark.getLastError());
     }
     
     public void doubleTankDrive(double forwardLeft, double forwardRight ){
@@ -165,15 +171,18 @@ public class DriveSubsystem extends BaseSubsystem {
         double encoderLeft = encoderConverter.toCounts(targetPosition.getLeftInches());
         double encoderRight = encoderConverter.toCounts(targetPosition.getRightInches());
 
+        logger.log("Left Desired", encoderLeft);
+        logger.log("Right Desired", encoderRight);    
+        
         frontRightPositionController.resetPosition();
         frontLeftPositionController.resetPosition();
         rearRightPositionController.resetPosition();
         rearLeftPositionController.resetPosition();
         
-        frontLeftPositionController.setDesiredPosition(encoderLeft);
-        frontRightPositionController.setDesiredPosition(encoderRight);
-        rearLeftPositionController.setDesiredPosition(encoderLeft);
-        rearRightPositionController.setDesiredPosition(encoderRight);
+        frontLeftPositionController.setDesiredPosition(4096);
+        frontRightPositionController.setDesiredPosition(4096);
+        rearLeftPositionController.setDesiredPosition(4096);
+        rearRightPositionController.setDesiredPosition(4096);
     }
 
 }

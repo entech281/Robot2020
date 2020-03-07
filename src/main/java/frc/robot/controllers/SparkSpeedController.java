@@ -25,6 +25,11 @@ public class SparkSpeedController extends BaseSparkController implements SpeedCo
     public boolean isSpeedWithinTolerance(double tolerance){
         return Math.abs(getActualSpeed() - getDesiredSpeed()) < tolerance;
     }
+
+    public boolean isSpeedWithinTolerance(double tolerance, double desired){
+        return Math.abs(getActualSpeed() - desired) < tolerance;
+    }
+
     
     public void setDesiredSpeed(double desiredSpeed) {
         if (enabled){
@@ -33,6 +38,10 @@ public class SparkSpeedController extends BaseSparkController implements SpeedCo
         }
     }
 
+    public void stop(){
+        spark.set(0);
+    }
+    
     public SparkSpeedController(CANSparkMax spark, SparkMaxSettings settings, boolean reversed) {
         super(spark, settings,reversed);
     }
@@ -42,11 +51,6 @@ public class SparkSpeedController extends BaseSparkController implements SpeedCo
         return this.enabled;
     }
     
-    @Override
-    public void stop(){
-        spark.stopMotor();
-    }
-
     @Override
     public void configure() {
         settings.configureSparkMax(spark);

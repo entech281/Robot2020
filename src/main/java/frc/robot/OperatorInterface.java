@@ -43,7 +43,8 @@ public class OperatorInterface {
         //        .add();
         
         operatorPanelManager.addButton(RobotConstants.BUTTONS.DEPLOY_INTAKE)
-                .whenPressed(commandFactory.toggleIntakeArms())
+                .whileHeldContinous(commandFactory.deployAndStartIntake())
+                .whenReleased(commandFactory.raiseAndStopIntake())
                 .add();
         
         operatorPanelManager.addButton(RobotConstants.BUTTONS.HOOD_FORWARD_ADJUST)
@@ -56,51 +57,37 @@ public class OperatorInterface {
                 
 
         operatorPanelManager.addButton(RobotConstants.BUTTONS.SELECT_PRESET_1)
-                .whenPressed(commandFactory.setShooterPreset1())
+                .whenPressed(commandFactory.hoodUpAgainstTargetPreset())
                 .add();
 
         operatorPanelManager.addButton(RobotConstants.BUTTONS.SELECT_PRESET_2)
-                .whenPressed(commandFactory.setShooterPreset1())
+                .whenPressed(commandFactory.hoodTrenchPreset())
                 .add();
         
 
         drive = subsystemManager.getDriveSubsystem();
-        
-        joystickManager.addButton(RobotConstants.BUTTONS.SNAP_TO_TARGET)
-                .whenPressed(commandFactory.snapToVisionTargetCommand().withTimeout(5))
-                .add();
-        
-        joystickManager.addButton(12)
-                .whenPressed(commandFactory.hoodHomeCommand())
-                .add();
-        
+               
         joystickManager.addButton(RobotConstants.BUTTONS.DRIVER_SHOOT)
-                .whileHeld(commandFactory.fireCommand())
+                .whileHeldContinous(commandFactory.fireCommand())
+                .whenReleased(commandFactory.stopElevator())
                 .add();
-        
-
-        
+                
         joystickManager.addButton(RobotConstants.BUTTONS.OUTAKE)
                 .whenPressed(commandFactory.reverse())
                 .whenReleased(commandFactory.stopEverything())
                 .add();
 
-//        joystickManager.addButton(8)
-//                .whenPressed(commandFactory.hoodHomeCommand())
-//                .add();
-        
-
-        joystickManager.addButton(9)
-                .whenPressed( new InstantCommand(
-                        () -> subsystemManager.getHoodSubsystem().setHoodPosition(10.0)))
-                .add();
         
         joystickManager.addButton(6)
-                .whenPressed(commandFactory.snapToYawCommand( 2.5, true).withTimeout(0.25))
+                .whenPressed(commandFactory.snapToYawCommand( 90, true).withTimeout(0.25))
                 .add();
         
         joystickManager.addButton(5)
-                .whenPressed(commandFactory.snapToYawCommand( -2.5, true).withTimeout(0.25))
+                .whenPressed(commandFactory.snapToYawCommand( -90, true).withTimeout(0.25))
+                .add();
+
+        joystickManager.addButton(12)
+                .whenPressed(commandFactory.driveForward(24))
                 .add();
         
         drive.setDefaultCommand(new TankDriveCurvatureCommand(drive, driveStick, 
