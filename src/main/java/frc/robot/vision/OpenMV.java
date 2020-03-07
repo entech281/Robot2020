@@ -1,7 +1,9 @@
 package frc.robot.vision;
 
-import edu.wpi.first.wpilibj.SerialPort;
+//import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.SerialPort.Port;
+import com.fazecast.jSerialComm.SerialPort;
+
 import frc.robot.utils.JStruct;
 
 public class OpenMV {
@@ -39,19 +41,28 @@ public class OpenMV {
     private static long BOOTLDR_ERASE = 0xABCD0004;
     private static long BOOTLDR_WRITE = 0xABCD0008;
 
-    public OpenMV(int baudRate,Port port, int timeout) {
-        connection = new SerialPort(baudRate, port);
-        connection.setTimeout(timeout);
-        //System.out.println(connection.isOpen());
+    public OpenMV(int baudRate,Port p, int timeout) {
+        for(SerialPort port: SerialPort.getCommPorts()){
+            if(port.getPortDescription().contains("OpenMV")){
+                System.out.println(port.getPortDescription());
+                connection = port;
+                break;
+            }
+        }
+        connection.setBaudRate(baudRate);
+        connection.setComPortTimeouts(SerialPort.TIMEOUT_READ_BLOCKING, timeout, timeout);
+        connection.openPort();
+        System.out.println(connection.isOpen());
     }
 
     private void write(byte[] bytes) {
-        connection.write(bytes, bytes.length);
+        connection.writeBytes(bytes, bytes.length);
     }
 
     private byte[] read(int numBytes) {
-        
-        var buff = connection.read(numBytes);
+        var buff = new byte[numBytes];
+        connection.readBytes(buff, numBytes);
+        System.out.println(new String(buff));
         if(buff.length != numBytes){
             return new byte[numBytes];
         }
@@ -135,6 +146,6 @@ public class OpenMV {
     }
     
     public void close(){
-        connection.close();
+        connection.closePort();
     }
 }
