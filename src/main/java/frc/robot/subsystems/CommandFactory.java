@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.PerpetualCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -58,7 +59,7 @@ public class CommandFactory {
     }
     
     public Command deployAndStartIntake(){
-        return new SequentialCommandGroup(deployIntakeArms(), intakeOnCommand());
+        return new SequentialCommandGroup(deployIntakeArms(), spinIntake());
     }
 
     public Command raiseAndStopIntake(){
@@ -74,18 +75,42 @@ public class CommandFactory {
         return new InstantCommand ( () -> sm.getNavXSubsystem().zeroYawMethod(inverted));
     }
     public Command middleSixBallAuto(){
-        return zeroYawOfNavX(false)
-                .andThen(startShooter().alongWith(hoodStartingLinePreset()))
-                .andThen(fireCommand())
-                .andThen(delay(3))
-                .andThen(driveForward(-100).alongWith(stopShooter()).alongWith(stopElevator()))
-                .andThen(turnRight(90))
-                .andThen(driveForward(100))
-                .andThen(turnRight(90))
-                .andThen(deployAndStartIntake().alongWith(driveForward(100)))
-                .andThen(raiseAndStopIntake().alongWith(driveForward(-100).alongWith(startShooter())).alongWith(hoodTrenchPreset()))
-                .andThen(turnRight(135))
-                .andThen(fireCommand());
+        return new SequentialCommandGroup(
+                new ParallelCommandGroup(
+                        zeroYawOfNavX(false),
+                        hoodStartingLinePreset(),
+                        startShooter()
+                ),
+                fireCommand(),
+                new WaitCommand(1.5),
+                new ParallelCommandGroup(
+                        driveForward(-60),
+                        stopElevator(),
+                        stopShooter()
+                ),
+                turnToDirection(90),
+                driveForward(60),
+                turnToDirection(180).withTimeout(2),
+                new ParallelCommandGroup(
+                        startShooter(),
+                        deployAndStartIntake(),
+                        driveForward(100)
+                ),                
+                new ParallelCommandGroup(
+                        raiseAndStopIntake(),
+                        hoodTrenchPreset()
+                ),
+                turnRight(160),
+                new ParallelCommandGroup(
+                    fireCommand(),
+                    stopDriving()
+                ),
+                new WaitCommand(2.5),
+                new ParallelCommandGroup(
+                        stopElevator(), 
+                        stopShooter()
+                )
+        );
     }
     
     public Command leftEightBallAuto(){
@@ -95,18 +120,28 @@ public class CommandFactory {
     public Command doNothing(){
         return new PrintCommand("Doing Nothing Skipper!");
     }
-        
+    //66.91 inches
     public Command simpleForwardShoot3Auto(){
-        return zeroYawOfNavX(false)
-                .andThen(driveForward(120.0)
-                .alongWith(startShooter())
-                .alongWith(hoodUpAgainstTargetPreset())
-                .andThen(fireCommand()));
+        return new SequentialCommandGroup(
+                zeroYawOfNavX(false),
+                new ParallelCommandGroup(
+                        driveForward(126.0).withTimeout(2.5), 
+                        startShooter(),
+                        hoodUpAgainstTargetPreset()
+                ),
+                fireCommand(),
+                new WaitCommand(3),
+                new ParallelCommandGroup(
+                        stopElevator(), 
+                        stopShooter())
+        );
     }
     
     public Command driveForward(double inches){
         return new DriveToPositionCommand(sm.getDriveSubsystem(), inches);
     }
+    
+
     
     public Command turnRight(double degrees){
         return new SnapToYawCommand(sm.getDriveSubsystem(), degrees, true, sm);
@@ -120,6 +155,9 @@ public class CommandFactory {
         return new SnapToYawCommand(sm.getDriveSubsystem(), degrees, false, sm);        
     }
     
+    public Command stopDriving(){
+        return new InstantCommand(() -> sm.getDriveSubsystem().stopDriving(), sm.getDriveSubsystem());
+    }
         
     public Command snapAndShootCommand(){
         return snapToVisionTargetCommand()
@@ -185,6 +223,10 @@ public class CommandFactory {
         return new AdjustHoodBackwardCommand(sm.getHoodSubsystem());
     }    
 
+    private Command startShooterNoShift(){
+        return new InstantCommand(() ->  sm.getShooterSubsystem().startShooter(), sm.getShooterSubsystem());
+    }
+    
     public Command hoodStartingLinePreset(){
         return new InstantCommand( () -> sm.getHoodSubsystem().startinfLinePreset(), sm.getHoodSubsystem());
         

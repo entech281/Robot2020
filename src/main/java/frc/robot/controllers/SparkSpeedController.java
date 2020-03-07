@@ -27,14 +27,14 @@ public class SparkSpeedController extends BaseSparkController implements SpeedCo
     }
 
     public boolean isSpeedWithinTolerance(double tolerance, double desired){
-        return Math.abs(getActualSpeed() - desired) < tolerance;
+        return Math.abs(getActualSpeed() - desired) < tolerance || getActualSpeed() > desired;
     }
 
     
     public void setDesiredSpeed(double desiredSpeed) {
         if (enabled){
             this.desiredSpeed = desiredSpeed;
-            spark.getPIDController().setReference(correctDirection(this.desiredSpeed), settings.ctrlType);
+            spark.getPIDController().setReference(correctDirection(this.desiredSpeed), settings.ctrlType, 0);
         }
     }
 

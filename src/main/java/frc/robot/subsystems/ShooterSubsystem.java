@@ -9,9 +9,9 @@ import frc.robot.utils.ClampedDouble;
 
 public class ShooterSubsystem extends BaseSubsystem {
 
-    public static final int SHOOTER_FIRE_RPM = 5350;
+    public static final int SHOOTER_FIRE_RPM = 4500;
     public static final int SHOOTER_MAX_RPM = 5400;
-    public static final int SHOOTER_RPM_TOLERANCE=200;
+    public static final int SHOOTER_RPM_TOLERANCE=100;
     public static final int SHOOTER_RPM_INCREMENT=100;
 
     private CANSparkMax shootMotor;
@@ -49,7 +49,6 @@ public class ShooterSubsystem extends BaseSubsystem {
         logger.log("Desired Speed", shooterMotorClosedLoopController.getDesiredSpeed());
         logger.log("AtSpeed", atShootSpeed());
         logger.log("Enabled", shooterMotorClosedLoopController.isEnabled());
-        logger.log("Stop controller config", RobotConstants.MOTOR_SETTINGS.SHOOTER_OPEN_LOOP.ctrlType);
         logger.log("Start controller config", RobotConstants.MOTOR_SETTINGS.SHOOTER_CLOSED_LOOP.ctrlType);
         logger.log("Output Bus voltage", shootMotor.getBusVoltage());
         logger.log("Applied output", shootMotor.getAppliedOutput());

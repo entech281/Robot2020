@@ -24,7 +24,7 @@ public class HoodSubsystem extends BaseSubsystem {
     public static final double HOOD_TOLERANCE_COUNTS = 50;
     public static final double HOME_OFFSET = 15.0;
     public static final double CLOSE_PRESET = 375;
-    public static final double FAR_PRESET = 1090;
+    public static final double FAR_PRESET = 911;
     public static final double STARTING_LINE_PRESET = 940;
     private boolean hoodHomedAlready = false;
     

@@ -61,7 +61,7 @@ public class OperatorInterface {
                 .add();
 
         operatorPanelManager.addButton(RobotConstants.BUTTONS.SELECT_PRESET_2)
-                .whenPressed(commandFactory.hoodTrenchPreset())
+                .whenPressed(commandFactory.hoodStartingLinePreset())
                 .add();
         
 
@@ -79,15 +79,19 @@ public class OperatorInterface {
 
         
         joystickManager.addButton(6)
-                .whenPressed(commandFactory.snapToYawCommand( 90, true).withTimeout(0.25))
+                .whenPressed(commandFactory.snapToYawCommand( 90, true))
                 .add();
         
         joystickManager.addButton(5)
-                .whenPressed(commandFactory.snapToYawCommand( -90, true).withTimeout(0.25))
+                .whenPressed(commandFactory.snapToYawCommand( -90, true))
                 .add();
 
         joystickManager.addButton(12)
-                .whenPressed(commandFactory.driveForward(24))
+                .whenPressed(commandFactory.driveForward(120))
+                .add();
+        
+        joystickManager.addButton(9)
+                .whenPressed(commandFactory.hoodHomeCommand())
                 .add();
         
         drive.setDefaultCommand(new TankDriveCurvatureCommand(drive, driveStick, 

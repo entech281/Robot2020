@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.commands.StopDrivingCommand;
 
 import frc.robot.logger.DataLogger;
 import frc.robot.logger.DataLoggerFactory;
@@ -52,8 +53,6 @@ public class Robot extends TimedRobot {
         subsystemManager.initAll();
 
         optionChooser = new SmartDashboardPathChooser();
-
-        oi = new OperatorInterface(subsystemManager);
         commandFactory = new CommandFactory(subsystemManager);
     }
 
@@ -75,6 +74,7 @@ public class Robot extends TimedRobot {
         if(!subsystemManager.getHoodSubsystem().knowsHome()){
             commandFactory.hoodHomeCommand().schedule();
         }
+        oi = new OperatorInterface(subsystemManager);
         subsystemManager.getVisionSubsystem().ensureConnected();
         subsystemManager.getShooterSubsystem().initialize();
 
@@ -97,6 +97,7 @@ public class Robot extends TimedRobot {
         autoCommand = new AutoCommandFactory(commandFactory).getSelectedCommand(optionChooser.getSelected());
         CommandScheduler.getInstance().schedule(autoCommand);
         subsystemManager.getShooterSubsystem().initialize();
+        subsystemManager.getDriveSubsystem().setDefaultCommand(new StopDrivingCommand(subsystemManager.getDriveSubsystem()));
     }
 
     @Override

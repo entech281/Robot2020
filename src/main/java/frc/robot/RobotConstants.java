@@ -59,13 +59,13 @@ public class RobotConstants {
                 .coastInNeutral()
                 .withDirections(false, false)
                 .limitMotorOutputs(1, -1)
-                .withMotorRampUpOnStart(0.5)
+                .noMotorStartupRamping()
                 .useSmartVelocityControl()
-                .withPositionGains(0.000015, 8e-4, 4e-7, 0.0)
-                .useAccelerationStrategy(CANPIDController.AccelStrategy.kSCurve)
+                .withPositionGains(0.000185, 4e-4, 0, 0.0)
+                .useAccelerationStrategy(CANPIDController.AccelStrategy.kTrapezoidal)
                 .withMaxVelocity(5700)
-                .withMaxAcceleration(3000)
-                .withClosedLoopError(150)
+                .withMaxAcceleration(200000)
+                .withClosedLoopError(50)
                 .build();
         
         public static SparkMaxSettings SHOOTER_OPEN_LOOP = SparkMaxSettingsBuilder.defaults()
@@ -156,15 +156,15 @@ public class RobotConstants {
 
     public interface PID{
         public interface AUTO_STRAIGHT{
-            public static final double P = 64e-4;
-            public static final double I = 0;
+            public static final double P = 4e-4;
+            public static final double I = 2e-7;
             public static final double D = 0;
             public static final double F = 0;
         }
         
         public interface AUTO_TURN{
-            public static final double P = 1e-1;
-            public static final double I = 4e-7;//2e-5;
+            public static final double P = 1e-2;
+            public static final double I = 0;
             public static final double D = 0;
             public static final double F = 0;
         }
@@ -180,8 +180,8 @@ public class RobotConstants {
 
     public interface AUTONOMOUS {
 
-        public static final int MAX_VELOCITY = 5000;//7500
-        public static final int MAX_ACCELLERATION = 5000;//30000
+        public static final int MAX_VELOCITY = 7500;
+        public static final int MAX_ACCELLERATION = 30000;
         public static final int ACCEPTABLE_ERROR = 0;
         public static final int POSITION_TOLERANCE_INCHES = 1;
     }

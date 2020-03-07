@@ -89,18 +89,16 @@ public class DriveSubsystem extends BaseSubsystem {
         frontRightSpark = new CANSparkMax(RobotConstants.CAN.FRONT_RIGHT_MOTOR, MotorType.kBrushless);
         rearRightSpark = new CANSparkMax(RobotConstants.CAN.REAR_RIGHT_MOTOR, MotorType.kBrushless);
         rightSpeedController = new SpeedControllerGroup(frontRightSpark, rearRightSpark);
-
         frontLeftEncoder = frontLeftSpark.getEncoder();
         frontRightEncoder = frontRightSpark.getEncoder();
         rearLeftEncoder = rearLeftSpark.getEncoder();
         rearRightEncoder = rearRightSpark.getEncoder();
-
         robotDrive = new DifferentialDrive(leftSpeedController, rightSpeedController);
+
         frontLeftPositionController = new SparkPositionController(frontLeftSpark, smartMotionSettings, FRONT_LEFT_POSITION_INVERSE);
         frontRightPositionController = new SparkPositionController(frontRightSpark, smartMotionSettings, FRONT_RIGHT_POSITION_INVERSE);
         rearLeftPositionController = new SparkPositionController(rearLeftSpark, smartMotionSettings, REAR_LEFT_POSITION_INVERSE);
         rearRightPositionController = new SparkPositionController(rearRightSpark, smartMotionSettings, REAR_RIGHT_POSITION_INVERSE);
-        
     }
 
     public void setSpeedMode() {
@@ -111,21 +109,24 @@ public class DriveSubsystem extends BaseSubsystem {
     }
 
     public void setPositionMode() {
+
         frontRightPositionController.configure();
         rearLeftPositionController.configure();
         frontLeftPositionController.configure();
         rearRightPositionController.configure();
-
-
     }
     
     public EncoderValues getEncoderValues() {
-        return new EncoderValues(frontLeftEncoder.getPosition(),
-                rearLeftEncoder.getPosition(),
-                frontRightEncoder.getPosition(),
-                rearRightEncoder.getPosition());
+        return new EncoderValues(frontLeftPositionController.getActualPosition(),
+                rearLeftPositionController.getActualPosition(),
+                frontRightPositionController.getActualPosition(),
+                rearRightPositionController.getActualPosition());
     }
 
+    public void stopDriving(){
+        robotDrive.tankDrive(0, 0);
+    }
+    
     public void feedWatchDog(){
         robotDrive.feedWatchdog();
     }
@@ -179,10 +180,10 @@ public class DriveSubsystem extends BaseSubsystem {
         rearRightPositionController.resetPosition();
         rearLeftPositionController.resetPosition();
         
-        frontLeftPositionController.setDesiredPosition(4096);
-        frontRightPositionController.setDesiredPosition(4096);
-        rearLeftPositionController.setDesiredPosition(4096);
-        rearRightPositionController.setDesiredPosition(4096);
+        frontLeftPositionController.setDesiredPosition(encoderLeft);
+        frontRightPositionController.setDesiredPosition(encoderRight);
+        rearLeftPositionController.setDesiredPosition(encoderLeft);
+        rearRightPositionController.setDesiredPosition(encoderRight);
     }
 
 }
