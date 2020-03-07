@@ -37,6 +37,7 @@ public class Robot extends TimedRobot {
     private SmartDashboardPathChooser optionChooser;
     OperatorInterface oi;
     Command autoCommand;
+    Command selfTestCommand;
     private Compressor compressor;
 
     @Override
@@ -55,6 +56,7 @@ public class Robot extends TimedRobot {
 
         oi = new OperatorInterface(subsystemManager);
         commandFactory = new CommandFactory(subsystemManager);
+        selfTestCommand = commandFactory.selfTestCommand();
     }
 
     @Override
@@ -67,6 +69,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void teleopInit() {
+        selfTestCommand.cancel();        
         subsystemManager.getDriveSubsystem().setSpeedMode();
         subsystemManager.getNavXSubsystem().zeroYawMethod(false);
         if (autoCommand != null) {
@@ -85,6 +88,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void autonomousInit() {
+        selfTestCommand.cancel();
         subsystemManager.getVisionSubsystem().ensureConnected();
 
         subsystemManager.getDriveSubsystem().setPositionMode();
@@ -110,7 +114,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void testInit(){
-
+        CommandScheduler.getInstance().schedule(selfTestCommand);
     }
 
     @Override
