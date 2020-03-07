@@ -8,7 +8,7 @@ import frc.robot.pose.ShooterConfiguration;
 import frc.robot.utils.ClampedDouble;
 
 public class ShooterSubsystem extends BaseSubsystem {
-
+    
     public static final int SHOOTER_FIRE_RPM = 5350;
     public static final int SHOOTER_MAX_RPM = 5400;
     public static final int SHOOTER_RPM_TOLERANCE=200;

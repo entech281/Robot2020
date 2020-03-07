@@ -29,43 +29,43 @@ public class Robot extends TimedRobot {
 
     private DataLogger logger;
     private SubsystemManager  subsystemManager;
-    private CommandFactory commandFactory;
+    //private CommandFactory commandFactory;
 
 
-    private SmartDashboardPathChooser optionChooser;
+    //private SmartDashboardPathChooser optionChooser;
     OperatorInterface oi;
     Command autoCommand;
     private Compressor compressor;
 
     @Override
     public void robotInit() {
-        if(RobotConstants.AVAILABILITY.PNEUMATICS_MOUNTED){
+        /*if(RobotConstants.AVAILABILITY.PNEUMATICS_MOUNTED){
             compressor = new Compressor(RobotConstants.CAN.PCM_ID);
             compressor.start();
-        }
+        }*/
         
         DataLoggerFactory.configureForMatch();
         this.logger = DataLoggerFactory.getLoggerFactory().createDataLogger("Robot Main Loop");
         subsystemManager = new SubsystemManager();
         subsystemManager.initAll();
 
-        optionChooser = new SmartDashboardPathChooser();
+        //optionChooser = new SmartDashboardPathChooser();
 
         oi = new OperatorInterface(subsystemManager);
-        commandFactory = new CommandFactory(subsystemManager);
+        //commandFactory = new CommandFactory(subsystemManager);
     }
 
     @Override
     public void robotPeriodic() {
         //runs after everything else
-        subsystemManager.updatePoses();
+        //subsystemManager.updatePoses();
 
         CommandScheduler.getInstance().run();
     }
 
     @Override
     public void teleopInit() {
-        subsystemManager.getDriveSubsystem().setSpeedMode();
+        /*subsystemManager.getDriveSubsystem().setSpeedMode();
         subsystemManager.getNavXSubsystem().zeroYawMethod(false);
         if (autoCommand != null) {
             autoCommand.cancel();
@@ -74,7 +74,7 @@ public class Robot extends TimedRobot {
             commandFactory.hoodHomeCommand().schedule();
         }
         subsystemManager.getVisionSubsystem().ensureConnected();
-
+        */
     }
 
     @Override
@@ -85,7 +85,7 @@ public class Robot extends TimedRobot {
     public void autonomousInit() {
         subsystemManager.getVisionSubsystem().ensureConnected();
 
-        subsystemManager.getDriveSubsystem().setPositionMode();
+        /*subsystemManager.getDriveSubsystem().setPositionMode();
 
         if(!subsystemManager.getHoodSubsystem().knowsHome()){
             commandFactory.hoodHomeCommand().schedule();
@@ -93,17 +93,18 @@ public class Robot extends TimedRobot {
 
         autoCommand = new AutoCommandFactory(commandFactory).getSelectedCommand(optionChooser.getSelected());
         CommandScheduler.getInstance().schedule(autoCommand);
+        */
     }
 
     @Override
     public void autonomousPeriodic() {
-        subsystemManager.getDriveSubsystem().feedWatchDog();
+        //subsystemManager.getDriveSubsystem().feedWatchDog();
 
     }
 
     @Override
     public void disabledInit() {
-        subsystemManager.getDriveSubsystem().setSpeedMode();
+        //subsystemManager.getDriveSubsystem().setSpeedMode();
     }
 
     @Override

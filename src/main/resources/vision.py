@@ -1,4 +1,4 @@
-import sensor, image, time
+import sensor, image, time, pyb
 
 def draw_lines(x, y):
     centerX = 80
@@ -13,7 +13,7 @@ def initialize():
     sensor.reset()
     sensor.set_pixformat(sensor.RGB565) # grayscale is faster (160x120 max on OpenMV-M7)
     #GRAYSCALE, RGB565,BAYER
-    sensor.set_framesize(sensor.QQVGA)
+    sensor.set_framesize(sensor.QVGA)
     sensor.set_auto_whitebal(False)
     sensor.set_auto_gain(False)
     sensor.set_auto_exposure(False, exposure_us=100) # make smaller to go faster
@@ -24,7 +24,7 @@ def transmit_data(data):
 
 def valid_target(blob):
     return blob.compactness() < 0.5
-    
+
 FILTER_RANGES = [(1, 87, -88, -10, -41, 44)]
 DEFAULT_TRANSMIT = "False -1 -1 -1 0 -"
 
@@ -34,8 +34,14 @@ def gather_data(blob):
     global clock
     return {str(True), str(blob.cx()), str(blob.cy()), str(blob.w()), str(clock.fps()), "-"}
 
+COUNTER = 0
+def should_send_frame():
+    global COUNTER
+    COUNTER += 1
+    return COUNTER % 30 == 0
+
 initialize()
-print("Script started!")
+
 while(True):
     clock.tick()
     img = sensor.snapshot()
@@ -46,7 +52,8 @@ while(True):
             transmit_data(data)
             draw_lines(b.cx(), b.cy())
             img.draw_rectangle( b.rect(), color = (0, 0, 255), thickness = 3)
-            found_valid_target = True 
+            found_valid_target = True
     if not found_valid_target:
         print(DEFAULT_TRANSMIT)
-    
+    if should_send_frame():
+        img.save("captured-"+str(COUNTER)+".jpg")

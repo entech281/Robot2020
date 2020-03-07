@@ -59,21 +59,22 @@ public class SubsystemManager implements PoseSource{
     }
 
     public void initAll() {
-        driveSubsystem = new DriveSubsystem();
-        intakeSubsystem = new IntakeSubsystem();
-        navXSubsystem = new NavXSubsystem();
-        shooterSubsystem = new ShooterSubsystem();
-        climbSubsystem = new ClimbSubsystem();
+        //driveSubsystem = new DriveSubsystem();
+        //intakeSubsystem = new IntakeSubsystem();
+        //navXSubsystem = new NavXSubsystem();
+        //shooterSubsystem = new ShooterSubsystem();
+        //climbSubsystem = new ClimbSubsystem();
         visionSubsystem = new VisionSubsystem();
-        hoodSubsystem  = new HoodSubsystem();
+        //hoodSubsystem  = new HoodSubsystem();
         
         Arrays.asList(
-            driveSubsystem, 
-            intakeSubsystem, 
-            navXSubsystem, 
-            visionSubsystem,
-            shooterSubsystem,
-            hoodSubsystem).forEach(subsystem -> subsystem.initialize());
+            //driveSubsystem, 
+            //intakeSubsystem, 
+            //navXSubsystem, 
+            visionSubsystem//,
+            //shooterSubsystem,
+            //hoodSubsystem
+            ).forEach(subsystem -> subsystem.initialize());
  
     }
     public void updatePoses() {

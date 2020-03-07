@@ -1,12 +1,13 @@
 package frc.robot.vision;
 
-//import edu.wpi.first.wpilibj.SerialPort;
+import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.SerialPort.Port;
-import com.fazecast.jSerialComm.SerialPort;
+//import com.fazecast.jSerialComm.SerialPort;
 
 import frc.robot.utils.JStruct;
 
 public class OpenMV {
+    private static final int MAX_READ_BUFF_BYTES = (int) (115200 * 0.02 / 8 * 10);
     private JStruct struct = new JStruct();
     private SerialPort connection;
 
@@ -42,32 +43,44 @@ public class OpenMV {
     private static long BOOTLDR_WRITE = 0xABCD0008;
 
     public OpenMV(int baudRate,Port p, int timeout) {
-        for(SerialPort port: SerialPort.getCommPorts()){
+        /*for(SerialPort port: SerialPort.getCommPorts()){
             if(port.getPortDescription().contains("OpenMV")){
                 System.out.println(port.getPortDescription());
                 connection = port;
                 break;
             }
-        }
-        connection.setBaudRate(baudRate);
-        connection.setComPortTimeouts(SerialPort.TIMEOUT_READ_BLOCKING, timeout, timeout);
-        connection.openPort();
-        connection.readBytes(new byte[connection.bytesAvailable()], connection.bytesAvailable());
-        System.out.println("Connected: "+connection.isOpen());
+        }*/
+        connection = new SerialPort(baudRate, p);
+        //connection.setBaudRate(baudRate);
+
+        //connection.setComPortTimeouts(SerialPort.TIMEOUT_READ_BLOCKING, timeout, timeout);
+        connection.setTimeout(timeout);
+        //connection.openPort();
+        //connection.readBytes(new byte[connection.bytesAvailable()], connection.bytesAvailable());
+        cleanSerialInput();
+        //System.out.println("Connected: "+connection.isOpen());
     }
 
     private void write(byte[] bytes) {
-        connection.writeBytes(bytes, bytes.length);
+        connection.write(bytes, bytes.length);
     }
 
-    private byte[] read(int numBytes) {
-        var buff = new byte[numBytes];
-        connection.readBytes(buff, numBytes);
-        System.out.println(new String(buff));
-        if(buff.length != numBytes){
-            return new byte[numBytes];
-        }
-        return buff;
+    public void cleanSerialInput(){
+        connection.read(connection.getBytesReceived());
+    }
+
+    private byte[] read(int numBytes) throws Exception {
+        if (numBytes < MAX_READ_BUFF_BYTES){
+            var buff = new byte[numBytes];
+
+            buff = connection.read(numBytes);
+
+            //System.out.println(new String(buff));
+            if(buff.length != numBytes){
+                throw new Exception(String.format("Requested %x bytes but got %x", numBytes, buff.length));
+            }
+            return buff;
+        } else throw new Exception(String.format( "Requested read size too big! Requested %x but max size %x", numBytes, MAX_READ_BUFF_BYTES));
     }
 
     public long[] fbSize() throws Exception {
@@ -147,6 +160,6 @@ public class OpenMV {
     }
     
     public void close(){
-        connection.closePort();
+        connection.close();
     }
 }

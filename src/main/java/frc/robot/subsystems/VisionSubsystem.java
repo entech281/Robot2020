@@ -27,7 +27,8 @@ public class VisionSubsystem extends BaseSubsystem {
     private static final int WAIT_TO_DEPLOY_SCRIPT_SECONDS = 2; 
     private static final int WAIT_TO_START_READING_VISION_DATA_SECONDS = 2;
     private static final int FRAME_RATE_FPS = 20;
-    private static final int CAMERA_SERVER_PORT = 1;
+    private static final int CAMERA_SERVER_PORT = 2810;
+    private static final int WAIT_BETWEEN_CONNECTS = 2;
     private byte[] deployScript;
 
     private OpenMV openMV;
@@ -42,6 +43,7 @@ public class VisionSubsystem extends BaseSubsystem {
     @Override
     public void initialize() {
         logger.log("initialized", true);
+        timer.start();
         ensureConnected();
         processor = new VisionDataProcessor();
         try{
@@ -51,30 +53,37 @@ public class VisionSubsystem extends BaseSubsystem {
             e.printStackTrace();
         }
     }
-
+    private int counter = 0;
     @Override
     public void periodic() {
+        
         logger.driverinfo("Vision Status", state);
+
 
         switch (state) {
             case NOT_CONNECTED:
-                break; // We could try reconnecting just in case we get vision halfway through the
-                       // match
+                if(timer.hasPeriodPassed(WAIT_BETWEEN_CONNECTS)){
+                    logger.warn("Trying to connect.");
+                    logger.log("counter", counter++);
+                    //ensureConnected();
+                }
+                break; 
             case CONNECTED:
                 try {
                     openMV.stopScript();
                     openMV.enableFb(1);
                     state = OpenMVState.STOPPED_SCRIPT;
                 } catch (Exception e) {
-                    state = OpenMVState.ERROR;
+                    transitionToErrorState(e);
                 }
             case STOPPED_SCRIPT:
                 if(timer.hasPeriodPassed(WAIT_TO_DEPLOY_SCRIPT_SECONDS)){
                     try{
+                        openMV.cleanSerialInput();
                         openMV.execScript(deployScript);
                         state = OpenMVState.STARTED_SCRIPT;
                     }catch (Exception e) {
-                        state = OpenMVState.ERROR;
+                        transitionToErrorState(e);
                     }
                 } 
                 break;
@@ -91,19 +100,21 @@ public class VisionSubsystem extends BaseSubsystem {
             case RUNNING_SCRIPT:
                 try{
 
-                    String reading = openMV.getSerialOutput().toString();
+                    logger.log("Script is running", openMV.scriptRunning());
+                    openMV.cleanSerialInput();
+                    String reading = new String(openMV.getSerialOutput());
+                    logger.log("Input", reading);
+
                     visionData = processor.getCurrentVisionData();
                     
-                    logger.log("Input", reading);
                     processor.addInput(reading);
                     logger.log("Vertical offset", visionData.getVerticalOffset());
                     logger.driverinfo("Horizontal Offset", visionData.getLateralOffset());
 
-                    logger.log("Script is running", openMV.scriptRunning());
 
                     liveStream.update();
                 }catch (Exception e) {
-                    state = OpenMVState.ERROR;
+                    transitionToErrorState(e);
                 }
                 break;
             case ERROR:
@@ -127,6 +138,11 @@ public class VisionSubsystem extends BaseSubsystem {
     }
     public boolean isConnected(){
         return state != OpenMVState.NOT_CONNECTED;
+    }
+
+    private void transitionToErrorState(Exception e){
+        logger.log("ERROR", e.getMessage());
+        state = OpenMVState.ERROR;
     }
 
     private enum OpenMVState{

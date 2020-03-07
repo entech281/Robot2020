@@ -21,18 +21,18 @@ public class OperatorInterface {
     private JoystickButtonManager operatorPanelManager;
     private SubsystemManager subsystemManager;
     private DriveSubsystem drive;
-    private CommandFactory commandFactory;
+    //private CommandFactory commandFactory;
 
     public OperatorInterface(final SubsystemManager subMan) {
         this.subsystemManager = subMan;
-        commandFactory = new CommandFactory(subsystemManager);
+        //commandFactory = new CommandFactory(subsystemManager);
         this.driveStick = new Joystick(RobotConstants.GAMEPAD.DRIVER_JOYSTICK);
         this.driveStick2 = new Joystick(RobotConstants.GAMEPAD.DRIVER_JOYSTICK2);
         this.operatorPanel = new Joystick(RobotConstants.GAMEPAD.OPERATOR_PANEL);
         this.joystickManager = new JoystickButtonManager(driveStick);
         this.operatorPanelManager = new JoystickButtonManager(operatorPanel);
         
-        operatorPanelManager.addButton(RobotConstants.BUTTONS.TURN_SHOOTER_ON)
+        /*operatorPanelManager.addButton(RobotConstants.BUTTONS.TURN_SHOOTER_ON)
                 .whenPressed(commandFactory.startShooter())
                 .whenReleased(commandFactory.stopShooter())
                 .add();
@@ -107,6 +107,7 @@ public class OperatorInterface {
                 new JoystickButton(driveStick,RobotConstants.JOYSTICK_BUTTONS.CURVATURE_DRIVE_PIVOT)));
         //drive.setDefaultCommand ( new TankDriveCommand(drive,driveStick));
         //drive.setDefaultCommand ( new TankDriveCommandTwoJoysticks(drive,driveStick,driveStick2));
+        */
     }
 
 }
