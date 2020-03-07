@@ -127,7 +127,7 @@ public class OpenMV {
         write(struct.pack("<I", enable));
     }
 
-    public byte[] fbDump(String s) throws Exception {
+    public byte[] fbDump() throws Exception {
         long[] size = fbSize();
         if (size[0] == 0){
             return new byte[0];

@@ -5,9 +5,10 @@
  */
 package frc.robot.subsystems;
 
-import edu.wpi.first.wpilibj.Filesystem;
+import frc.robot.RobotConstants;
 import frc.robot.pose.*;
 import frc.robot.vision.OpenMV;
+import frc.robot.vision.OpenMVCameraServer;
 import frc.robot.vision.VisionDataProcessor;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.SerialPort.Port;
@@ -23,9 +24,10 @@ public class VisionSubsystem extends BaseSubsystem {
 
     private static final int BAUD_RATE = 115200;
     private static final int TIMEOUT = 2;
-    private static final int WAIT_TO_DEPLOY_SCRIPT_SECONDS = 4; 
-    private static final int WAIT_TO_START_READING_VISION_DATA_SECONDS = 4;
+    private static final int WAIT_TO_DEPLOY_SCRIPT_SECONDS = 2; 
+    private static final int WAIT_TO_START_READING_VISION_DATA_SECONDS = 2;
     private static final int FRAME_RATE_FPS = 20;
+    private static final int CAMERA_SERVER_PORT = 1;
     private byte[] deployScript;
 
     private OpenMV openMV;
@@ -34,6 +36,8 @@ public class VisionSubsystem extends BaseSubsystem {
     private VisionDataProcessor processor;
 
     private OpenMVState state = OpenMVState.NOT_CONNECTED;
+
+    private OpenMVCameraServer liveStream = new OpenMVCameraServer(true);
 
     @Override
     public void initialize() {
@@ -68,25 +72,39 @@ public class VisionSubsystem extends BaseSubsystem {
                 if(timer.hasPeriodPassed(WAIT_TO_DEPLOY_SCRIPT_SECONDS)){
                     try{
                         openMV.execScript(deployScript);
+                        state = OpenMVState.STARTED_SCRIPT;
                     }catch (Exception e) {
                         state = OpenMVState.ERROR;
                     }
                 } 
                 break;
-            case SCRIPT_RUNNING:
+            case STARTED_SCRIPT:
                 if(timer.hasPeriodPassed(WAIT_TO_START_READING_VISION_DATA_SECONDS)){
-                    try{
-                        String reading = openMV.getSerialOutput().toString();
-                        logger.log("Input", reading);
-                        logger.log("Script is running", openMV.scriptRunning());
-                        processor.addInput(reading);
-                        visionData = processor.getCurrentVisionData();
-                        logger.log("Vertical offset", visionData.getVerticalOffset());
-                        logger.driverinfo("Horizontal Offset", visionData.getLateralOffset());
-                    }catch (Exception e) {
-                        state = OpenMVState.ERROR;
-                    }
-                } 
+                    liveStream.initialize(openMV, 
+                        RobotConstants.ROBOT_DEFAULTS.VISION.FRAME_WIDTH, 
+                        RobotConstants.ROBOT_DEFAULTS.VISION.FRAME_HEIGHT, 
+                        FRAME_RATE_FPS, 
+                        CAMERA_SERVER_PORT);
+                    state = OpenMVState.RUNNING_SCRIPT;
+                }
+                break;
+            case RUNNING_SCRIPT:
+                try{
+
+                    String reading = openMV.getSerialOutput().toString();
+                    visionData = processor.getCurrentVisionData();
+                    
+                    logger.log("Input", reading);
+                    processor.addInput(reading);
+                    logger.log("Vertical offset", visionData.getVerticalOffset());
+                    logger.driverinfo("Horizontal Offset", visionData.getLateralOffset());
+
+                    logger.log("Script is running", openMV.scriptRunning());
+
+                    liveStream.update();
+                }catch (Exception e) {
+                    state = OpenMVState.ERROR;
+                }
                 break;
             case ERROR:
                 break;
@@ -107,7 +125,6 @@ public class VisionSubsystem extends BaseSubsystem {
             }
         }
     }
-
     public boolean isConnected(){
         return state != OpenMVState.NOT_CONNECTED;
     }
@@ -117,9 +134,8 @@ public class VisionSubsystem extends BaseSubsystem {
         CONNECTED,
         ERROR,
         STOPPED_SCRIPT,
-        SCRIPT_RUNNING
+        STARTED_SCRIPT,
+        RUNNING_SCRIPT
     }
-
-    
 
 }
