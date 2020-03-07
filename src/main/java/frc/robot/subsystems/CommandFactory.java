@@ -89,12 +89,12 @@ public class CommandFactory {
                         stopShooter()
                 ),
                 turnToDirection(90),
-                driveForward(60),
+                driveForward(60), //
                 turnToDirection(180).withTimeout(2),
                 new ParallelCommandGroup(
                         startShooter(),
                         deployAndStartIntake(),
-                        driveForward(100)
+                        driveForward(100) //
                 ),                
                 new ParallelCommandGroup(
                         raiseAndStopIntake(),
