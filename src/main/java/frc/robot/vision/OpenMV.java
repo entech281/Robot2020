@@ -52,7 +52,8 @@ public class OpenMV {
         connection.setBaudRate(baudRate);
         connection.setComPortTimeouts(SerialPort.TIMEOUT_READ_BLOCKING, timeout, timeout);
         connection.openPort();
-        System.out.println(connection.isOpen());
+        connection.readBytes(new byte[connection.bytesAvailable()], connection.bytesAvailable());
+        System.out.println("Connected: "+connection.isOpen());
     }
 
     private void write(byte[] bytes) {
