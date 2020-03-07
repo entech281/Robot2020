@@ -23,7 +23,6 @@ public class VisionSubsystem extends BaseSubsystem {
 
     private static final int BAUD_RATE = 115200;
     private static final int TIMEOUT = 2;
-    private static final String VISION_SCRIPT_LOCATION = Filesystem.getDeployDirectory() + "python/vision.py";
     private static final int WAIT_TO_DEPLOY_SCRIPT_SECONDS = 4; 
     private static final int WAIT_TO_START_READING_VISION_DATA_SECONDS = 4;
     private static final int FRAME_RATE_FPS = 20;

@@ -50,7 +50,12 @@ public class OpenMV {
     }
 
     private byte[] read(int numBytes) {
-        return  connection.read(numBytes);
+        
+        var buff = connection.read(numBytes);
+        if(buff.length != numBytes){
+            return new byte[numBytes];
+        }
+        return buff;
     }
 
     public long[] fbSize() throws Exception {
@@ -127,5 +132,9 @@ public class OpenMV {
 
 	public byte[] getSerialOutput() throws Exception {
 		return txBuf(txBufLen());
-	}
+    }
+    
+    public void close(){
+        connection.close();
+    }
 }
