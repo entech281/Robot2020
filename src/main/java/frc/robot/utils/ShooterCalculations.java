@@ -19,7 +19,7 @@ public class ShooterCalculations {
     }
     public static double hoodEncoderPosition(double distance){
         double targetHeight = 86;
-        double encoderClicks = (Math.atan(targetHeight/distance) - 90)*2100*4;
+        double encoderClicks = Math.atan(targetHeight/distance)*2100*4;
         return encoderClicks;
     }
 }
