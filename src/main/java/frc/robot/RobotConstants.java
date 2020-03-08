@@ -136,7 +136,6 @@ public class RobotConstants {
         public static final RobotPose START_POSE = new RobotPose(START_POSITION, VISION.DEFAULT_VISION_DATA);
 
         public interface VISION {
-
             public static final VisionData DEFAULT_VISION_DATA = new VisionData(false, -1, -1, -1);
             public static final int FRAME_WIDTH = 160;
             public static final int FRAME_HEIGHT = 120;

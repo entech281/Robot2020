@@ -109,7 +109,6 @@ public class DriveSubsystem extends BaseSubsystem {
     }
 
     public void setPositionMode() {
-
         frontRightPositionController.configure();
         rearLeftPositionController.configure();
         frontLeftPositionController.configure();

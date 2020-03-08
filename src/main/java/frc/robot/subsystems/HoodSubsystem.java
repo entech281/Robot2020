@@ -30,7 +30,7 @@ public class HoodSubsystem extends BaseSubsystem {
     
     private final ClampedDouble desiredHoodPositionEncoder = ClampedDouble.builder()
             .bounds(0, 1500)
-            .withIncrement(15.0)
+            .withIncrement(5.0)
             .withValue(0.0).build();
 
     @Override

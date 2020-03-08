@@ -37,10 +37,10 @@ public class OperatorInterface {
                 .whenReleased(commandFactory.stopShooter())
                 .add();
         
-        //operatorPanelManager.addButton(RobotConstants.BUTTONS.ENABLE_AUTO_HOOD)
-        //        .whenPressed(subsystemManager.getShooterSubsystem().enableAutoShooting())
-        //        .whenReleased(subsystemManager.getShooterSubsystem().disableAutoShooting())
-        //        .add();
+        operatorPanelManager.addButton(RobotConstants.BUTTONS.ENABLE_AUTO_HOOD)
+                .whenPressed(commandFactory.enableAutoShooterAndHood())
+                .whenReleased(commandFactory.disableAutoShooterAndHood())
+                .add();
         
         operatorPanelManager.addButton(RobotConstants.BUTTONS.DEPLOY_INTAKE)
                 .whileHeldContinous(commandFactory.deployAndStartIntake())
@@ -64,14 +64,15 @@ public class OperatorInterface {
                 .whenPressed(commandFactory.hoodStartingLinePreset())
                 .add();
         
-
-        drive = subsystemManager.getDriveSubsystem();
-               
-        joystickManager.addButton(RobotConstants.BUTTONS.DRIVER_SHOOT)
-                .whileHeldContinous(commandFactory.fireCommand())
+        operatorPanelManager.addButton(RobotConstants.BUTTONS.FIRE)
+                .whenPressed(commandFactory.fireCommand())
                 .whenReleased(commandFactory.stopElevator())
                 .add();
-                
+        
+
+        drive = subsystemManager.getDriveSubsystem();
+                               
+        
         joystickManager.addButton(RobotConstants.BUTTONS.OUTAKE)
                 .whenPressed(commandFactory.reverse())
                 .whenReleased(commandFactory.stopEverything())
@@ -79,11 +80,11 @@ public class OperatorInterface {
 
         
         joystickManager.addButton(6)
-                .whenPressed(commandFactory.snapToYawCommand( 90, true))
+                .whenPressed(commandFactory.snapToYawCommand( 5, true))
                 .add();
         
         joystickManager.addButton(5)
-                .whenPressed(commandFactory.snapToYawCommand( -90, true))
+                .whenPressed(commandFactory.snapToYawCommand( -5, true))
                 .add();
 
         joystickManager.addButton(12)
