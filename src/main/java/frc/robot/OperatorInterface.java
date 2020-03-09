@@ -67,7 +67,8 @@ public class OperatorInterface {
         
         operatorPanelManager.addButton(RobotConstants.BUTTONS.NUDGE_HOOD_BACKWARD)
                 .whenPressed(subsystemManager.getShooterSubsystem().nudgeHoodBackward())
-                .add();        
+                .add();   
+                
         drive = subsystemManager.getDriveSubsystem();
         
         joystickManager.addButton(RobotConstants.BUTTONS.SNAP_TO_TARGET)
