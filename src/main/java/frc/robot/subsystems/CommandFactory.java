@@ -235,8 +235,55 @@ public class CommandFactory {
             new WaitCommand( 0.5 ),
             new InstantCommand ( () ->    sm.getIntakeSubsystem().setElevatorSpeed(0)  )
         ).withTimeout(1.0);  
-    }  
+    }
     
+    public Command testDriveForward(){
+        return new SequentialCommandGroup(
+            new InstantCommand ( () ->    sm.getDriveSubsystem().drive(1.0, 0.0)  )
+        ).withTimeout(1.0); 
+    }
+
+    public Command testDriveBackwards(){
+        return new SequentialCommandGroup(
+            new InstantCommand ( () ->    sm.getDriveSubsystem().drive(-1.0, 0.0)  )
+        ).withTimeout(1.0); 
+    }
+
+    public Command testTurnRight(){
+        return new SequentialCommandGroup(
+            new InstantCommand ( () ->    sm.getDriveSubsystem().drive(0.0, 1.0)  )
+        ).withTimeout(1.0); 
+    }
+
+    public Command testTurnLeft(){
+        return new SequentialCommandGroup(
+            new InstantCommand ( () ->    sm.getDriveSubsystem().drive(0.0, -1.0)  )
+        ).withTimeout(1.0); 
+    }
+    
+    public Command testShooterSpeed(){
+        return new SequentialCommandGroup(
+            new InstantCommand( () ->  sm.getShooterSubsystem().startShooter()  ),
+            new WaitCommand(0.5),
+            new InstantCommand(  () -> sm.getShooterSubsystem().stopShooter()   )
+        ).withTimeout(5.0);
+    }
+
+    public Command testHoodPosition(){
+        return new SequentialCommandGroup(
+            new InstantCommand(  () -> sm.getHoodSubsystem().setHoodPosition(90.0)),
+            new InstantCommand(  () -> sm.getHoodSubsystem().adjustHoodForward()),
+            new InstantCommand(  () -> sm.getHoodSubsystem().setHoodPosition(0.0)),
+            new InstantCommand(  () -> sm.getHoodSubsystem().adjustHoodBackward())
+        ).withTimeout(5.0);
+    }
+
+    public Command testIntake(){
+        return new SequentialCommandGroup(
+            
+        ).withTimeout(5.0);
+    }
+
     public Command getStopShooterCommandGroup(){
 //        return new EntechCommandGroup()
 //                .addCommand(subsystemManager.getIntakeSubsystem().stopElevator())

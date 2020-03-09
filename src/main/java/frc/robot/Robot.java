@@ -6,8 +6,11 @@
 /*----------------------------------------------------------------------------*/
 package frc.robot;
 
+import java.sql.Time;
+
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
@@ -18,6 +21,7 @@ import frc.robot.pose.RobotPoseManager;
 import frc.robot.preferences.AutoCommandFactory;
 import frc.robot.preferences.SmartDashboardPathChooser;
 import frc.robot.subsystems.CommandFactory;
+import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.SubsystemManager;
 
 /**
@@ -108,14 +112,25 @@ public class Robot extends TimedRobot {
         subsystemManager.getDriveSubsystem().setSpeedMode();
     }
 
-    @Override
-    public void testInit(){
 
+    
+    @Override
+    public void testInit() {
+        subsystemManager.getNavXSubsystem().zeroYawMethod(false);
+        if (autoCommand != null) {
+            autoCommand.cancel();
+        }
+        subsystemManager.getVisionSubsystem().ensureConnected();
+        subsystemManager.getDriveSubsystem().setSpeedMode();
+        CommandScheduler.getInstance().schedule(commandFactory.getStopShooterCommandGroup());
     }
 
     @Override
     public void testPeriodic() {
+    }
 
+
+    
     }
     
-}
+
