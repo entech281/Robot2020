@@ -63,14 +63,10 @@ public class OperatorInterface {
                 .whenPressed(commandFactory.setShooterPreset1())
                 .add();
         
-<<<<<<< HEAD
         operatorPanelManager.addButton(RobotConstants.BUTTONS.NUDGE_HOOD_BACKWARD)
                 .whenPressed(subsystemManager.getShooterSubsystem().nudgeHoodBackward())
                 .add();   
                 
-=======
-
->>>>>>> dfa29a4cea4e69120b99db418cb63e87acb052cf
         drive = subsystemManager.getDriveSubsystem();
         
         joystickManager.addButton(RobotConstants.BUTTONS.SNAP_TO_TARGET)
