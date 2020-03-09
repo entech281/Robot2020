@@ -1,12 +1,14 @@
 package frc.robot.subsystems;
 
+import frc.robot.pose.FieldPose;
+import frc.robot.pose.FieldPoseManager;
+import frc.robot.pose.PoseSource;
+import frc.robot.pose.RobotPose;
+import frc.robot.pose.RobotPoseManager;
 import java.util.*;
 
-import frc.robot.logger.DataLoggerFactory;
-import frc.robot.pose.FieldPoseManager;
-import frc.robot.pose.RobotPoseManager;
 
-public class SubsystemManager {
+public class SubsystemManager implements PoseSource{
 
     boolean hasClimb = false;
 
@@ -30,56 +32,64 @@ public class SubsystemManager {
     }
 
     public ShooterSubsystem getShooterSubsystem() {
-        return shootSubsystem;
+        return shooterSubsystem;
     }
     
     public VisionSubsystem getVisionSubsystem(){
         return visionSubsystem;
     }
 
-    public FieldPoseManager getFieldPoseManager(){
-        return fieldPoseManager;
+    public HoodSubsystem getHoodSubsystem() {
+        return hoodSubsystem;
     }
 
     private DriveSubsystem driveSubsystem;
     private IntakeSubsystem intakeSubsystem;
     private NavXSubsystem navXSubsystem;
-    private ShooterSubsystem shootSubsystem;
+    private ShooterSubsystem shooterSubsystem;
     private ClimbSubsystem climbSubsystem;
     private VisionSubsystem visionSubsystem;
+    private HoodSubsystem hoodSubsystem;
 
     private final RobotPoseManager robotPoseManager = new RobotPoseManager();
     private final FieldPoseManager fieldPoseManager = new FieldPoseManager();
-
-    private final List<BaseSubsystem> allSubsystems = new ArrayList<>();
+    
+    public void setHoodSubsystem(HoodSubsystem hoodSubsystem) {
+        this.hoodSubsystem = hoodSubsystem;
+    }
 
     public void initAll() {
         driveSubsystem = new DriveSubsystem();
         intakeSubsystem = new IntakeSubsystem();
         navXSubsystem = new NavXSubsystem();
-        shootSubsystem = new ShooterSubsystem();
+        shooterSubsystem = new ShooterSubsystem();
         climbSubsystem = new ClimbSubsystem();
         visionSubsystem = new VisionSubsystem();
-
-        Collections.addAll(allSubsystems, driveSubsystem, intakeSubsystem, navXSubsystem, visionSubsystem, shootSubsystem);
-
-        allSubsystems.forEach(subsystem -> subsystem.initialize());
-
+        hoodSubsystem  = new HoodSubsystem();
+        
+        Arrays.asList(
+            driveSubsystem, 
+            intakeSubsystem, 
+            navXSubsystem, 
+            visionSubsystem,
+            shooterSubsystem,
+            hoodSubsystem).forEach(subsystem -> subsystem.initialize());
+ 
     }
-
-    public void periodicAll() {
-        updatePoses();
-        allSubsystems.forEach(subsystem -> subsystem.customPeriodic(
-                robotPoseManager.getCurrentPose(),
-                fieldPoseManager.getCurrentPose()
-        ));
-    }
-
-    private void updatePoses() {
+    public void updatePoses() {
         robotPoseManager.updateEncoders(driveSubsystem.getEncoderValues());
         robotPoseManager.updateNavxAngle(navXSubsystem.updateNavXAngle());
         robotPoseManager.updateVisionData(visionSubsystem.getVisionData());
         robotPoseManager.update();
     }
 
+    @Override
+    public RobotPose getRobotPose() {
+        return robotPoseManager.getCurrentPose();
+    }
+
+    @Override
+    public FieldPose getFieldPose() {
+        return fieldPoseManager.getCurrentPose();
+    }
 }

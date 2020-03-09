@@ -38,6 +38,8 @@ class JoystickButtonManager {
 
         public Builder whileHeld(Command command);
         
+        public Builder whileHeldContinous(Command command);
+        
     }
 
     public class Builder implements BuilderWithoutHandlers {
@@ -67,10 +69,16 @@ class JoystickButtonManager {
             buttonBeingBuilt.whenHeld(command);
             return this;
         }
-
+        
         public JoystickButton add() {
             buttons.add(buttonBeingBuilt);
             return buttonBeingBuilt;
+        }
+
+        @Override
+        public Builder whileHeldContinous(Command command) {
+            buttonBeingBuilt.whileActiveContinuous(command);
+            return this;
         }
 
     }

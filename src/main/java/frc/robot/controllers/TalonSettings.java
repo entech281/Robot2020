@@ -2,6 +2,8 @@ package frc.robot.controllers;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
+import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
@@ -46,6 +48,7 @@ public class TalonSettings {
     public FeedbackDevice feedbackDevice = FeedbackDevice.QuadEncoder;
     public ControlMode controlMode = ControlMode.Disabled;
     public double demand = DEFAULT_DEMAND;
+    public boolean limitSwitches = false;
 
     public TalonSettings copy() {
         TalonSettings copySettings = new TalonSettings();
@@ -61,6 +64,7 @@ public class TalonSettings {
         copySettings.controlMode = this.controlMode;
         copySettings.demand = this.demand;
         copySettings.profile = this.profile;
+        copySettings.limitSwitches = this.limitSwitches;
         return copySettings;
     }
 
@@ -108,6 +112,14 @@ public class TalonSettings {
         talon.configMotionAcceleration(this.profile.accelerationEncoderClicksPerSecond2, TIMEOUT_MS);
         talon.configAllowableClosedloopError(PID_SLOT, this.profile.allowableClosedLoopError, TIMEOUT_MS);
         talon.set(this.controlMode, 0);
+        if(limitSwitches){
+            talon.configForwardLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen,
+                    0);
+            talon.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen,
+                    0);
+
+            talon.overrideLimitSwitchesEnable(true);
+        }
     }
 
     /**
@@ -122,6 +134,14 @@ public class TalonSettings {
 
     public void setMode(TalonSRX talon) {
         talon.set(this.controlMode, this.demand);
+    }
+    
+    public boolean isLimitSwitchesEnabled(){
+        return this.limitSwitches;
+    }
+    
+    public ControlMode getControlMode(){
+        return this.controlMode;
     }
 
     public static class Gains {

@@ -10,11 +10,7 @@ import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.commands.SingleShotCommand;
-import frc.robot.pose.FieldPose;
 import frc.robot.pose.NavXData;
-import frc.robot.pose.RobotPose;
 import frc.robot.utils.NavXDataProcessor;
 
 /**
@@ -61,18 +57,11 @@ public class NavXSubsystem extends BaseSubsystem {
     }
     
     @Override
-    public void customPeriodic(RobotPose rPose, FieldPose fPose) {
+    public void periodic() {
         logger.driverinfo("Angle reported by NavX", calculateNavX(navX.getYaw()));
     }
     
-    public Command zeroYawOfNavX(boolean inverted){
-        return new SingleShotCommand(this) {
-            @Override
-            public void doCommand() {
-                zeroYawMethod(inverted);
-            }
-        };
-    }
+
     
     public double calculateNavX(double angle){
         if(inverted){
