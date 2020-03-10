@@ -12,7 +12,8 @@ import static org.mockito.Mockito.*;
 public class TestDriveSubsystem {
  
     protected CommandScheduler scheduler= CommandScheduler.getInstance();
-//    @Test
+    
+    @Test
     public void testDriveSubsystemPosition(){
 
         DriveSubsystem drive = Mockito.mock(DriveSubsystem.class);
