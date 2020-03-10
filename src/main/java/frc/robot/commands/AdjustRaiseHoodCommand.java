@@ -1,3 +1,4 @@
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -5,7 +6,7 @@
  */
 package frc.robot.commands;
 
-import frc.robot.subsystems.ShooterSubsystem;
+import frc.robot.subsystems.HoodSubsystem;
 
 /**
  *
@@ -13,15 +14,15 @@ import frc.robot.subsystems.ShooterSubsystem;
  */
 public class AdjustRaiseHoodCommand extends EntechCommandBase{
 
-    private ShooterSubsystem shooter;
-    public AdjustRaiseHoodCommand(ShooterSubsystem shooter){
-        super(shooter);
-        this.shooter = shooter;
+    private HoodSubsystem hood;
+    public AdjustRaiseHoodCommand(HoodSubsystem hood){
+        super(hood);
+        this.hood = hood;
     }
 
     @Override
     public void execute() {
-        shooter.adjustHoodForward();
+        hood.adjustHoodForward();
     }
 
     @Override

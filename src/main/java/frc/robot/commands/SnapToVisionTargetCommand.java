@@ -6,11 +6,10 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.controller.PIDController;
-import frc.robot.DriveInstruction;
 import frc.robot.RobotConstants;
+import frc.robot.pose.PoseSource;
 import frc.robot.pose.RobotPose;
 import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.utils.PIDControlOutputProcessor;
 
 /**
@@ -23,12 +22,13 @@ public class SnapToVisionTargetCommand extends EntechCommandBase {
     private PIDController controller;
     private double offset;
     private double output = 0.0;
-    private RobotPose rp = RobotConstants.ROBOT_DEFAULTS.START_POSE;
-    
+    private PoseSource poseSource;
+    public static final double TIMEOUT_SECONDS=2;
 
-    public SnapToVisionTargetCommand(DriveSubsystem drive) {
-        super(drive);
+    public SnapToVisionTargetCommand(DriveSubsystem drive, PoseSource poseSource) {
+        super(drive,TIMEOUT_SECONDS);
         this.drive = drive;
+        this.poseSource = poseSource;
         this.controller = new PIDController(RobotConstants.PID.TARGET_LOCK.P,
             RobotConstants.PID.TARGET_LOCK.I,
             RobotConstants.PID.TARGET_LOCK.D);
@@ -41,7 +41,7 @@ public class SnapToVisionTargetCommand extends EntechCommandBase {
 
     @Override
     public void execute(){
-        rp = drive.getLatestRobotPose();
+        RobotPose rp = poseSource.getRobotPose();
         logger.log("Vision data", rp.getVisionDataValidity());
         if(rp.getVisionDataValidity()){
             offset = rp.getTargetLateralOffset();
@@ -49,14 +49,14 @@ public class SnapToVisionTargetCommand extends EntechCommandBase {
             output = controller.calculate(offset);
             output = PIDControlOutputProcessor.constrain(output, 0.4);
             logger.log("Output", output);
-            drive.drive(new DriveInstruction(0, output));
+            drive.drive(0, output);
         }
 
     }
 
     @Override
     public boolean isFinished(){
-        return controller.atSetpoint() || !rp.getVisionDataValidity();
+        return controller.atSetpoint() || !poseSource.getRobotPose().getVisionDataValidity();
     }
 
 }

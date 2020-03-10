@@ -2,7 +2,11 @@ plugins {
     id "java"
     id "eclipse"
     id "edu.wpi.first.GradleRIO" version "2020.3.2"
+    id 'jacoco'
     id "com.github.spotbugs" version "3.0.0"
+    
+    //id 'net.saliman.cobertura' version '3.0.0'
+    id 'com.github.ksoichiro.console.reporter' version '0.6.2'
 }
 
 sourceCompatibility = JavaVersion.VERSION_11
@@ -39,6 +43,18 @@ deploy {
     }
 }
 
+//jacoco {
+//    toolVersion = "0.8.5"
+//    reportsDir = file("$buildDir/customJacocoReportDir")
+//}
+
+//test {
+//    jacoco {
+//        destinationFile = file("$buildDir/jacoco/jacocoTest.exec")
+//        classDumpDir = file("$buildDir/jacoco/classpathdumps")
+//    }
+//}
+
 // Set this to true to enable desktop support.
 def includeDesktopSupport = false
 
@@ -49,6 +65,7 @@ repositories {
 // Defining my dependencies. In this case, WPILib (+ friends), and vendor libraries.
 // Also defines JUnit 4.
 dependencies {
+    compile 'com.fazecast:jSerialComm:[2.0.0,3.0.0)'
     implementation wpi.deps.wpilib()
     nativeZip wpi.deps.wpilibJni(wpi.platforms.roborio)
     nativeDesktopZip wpi.deps.wpilibJni(wpi.platforms.desktop)
@@ -58,12 +75,28 @@ dependencies {
     nativeZip wpi.deps.vendor.jni(wpi.platforms.roborio)
     nativeDesktopZip wpi.deps.vendor.jni(wpi.platforms.desktop)
 
-    // https://mvnrepository.com/artifact/org.mockito/mockito-core
-    testCompile group: 'org.mockito', name: 'mockito-core', version: '2.1.0'
+    
+    // https://mvnrepository.com/artifact/org.powermock/powermock-api-mockito2
+    testCompile group: 'org.powermock', name: 'powermock-api-mockito2', version: '2.0.5'
+
 
     // https://mvnrepository.com/artifact/org.powermock/powermock-mockito-release-full
-    testCompile group: 'org.powermock', name: 'powermock-mockito-release-full', version: '1.5.4', ext: 'pom'
+    //testCompile group: 'org.powermock', name: 'powermock-module-junit4', version: '1.7.4'
+    
+    // https://mvnrepository.com/artifact/org.powermock/powermock-api-mockito
+    //testCompile group: 'org.powermock', name: 'powermock-api-mockito', version: '1.7.4'
 
+    // https://mvnrepository.com/artifact/org.powermock/powermock-core
+    //testCompile group: 'org.powermock', name: 'powermock-core', version: '1.7.4'
+    
+    // https://mvnrepository.com/artifact/org.powermock/powermock-reflect
+    //testCompile group: 'org.powermock', name: 'powermock-reflect', version: '1.7.4'
+    
+    // https://mvnrepository.com/artifact/net.bytebuddy/byte-buddy-dep
+    //testCompile group: 'net.bytebuddy', name: 'byte-buddy-dep', version: '1.10.8'
+
+    // https://mvnrepository.com/artifact/net.bytebuddy/byte-buddy-agent
+    //testCompile group: 'net.bytebuddy', name: 'byte-buddy-agent', version: '1.10.8'
 
 
     testImplementation 'junit:junit:4.12'
@@ -86,6 +119,15 @@ tasks.withType(com.github.spotbugs.SpotBugsTask) {
   reportLevel = "high"
   reports {
     xml.enabled = false
-    html.enabled = true
+    html.enabled = false
   }
 }
+
+jacocoTestReport {
+    reports {
+        xml.enabled = true
+        html.enabled = true
+    }
+}
+
+check.dependsOn jacocoTestReport
