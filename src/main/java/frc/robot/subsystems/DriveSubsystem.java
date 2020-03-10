@@ -166,6 +166,11 @@ public class DriveSubsystem extends BaseSubsystem {
                               encoderConverter.toInches(v.getRightFront()) );
     }
     
+    public double getDistanceTravelled(){
+        EncoderValues v = getEncoderValues();
+        return (v.getLeftFront() + v.getRightFront())/2.0;
+    }
+    
     public void driveToPosition(Position targetPosition){
         setPositionMode();
         double encoderLeft = encoderConverter.toCounts(targetPosition.getLeftInches());

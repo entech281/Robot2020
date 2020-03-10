@@ -74,7 +74,7 @@ public class SnapToYawCommand extends EntechCommandBase{
         } else {
             count = 0;
         }
-        return count > 3;
+        return count > 1;
     }
     
 }

@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.PrintCommand;
 import frc.robot.commands.AdjustHoodBackwardCommand;
 import frc.robot.commands.AdjustRaiseHoodCommand;
 import frc.robot.commands.AutoHoodShooterAdjust;
+import frc.robot.commands.DriveDistancePIDCommand;
 import frc.robot.commands.DriveToPositionCommand;
 import frc.robot.commands.SnapToVisionTargetCommand;
 import frc.robot.commands.SnapToYawCommand;
@@ -64,14 +65,22 @@ public class CommandFactory {
         return new InstantCommand ( sm.getIntakeSubsystem()::intakeOn, sm.getIntakeSubsystem());
     }
     
+    public Command intake3Balls(){
+        return new SequentialCommandGroup(
+                deployIntakeArms(),
+                intakeOnCommand(),
+                intakeOnCommand(),
+                intakeOnCommand()
+        ).withTimeout(6);
+    }
+    
     public Command deployAndStartIntake(){
-        return new SequentialCommandGroup(deployIntakeArms(), spinIntake());
+        return new SequentialCommandGroup(deployIntakeArms(), intakeOnCommand());
     }
 
     public Command raiseAndStopIntake(){
         return new SequentialCommandGroup(raiseIntakeArms(), stopIntake());
     }
-
     
     public Command stopSpinningIntake(){
         return new InstantCommand ( sm.getIntakeSubsystem()::intakeOff, sm.getIntakeSubsystem());
@@ -95,13 +104,17 @@ public class CommandFactory {
                         stopShooter()
                 ),
                 turnToDirection(90),
-                driveForward(60), //
-                turnToDirection(180).withTimeout(2),
+                driveForward(55), //
                 new ParallelCommandGroup(
-                        startShooter(),
-                        deployAndStartIntake(),
-                        driveForward(100) //
-                ),                
+                    intake3Balls(),
+                    new SequentialCommandGroup(
+                        turnToDirection(180).withTimeout(2),
+                        new ParallelCommandGroup(
+                                startShooter(),
+                                driveForward(100) //
+                        )                
+                    )
+                ),
                 new ParallelCommandGroup(
                         raiseAndStopIntake(),
                         hoodTrenchPreset()
@@ -147,6 +160,9 @@ public class CommandFactory {
         return new DriveToPositionCommand(sm.getDriveSubsystem(), inches);
     }
     
+    public Command driveForwardSpeedMode(double distance){
+        return new DriveDistancePIDCommand(sm.getDriveSubsystem(), distance);
+    }
 
     
     public Command turnRight(double degrees){
@@ -183,9 +199,10 @@ public class CommandFactory {
         
     public Command intakeOnCommand(){
         double DELAY1 = 0.5;
-        double DELAY2 = 0.25;    
+        double DELAY2 = 0.15;    
         return new SequentialCommandGroup(
-            spinIntake(),
+            setIntakeSpeed(1),
+            setElevatorSpeed(0),
             new WaitUntilCommand ( sm.getIntakeSubsystem()::isBallAtIntake),
             setIntakeSpeed(0.4),
             setElevatorSpeed(0.3),
@@ -201,7 +218,7 @@ public class CommandFactory {
             new WaitUntilCommand ( () ->  
                     sm.getShooterSubsystem().atShootSpeed() &&
                     sm.getHoodSubsystem().atHoodPosition() ),
-            snapToTargetVision(),
+//            snapToTargetVision(),
             new InstantCommand(() -> sm.getIntakeSubsystem().setElevatorSpeed(ELEVEATOR_SLOW_SPEED) )        
         );
     }

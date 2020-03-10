@@ -61,7 +61,7 @@ public class OperatorInterface {
                 .add();
 
         operatorPanelManager.addButton(RobotConstants.BUTTONS.SELECT_PRESET_2)
-                .whenPressed(commandFactory.hoodStartingLinePreset())
+                .whenPressed(commandFactory.hoodTrenchPreset())
                 .add();
         
         operatorPanelManager.addButton(RobotConstants.BUTTONS.FIRE)
@@ -88,7 +88,7 @@ public class OperatorInterface {
                 .add();
 
         joystickManager.addButton(12)
-                .whenPressed(commandFactory.driveForward(120))
+                .whenPressed(commandFactory.driveForwardSpeedMode(24))
                 .add();
         
         joystickManager.addButton(9)

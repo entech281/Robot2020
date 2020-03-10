@@ -163,7 +163,14 @@ public class RobotConstants {
         
         public interface AUTO_TURN{
             public static final double P = 1e-2;
-            public static final double I = 0;
+            public static final double I = 1e-7;
+            public static final double D = 0;
+            public static final double F = 0;
+        }
+
+        public interface AUTO_STRAIGHT_SPEED{
+            public static final double P = 1e-2;
+            public static final double I = 1e-7;
             public static final double D = 0;
             public static final double F = 0;
         }
