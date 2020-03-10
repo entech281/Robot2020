@@ -120,13 +120,17 @@ public class Robot extends TimedRobot {
     
     @Override
     public void testInit() {
+        subsystemManager.getDriveSubsystem().setSpeedMode();
         subsystemManager.getNavXSubsystem().zeroYawMethod(false);
         if (autoCommand != null) {
             autoCommand.cancel();
         }
+        if(!subsystemManager.getHoodSubsystem().knowsHome()){
+            commandFactory.hoodHomeCommand().schedule();
+        }
         subsystemManager.getVisionSubsystem().ensureConnected();
-        subsystemManager.getDriveSubsystem().setSpeedMode();
-        CommandScheduler.getInstance().schedule(commandFactory.getStopShooterCommandGroup());
+
+        CommandScheduler.getInstance().schedule(selfTestCommand);
     }
 
     @Override
