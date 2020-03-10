@@ -1,13 +1,10 @@
-import sensor, image, time, pyb
+import sensor, image, time, pyb, uos
 
-def draw_lines(x, y):
-    centerX = 80
-    centerY = 60
-    img.draw_line(x, y - 20, x, y + 20, color = (255, 0, 0), thickness = 1)
-    img.draw_line(x - 20, y, x + 20, y, color = (255, 0, 0), thickness = 1)
-
-    img.draw_line(centerX, centerY - 20, centerX, centerY + 20, color = (255, 0, 0), thickness = 1)
-    img.draw_line(centerX - 20, centerY, centerX + 20, centerY, color = (255, 0, 0), thickness = 1)
+DEFAULT_TRANSMIT = "False -1 -1 -1 0 -"
+FILTER_RANGES = [(1, 87, -88, -10, -41, 44)]
+SHOULD_SAVE_IMAGES = False
+FRAMES_PER_SAVE = 50
+SAVE_PATH = "./saves"
 
 def initialize():
     sensor.reset()
@@ -18,42 +15,67 @@ def initialize():
     sensor.set_auto_gain(False)
     sensor.set_auto_exposure(False, exposure_us=100) # make smaller to go faster
     sensor.skip_frames(time = 2000)
+    try:
+        for file in uos.listdir(SAVE_PATH):
+            print(SAVE_PATH + "/" + file)
+            uos.remove(SAVE_PATH + "/" + file)
+        uos.rmdir(SAVE_PATH)
+    except Exception as e:
+        print(e)
+    uos.mkdir(SAVE_PATH)
 
-def transmit_data(data):
-    print(" ".join(data))
 
 def valid_target(blob):
     return blob.compactness() < 0.5
-
-FILTER_RANGES = [(1, 87, -88, -10, -41, 44)]
-DEFAULT_TRANSMIT = "False -1 -1 -1 0 -"
 
 clock = time.clock()
 
 def gather_data(blob):
     global clock
-    return {str(True), str(blob.cx()), str(blob.cy()), str(blob.w()), str(clock.fps()), "-"}
+    return [str(True), str(blob.cx()), str(blob.cy()), str(blob.w()), str(clock.fps())]
 
-COUNTER = 0
+def get_default_data():
+    global clock
+    return [str(False), str(-1), str(-1), str(-1), str(clock.fps())]
+
+def transmit_data(data):
+    print(" ".join(data) + " - ")
+
+def highlight_found_target(img, blob):
+    img.draw_cross(blob.cx(), blob.cy(), color = (255, 0, 0), size=10, thickness = 1)
+    img.draw_rectangle( blob.rect(), color = (0, 0, 255), thickness = 3)
+
+counter = 0
 def should_send_frame():
-    global COUNTER
-    COUNTER += 1
-    return COUNTER % 30 == 0
+    global counter
+    if SHOULD_SAVE_IMAGES:
+        counter += 1
+        return counter % FRAMES_PER_SAVE == 0
+    else:
+        return False
 
 initialize()
 
+ROI = [0,0, sensor.width(), int(sensor.height()/2)]
+
 while(True):
+
     clock.tick()
     img = sensor.snapshot()
-    found_valid_target = False
-    for b in img.find_blobs( FILTER_RANGES ):
-        if valid_target(b):
-            data = gather_data(b)
-            transmit_data(data)
-            draw_lines(b.cx(), b.cy())
-            img.draw_rectangle( b.rect(), color = (0, 0, 255), thickness = 3)
-            found_valid_target = True
-    if not found_valid_target:
-        print(DEFAULT_TRANSMIT)
+
+    data = get_default_data()
+    num_blobs = 0
+    num_targets = 0
+
+    for blob in img.find_blobs( FILTER_RANGES, False, ROI ):
+        num_blobs += 1
+        if valid_target(blob):
+            data = gather_data(blob)
+            highlight_found_target(img, blob)
+            num_targets += 1
+
+    transmit_data(data)
+
     if should_send_frame():
-        img.save("captured-"+str(COUNTER)+".jpg")
+        filename = SAVE_PATH + "/vision" + "-".join([ str(pyb.millis()), str(num_blobs), str(num_targets)])+".jpg"
+        img.save(filename, ROI)
