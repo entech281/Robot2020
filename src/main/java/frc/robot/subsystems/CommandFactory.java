@@ -35,6 +35,7 @@ public class CommandFactory {
         this.sm = subsystemManager;
     }
     
+    
     public Command toggleIntakeArms(){
         return new InstantCommand( sm.getIntakeSubsystem()::toggleIntakeArms, sm.getIntakeSubsystem())
                 .andThen(new PrintCommand("Toggling Arms"));
@@ -260,6 +261,7 @@ public class CommandFactory {
             new InstantCommand ( () ->    sm.getDriveSubsystem().drive(0.0, -1.0)  )
         ).withTimeout(1.0); 
     }
+
     
     public Command testShooterSpeed(){
         return new SequentialCommandGroup(
@@ -280,7 +282,8 @@ public class CommandFactory {
 
     public Command testIntake(){
         return new SequentialCommandGroup(
-            
+        new InstantCommand(   () -> sm.getIntakeSubsystem().toggleIntakeArms()),
+        new InstantCommand(   () -> sm.getIntakeSubsystem().intakeOn())
         ).withTimeout(5.0);
     }
 

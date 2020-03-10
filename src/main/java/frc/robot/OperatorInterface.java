@@ -62,10 +62,6 @@ public class OperatorInterface {
         operatorPanelManager.addButton(RobotConstants.BUTTONS.SELECT_PRESET_2)
                 .whenPressed(commandFactory.setShooterPreset1())
                 .add();
-        
-        operatorPanelManager.addButton(RobotConstants.BUTTONS.NUDGE_HOOD_BACKWARD)
-                .whenPressed(subsystemManager.getShooterSubsystem().nudgeHoodBackward())
-                .add();   
                 
         drive = subsystemManager.getDriveSubsystem();
         
