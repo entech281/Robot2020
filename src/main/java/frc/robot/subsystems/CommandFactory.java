@@ -227,6 +227,12 @@ public class CommandFactory {
             new InstantCommand ( () ->    sm.getIntakeSubsystem().setElevatorSpeed(0)  )
         ).withTimeout(1.0);  
     }   
+
+    public Command testDriveForward() {
+        DriveSubsystem drive = sm.getDriveSubsystem();
+        double STEP_LENGTH_SEC = 1.0 ;
+        return new SimulateDrivingCommand(drive,STEP_LENGTH_SEC,1.0,0.0);
+    }    
     
     
     public Command selfTestCommand(){
@@ -237,45 +243,45 @@ public class CommandFactory {
                 
             //test driving
             new SimulateDrivingCommand(drive,STEP_LENGTH_SEC,1.0,0 ),
-            new WaitCommand(STEP_LENGTH_SEC),
+            new WaitUntilCommand(() -> sm.getDriveSubsystem().getCurrentCommand().isFinished()),
             new SimulateDrivingCommand(drive,STEP_LENGTH_SEC,-1.0,0 ),
-            new WaitCommand(STEP_LENGTH_SEC),
+            new WaitUntilCommand(() -> sm.getDriveSubsystem().getCurrentCommand().isFinished()),
             new SimulateDrivingCommand(drive,STEP_LENGTH_SEC,0,1.0 ),
-            new WaitCommand(STEP_LENGTH_SEC),
+            new WaitUntilCommand(() -> sm.getDriveSubsystem().getCurrentCommand().isFinished()),
             new SimulateDrivingCommand(drive,STEP_LENGTH_SEC,0,-1.0 ),
-            new WaitCommand(STEP_LENGTH_SEC),  
+            new WaitUntilCommand(() -> sm.getDriveSubsystem().getCurrentCommand().isFinished()),
 
             //test shooter
             startShooter(),
-            new WaitCommand(2* STEP_LENGTH_SEC),
+            new WaitUntilCommand(() -> sm.getShooterSubsystem().getCurrentCommand().isFinished()),
             stopShooter(),
-            new WaitCommand(STEP_LENGTH_SEC),  
+            new WaitUntilCommand(() -> sm.getShooterSubsystem().getCurrentCommand().isFinished()), 
 
             //test intake and elevator
             setIntakeSpeed(1.0),
-            new WaitCommand(STEP_LENGTH_SEC),
+            new WaitUntilCommand(() -> sm.getIntakeSubsystem().getCurrentCommand().isFinished()),
             stopIntake(),
-            new WaitCommand(STEP_LENGTH_SEC),
+            new WaitUntilCommand(() -> sm.getIntakeSubsystem().getCurrentCommand().isFinished()),
             setElevatorSpeed(1.0),                
-            new WaitCommand(STEP_LENGTH_SEC),
+            new WaitUntilCommand(() -> sm.getIntakeSubsystem().getCurrentCommand().isFinished()),
             stopElevator(),
 
             //test hood
             hoodHomeCommand(),
-            new WaitCommand(STEP_LENGTH_SEC),  
+            new WaitUntilCommand(() -> sm.getHoodSubsystem().getCurrentCommand().isFinished()),
             hoodAdjustToPositionCommand(1000),
-            new WaitCommand(2.0),
+            new WaitUntilCommand(() -> sm.getHoodSubsystem().getCurrentCommand().isFinished()),
             setShooterPreset1(),
-            new WaitCommand(2.0),
+            new WaitUntilCommand(() -> sm.getHoodSubsystem().getCurrentCommand().isFinished()),
             setShooterPreset2(),
-            new WaitCommand(2.0),
+            new WaitUntilCommand(() -> sm.getHoodSubsystem().getCurrentCommand().isFinished()),
             hoodParkCommand(),
 
             //test shooting
             startShooter(),
             setShooterPreset1(),
             fireCommand(),             
-            new WaitCommand(STEP_LENGTH_SEC),
+            new WaitUntilCommand(() -> sm.getShooterSubsystem().getCurrentCommand().isFinished()),
             stopShooter(),
             hoodParkCommand()
                 
