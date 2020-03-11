@@ -24,11 +24,13 @@ public class HoodSubsystem extends BaseSubsystem {
     public static final double HOOD_TOLERANCE_COUNTS = 50;
     public static final double HOME_OFFSET = 15.0;
     public static final double CLOSE_PRESET = 375;
+    public static final double FAR_PRESET = 911;
+    public static final double STARTING_LINE_PRESET = 940;
     private boolean hoodHomedAlready = false;
     
     private final ClampedDouble desiredHoodPositionEncoder = ClampedDouble.builder()
-            .bounds(0, 1000)
-            .withIncrement(15.0)
+            .bounds(0, 1500)
+            .withIncrement(5.0)
             .withValue(0.0).build();
 
     @Override
@@ -100,6 +102,16 @@ public class HoodSubsystem extends BaseSubsystem {
         update();
     }
 
+    public void trenchPreset(){
+        desiredHoodPositionEncoder.setValue(FAR_PRESET);
+        update();
+    }
+
+    public void startinfLinePreset(){
+        desiredHoodPositionEncoder.setValue(STARTING_LINE_PRESET);
+        update();
+    }
+    
     public void adjustHoodBackward() {
         desiredHoodPositionEncoder.decrement();
         update();

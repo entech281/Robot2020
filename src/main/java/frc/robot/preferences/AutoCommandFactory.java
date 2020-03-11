@@ -16,7 +16,7 @@ public class AutoCommandFactory{
             case LeftSevenBall:
                 return commandFactory.leftEightBallAuto();
             case ShootAndBackUp:
-                return commandFactory.simpleBackupAuto();
+                return commandFactory.simpleForwardShoot3Auto();
         }
         return commandFactory.doNothing();
     }

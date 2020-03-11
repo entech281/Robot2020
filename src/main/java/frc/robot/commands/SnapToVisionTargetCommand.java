@@ -24,14 +24,15 @@ public class SnapToVisionTargetCommand extends EntechCommandBase {
     private double output = 0.0;
     private PoseSource poseSource;
     public static final double TIMEOUT_SECONDS=2;
+    private int count = 0;
 
     public SnapToVisionTargetCommand(DriveSubsystem drive, PoseSource poseSource) {
         super(drive,TIMEOUT_SECONDS);
         this.drive = drive;
         this.poseSource = poseSource;
-        this.controller = new PIDController(RobotConstants.PID.TARGET_LOCK.P,
-            RobotConstants.PID.TARGET_LOCK.I,
-            RobotConstants.PID.TARGET_LOCK.D);
+        this.controller = new PIDController(RobotConstants.PID.AUTO_TURN.P,
+            RobotConstants.PID.AUTO_TURN.I,
+            RobotConstants.PID.AUTO_TURN.D);
     }
     @Override
     public void initialize(){
@@ -42,21 +43,24 @@ public class SnapToVisionTargetCommand extends EntechCommandBase {
     @Override
     public void execute(){
         RobotPose rp = poseSource.getRobotPose();
-        logger.log("Vision data", rp.getVisionDataValidity());
         if(rp.getVisionDataValidity()){
             offset = rp.getTargetLateralOffset();
-            logger.log("Offset", offset);
             output = controller.calculate(offset);
-            output = PIDControlOutputProcessor.constrain(output, 0.4);
-            logger.log("Output", output);
+            output = PIDControlOutputProcessor.constrainWithMinBounds(output, 0.8, 0.25);
             drive.drive(0, output);
+            drive.feedWatchDog();
         }
 
     }
 
     @Override
     public boolean isFinished(){
-        return controller.atSetpoint() || !poseSource.getRobotPose().getVisionDataValidity();
+        if(controller.atSetpoint()){
+            count += 1;
+        } else {
+            count = 0;
+        }
+        return count > 3 || !poseSource.getRobotPose().getVisionDataValidity();
     }
 
 }

@@ -39,7 +39,6 @@ public class DriveToPositionCommand extends EntechCommandBase{
     
    @Override
     public void initialize(){
-        drive.setPositionMode();
         drive.driveToPosition(targetPosition);
     }
     
@@ -47,6 +46,8 @@ public class DriveToPositionCommand extends EntechCommandBase{
     public void execute() {
         currentPosition = drive.getCurrentPosition() ;
         logger.log("Current Position", currentPosition);
+        logger.log("Target Position", targetPosition);
+        drive.feedWatchDog();
     }
     
     @Override
