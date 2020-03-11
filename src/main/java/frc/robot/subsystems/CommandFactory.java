@@ -36,8 +36,13 @@ public class CommandFactory {
     }
     
     public Command toggleIntakeArms(){
-        return new InstantCommand( sm.getIntakeSubsystem()::toggleIntakeArms, sm.getIntakeSubsystem())
-                .andThen(new PrintCommand("Toggling Arms"));
+        return new SequentialCommandGroup(
+            new InstantCommand(() -> sm.getIntakeSubsystem().toggleIntakeArms()),
+            new ParallelRaceCommandGroup(
+                new PerpetualCommand(new InstantCommand(() -> sm.getIntakeSubsystem().updateSolenoidPosition())),
+                new WaitCommand(0.25)
+                )
+            ).andThen(new PrintCommand("Toggling Arms");
     }
     public Command turnIntakeOn(){
         return new InstantCommand ( sm.getIntakeSubsystem()::intakeOn, sm.getIntakeSubsystem());

@@ -15,6 +15,7 @@ public class IntakeSubsystem extends BaseSubsystem {
     private WPI_TalonSRX elevatorMotor;
     private TalonSpeedController elevatorMotorController;
     private DoubleSolenoid deployIntakeSolenoids;
+    private DoubleSolenoid.Value currentState;
     private DigitalInput intakeBallSensor;
     
     public static final double INTAKE_ON= 1.0;
@@ -31,7 +32,8 @@ public class IntakeSubsystem extends BaseSubsystem {
 
 
         deployIntakeSolenoids = new DoubleSolenoid(RobotConstants.CAN.FORWARD, RobotConstants.CAN.REVERSE);
-        deployIntakeSolenoids.set(DoubleSolenoid.Value.kReverse);
+        currentState = DoubleSolenoid.Value.kReverse;
+        updateSolenoidPosition();
 
         elevatorMotor = new WPI_TalonSRX(RobotConstants.CAN.ELEVATOR_MOTOR);
         elevatorMotorController = new TalonSpeedController(elevatorMotor, MOTOR_SETTINGS.ELEVATOR,true);
@@ -52,13 +54,12 @@ public class IntakeSubsystem extends BaseSubsystem {
     
   
     public void toggleIntakeArms(){
-        if ( deployIntakeSolenoids.get() == DoubleSolenoid.Value.kForward){
-            deployIntakeSolenoids.set(DoubleSolenoid.Value.kReverse);
+        if (currentState == DoubleSolenoid.Value.kForward) {
+            currentState = DoubleSolenoid.Value.kReverse;
+        } else {
+            currentState = DoubleSolenoid.Value.kForward;
         }
-        else if ( deployIntakeSolenoids.get() == DoubleSolenoid.Value.kReverse ){
-            deployIntakeSolenoids.set(DoubleSolenoid.Value.kForward);
-
-        }
+        updateSolenoidPosition();
     }
     
     public boolean isIntakeOn(){
@@ -83,5 +84,8 @@ public class IntakeSubsystem extends BaseSubsystem {
        elevatorMotorController.setDesiredSpeed(desiredSpeed);
     }
 
+    public void updateSolenoidPosition() {
+        deployIntakeSolenoids.set(currentState);
+    }
 
 }
