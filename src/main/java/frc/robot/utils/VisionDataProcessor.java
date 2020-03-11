@@ -4,14 +4,16 @@ import frc.robot.RobotConstants;
 import frc.robot.pose.ShooterConfiguration;
 import frc.robot.pose.TargetLocation;
 import frc.robot.pose.VisionData;
-
+import java.util.Base64;
+        
 public class VisionDataProcessor {
-
+    private String IMAGE_PREFIX = "Q";
     private String buffer = "";
     private String retval;
     private int visionDataMemory = 5;
     private int num_consecutive_bad_data = 0;
     private final int TOLERANCE_CONSECUTIVE_BAD_DATA = 20;
+    private byte[] imageData;
 
     private FixedStack visionDataStack = new FixedStack(visionDataMemory);
 
@@ -54,7 +56,11 @@ public class VisionDataProcessor {
             if (!completeData(data)) {
                 continue;
             }
-            visionDataStack.add(calculateVisionData(data));
+            if(isImageTransmit(data)){
+                imageData = decodeImage(data);
+            } else {
+                visionDataStack.add(calculateVisionData(data));
+            }
         }
         if (buffer.lastIndexOf("\n") != -1) {
             buffer = buffer.substring(buffer.lastIndexOf("\n"));
@@ -90,5 +96,18 @@ public class VisionDataProcessor {
             frameRate = Double.parseDouble(outputData[4]);
         }
         return new VisionData(visionTargetFound, lateralOffset, verticalOffset, blobWidth);
+    }
+    
+    private boolean isImageTransmit(String reading){
+        return reading.startsWith(IMAGE_PREFIX);
+    }
+    
+    private byte[] decodeImage(String data){
+        String adjusted = data.substring(IMAGE_PREFIX.length());
+        return Base64.getDecoder().decode(data);
+    }
+    
+    public byte[] getImageData(){
+        return imageData;
     }
 }
