@@ -24,10 +24,17 @@ public class SparkPositionController extends BaseSparkController implements Posi
      *
      * @param desiredPosition
      */
+    @Override
     public void setDesiredPosition(double desiredPosition) {
-        this.desiredPosition = desiredPosition;
-        if(enabled)
+        
+        if(enabled){
+            this.desiredPosition = desiredPosition;
             spark.getPIDController().setReference(correctDirection(desiredPosition), settings.ctrlType);
+        }
+        else{
+            Throwable t = new Throwable("Didnt set position, because this controller is disabled.");
+            t.printStackTrace();
+        }
     }
 
     @Override
@@ -46,6 +53,11 @@ public class SparkPositionController extends BaseSparkController implements Posi
     public boolean isAtUpperLimit() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+    
+    @Override
+    public void resetPosition(){
+        spark.getEncoder().setPosition(0);
+    }
 
     
     @Override
@@ -54,8 +66,7 @@ public class SparkPositionController extends BaseSparkController implements Posi
     }
 
     @Override
-    public void configure() {
-        settings.configureSparkMax(spark);
+    public void configure() {        
         CANError err = spark.setCANTimeout(CAN_TIMEOUT_MILLIS);
         if ( err == err.kOk ){
             settings.configureSparkMax(spark);
@@ -63,6 +74,8 @@ public class SparkPositionController extends BaseSparkController implements Posi
         }
         else{
             this.enabled = false;
+            Throwable t = new Throwable("CAN Error Configuring!");
+            t.printStackTrace();
         }
     }
 }

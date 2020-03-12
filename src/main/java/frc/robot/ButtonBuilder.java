@@ -77,7 +77,7 @@ class JoystickButtonManager {
 
         @Override
         public Builder whileHeldContinous(Command command) {
-            buttonBeingBuilt.whileActiveContinuous(command);
+            buttonBeingBuilt.whileHeld(command);
             return this;
         }
 

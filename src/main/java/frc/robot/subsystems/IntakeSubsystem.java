@@ -42,6 +42,28 @@ public class IntakeSubsystem extends BaseSubsystem {
    
     }
 
+    public void deployAndStart(){
+        deployIntakeSolenoids.set(DoubleSolenoid.Value.kForward);
+        intakeOn();
+    }
+    
+    public void raiseAndStop(){
+        deployIntakeSolenoids.set(DoubleSolenoid.Value.kReverse);
+        intakeOff();
+    }
+    
+    public void deployIntakeArms(){
+        if ( deployIntakeSolenoids.get() == DoubleSolenoid.Value.kReverse ){
+            deployIntakeSolenoids.set(DoubleSolenoid.Value.kForward);
+        }
+    }
+    
+    public void raiseIntakeArms(){
+        if ( deployIntakeSolenoids.get() == DoubleSolenoid.Value.kForward){
+            deployIntakeSolenoids.set(DoubleSolenoid.Value.kReverse);
+        }        
+    }
+    
     public void intakeOn(){
         intakeMotorController.setDesiredSpeed(INTAKE_ON);
     }

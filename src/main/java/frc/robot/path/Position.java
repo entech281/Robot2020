@@ -29,12 +29,8 @@ public class Position {
     }
 
     public boolean isCloseTo(Position other, double tolerance) {
-        if (other == null) {
-            return false;
-        }
-
         return Math.sqrt(Math.pow(this.getLeftInches() - other.getLeftInches(), 2)
-                + Math.pow(this.getRightInches() - other.getRightInches(), 2)) < tolerance;
+                + Math.pow(this.getRightInches() - other.getRightInches(), 2)) <= tolerance;
     }
 
     @Override

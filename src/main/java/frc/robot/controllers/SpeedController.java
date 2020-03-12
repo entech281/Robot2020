@@ -20,9 +20,5 @@ public interface SpeedController {
     
     boolean isReversed();
     boolean isEnabled();
-    void configure();
-    default void stop(){
-        setDesiredSpeed(0.0);
-    }
-    
+    void configure();    
 }

@@ -22,6 +22,12 @@ public class EntechCommandBase extends CommandBase {
         logger = DataLoggerFactory.getLoggerFactory().createDataLogger(this.getName());
     }
 
+    public EntechCommandBase(BaseSubsystem sub1, BaseSubsystem sub2) {
+        addRequirements(sub1, sub2);
+        logger = DataLoggerFactory.getLoggerFactory().createDataLogger(this.getName());
+    }
+    
+    
     public EntechCommandBase(BaseSubsystem subsystem, double timeout) {
         addRequirements(subsystem);
     }
