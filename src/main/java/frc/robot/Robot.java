@@ -23,6 +23,9 @@ import frc.robot.preferences.SmartDashboardPathChooser;
 import frc.robot.subsystems.CommandFactory;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.SubsystemManager;
+import edu.wpi.cscore.MjpegServer;
+import edu.wpi.cscore.UsbCamera;
+import edu.wpi.first.cameraserver.CameraServer;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -61,6 +64,17 @@ public class Robot extends TimedRobot {
         oi = new OperatorInterface(subsystemManager);
         commandFactory = new CommandFactory(subsystemManager);
         selfTestCommand = commandFactory.selfTestCommand();
+    
+        CameraServer inst = CameraServer.getInstance();
+        UsbCamera camera = new UsbCamera("USB Camera 0", 0);
+        inst.addCamera(camera);
+        camera.setExposureManual(1);
+        camera.setBrightness(50);
+        MjpegServer server = inst.addServer("serve_USB Camera 0");
+        server.setSource(camera);
+        server.getProperty("compression").set(20);
+        server.getProperty("default_compression").set(20);
+        server.setResolution(320, 240);
     }
 
     @Override
@@ -136,7 +150,7 @@ public class Robot extends TimedRobot {
     @Override
     public void testPeriodic() {
     }
-    
+
 
     
     }
