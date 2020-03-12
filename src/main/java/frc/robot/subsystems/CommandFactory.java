@@ -3,6 +3,8 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
+import edu.wpi.first.wpilibj2.command.PerpetualCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
@@ -38,11 +40,11 @@ public class CommandFactory {
     public Command toggleIntakeArms(){
         return new SequentialCommandGroup(
             new InstantCommand(() -> sm.getIntakeSubsystem().toggleIntakeArms()),
-            new ParallelRaceCommandGroup(
+            new ParallelRaceGroup(
                 new PerpetualCommand(new InstantCommand(() -> sm.getIntakeSubsystem().updateSolenoidPosition())),
                 new WaitCommand(0.25)
                 )
-            ).andThen(new PrintCommand("Toggling Arms");
+            ).andThen(new PrintCommand("Toggling Arms"));
     }
     public Command turnIntakeOn(){
         return new InstantCommand ( sm.getIntakeSubsystem()::intakeOn, sm.getIntakeSubsystem());
