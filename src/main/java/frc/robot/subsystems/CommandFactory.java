@@ -6,6 +6,8 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.PerpetualCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
+import edu.wpi.first.wpilibj2.command.PerpetualCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
@@ -43,8 +45,13 @@ public class CommandFactory {
     }
     
     public Command toggleIntakeArms(){
-        return new InstantCommand( sm.getIntakeSubsystem()::toggleIntakeArms, sm.getIntakeSubsystem())
-                .andThen(new PrintCommand("Toggling Arms"));
+        return new SequentialCommandGroup(
+            new InstantCommand(() -> sm.getIntakeSubsystem().toggleIntakeArms()),
+            new ParallelRaceGroup(
+                new PerpetualCommand(new InstantCommand(() -> sm.getIntakeSubsystem().updateSolenoidPosition())),
+                new WaitCommand(0.25)
+                )
+            ).andThen(new PrintCommand("Toggling Arms"));
     }
 
     public Command deployIntakeArms(){
