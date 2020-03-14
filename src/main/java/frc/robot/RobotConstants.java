@@ -10,6 +10,15 @@ import frc.robot.pose.*;
 
 public class RobotConstants {
 
+    
+    public interface OPENMV{
+        public static final int WIDTH=160;
+        public static final int HEIGHT=120;
+        public static final int FRAME_RATE = 20;
+        public static final String FILE_PATH = "/media/sda1/stream.jpg";
+        public static final int PORT=5800;
+    }
+    
     public interface DIGITIAL_INPUT{
         public static final int BALL_SENSOR = 0;
     }

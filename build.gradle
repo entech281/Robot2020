@@ -73,8 +73,12 @@ dependencies {
     implementation wpi.deps.vendor.java()
     nativeZip wpi.deps.vendor.jni(wpi.platforms.roborio)
     nativeDesktopZip wpi.deps.vendor.jni(wpi.platforms.desktop)
+    compile 'com.fazecast:jSerialComm:[2.0.0,3.0.0)'
+ 
+    // https://mvnrepository.com/artifact/org.apache.commons/commons-collections4
+    compile group: 'org.apache.commons', name: 'commons-collections4', version: '4.4'
 
-    
+
     // https://mvnrepository.com/artifact/org.powermock/powermock-api-mockito2
     testCompile group: 'org.powermock', name: 'powermock-api-mockito2', version: '2.0.5'
 
