@@ -6,13 +6,15 @@
 /*----------------------------------------------------------------------------*/
 package frc.robot;
 
+import java.sql.Time;
+
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.commands.StopDrivingCommand;
-
+//import frc.robot.commands.
 import frc.robot.logger.DataLogger;
 import frc.robot.logger.DataLoggerFactory;
 import frc.robot.pose.FieldPoseManager;
@@ -20,7 +22,11 @@ import frc.robot.pose.RobotPoseManager;
 import frc.robot.preferences.AutoCommandFactory;
 import frc.robot.preferences.SmartDashboardPathChooser;
 import frc.robot.subsystems.CommandFactory;
+import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.SubsystemManager;
+import edu.wpi.cscore.MjpegServer;
+import edu.wpi.cscore.UsbCamera;
+import edu.wpi.first.cameraserver.CameraServer;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -39,6 +45,7 @@ public class Robot extends TimedRobot {
     private SmartDashboardPathChooser optionChooser;
     OperatorInterface oi;
     Command autoCommand;
+    Command selfTestCommand;
     private Compressor compressor;
 
     @Override
@@ -55,6 +62,18 @@ public class Robot extends TimedRobot {
 
         optionChooser = new SmartDashboardPathChooser();
         commandFactory = new CommandFactory(subsystemManager);
+        //selfTestCommand = commandFactory.selfTestCommand();
+    
+        CameraServer inst = CameraServer.getInstance();
+        UsbCamera camera = new UsbCamera("USB Camera 0", 0);
+        inst.addCamera(camera);
+        camera.setExposureManual(1);
+        camera.setBrightness(50);
+        MjpegServer server = inst.addServer("serve_USB Camera 0");
+        server.setSource(camera);
+        server.getProperty("compression").set(20);
+        server.getProperty("default_compression").set(20);
+        server.setResolution(320, 240);
     }
 
     @Override
@@ -67,6 +86,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void teleopInit() {
+        selfTestCommand.cancel();        
         subsystemManager.getDriveSubsystem().setSpeedMode();
         subsystemManager.getNavXSubsystem().zeroYawMethod(false);
         if (autoCommand != null) {
@@ -91,6 +111,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void autonomousInit() {
+        selfTestCommand.cancel();
         subsystemManager.getVisionSubsystem().ensureConnected();
 
         subsystemManager.getDriveSubsystem().setPositionMode();
@@ -118,14 +139,29 @@ public class Robot extends TimedRobot {
         subsystemManager.getDriveSubsystem().setSpeedMode();
     }
 
-    @Override
-    public void testInit(){
 
+    
+    @Override
+    public void testInit() {
+        subsystemManager.getDriveSubsystem().setSpeedMode();
+        subsystemManager.getNavXSubsystem().zeroYawMethod(false);
+        if (autoCommand != null) {
+            autoCommand.cancel();
+        }
+        if(!subsystemManager.getHoodSubsystem().knowsHome()){
+            commandFactory.hoodHomeCommand().schedule();
+        }
+        subsystemManager.getVisionSubsystem().ensureConnected();
+
+        CommandScheduler.getInstance().schedule(selfTestCommand);
     }
 
     @Override
     public void testPeriodic() {
+    }
 
+
+    
     }
     
-}
+
