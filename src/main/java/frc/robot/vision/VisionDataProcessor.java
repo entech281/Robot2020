@@ -1,9 +1,11 @@
-package frc.robot.utils;
+package frc.robot.vision;
 
 import frc.robot.RobotConstants;
 import frc.robot.pose.ShooterConfiguration;
 import frc.robot.pose.TargetLocation;
 import frc.robot.pose.VisionData;
+import frc.robot.utils.FixedStack;
+
 import java.util.Base64;
         
 public class VisionDataProcessor {

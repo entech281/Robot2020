@@ -1,16 +1,35 @@
-import sensor, image, time, ubinascii
+import sensor, image, time, ubinascii, pyb, ustruct, sys
 
 DEFAULT_TRANSMIT = "False -1 -1 -1 0 -"
 FILTER_RANGES = [(1, 87, -88, -10, -41, 44)]
-SHOULD_SEND_IMAGES = False
-FRAMES_PER_SEND = 50
+SHOULD_SEND_IMAGES = True
+DEBUG_SCALE = 0.3
+FRAMES_PER_SEND = 20
 
-AREA_COEF = 1
+AREA_COEF = 3
 CONVEXITY_COEF = 4
 LINEARITY_COEF = 3
 
+class CommManager:
+    def __init__(self):
+        pass
+
+    def _write(self, data):
+        sys.stdout.write(data)
+
+    def _get_header(self, _type, size):
+        return ustruct.pack(">BI", _type, size)
+
+    def send_string(self, data):
+        header = self._get_header("D",len(data))
+        self._write(header + bytes(data))
+
+    def send_image_bytes(self, image_bytes):
+        header = self._get_header("I",len(image_bytes))
+        self._write(header + image_bytes)
+
 def blob_elongation_score(x):
-    return -(x-0.86)**2
+    return -(x-0.79)**2
 
 def initialize():
     sensor.reset()
@@ -19,7 +38,7 @@ def initialize():
     sensor.set_framesize(sensor.QVGA)
     sensor.set_auto_whitebal(False)
     sensor.set_auto_gain(False)
-    sensor.set_auto_exposure(False, exposure_us=1000) # make smaller to go faster
+    sensor.set_auto_exposure(False, exposure_us=100) # make smaller to go faster
     sensor.skip_frames(time = 2000)
 
 class TargetData:
@@ -35,6 +54,14 @@ class TargetData:
             str(self.cy),
             str(self.width)
             ])
+
+class LoopTime:
+    def __init__(self):
+        self.start_ms = pyb.millis()
+    def end(self):
+        self.end_ms = pyb.millis()
+    def get_time(self):
+        return self.end_ms - self.start_ms
 
 def get_populated_target_data(_blob):
     return TargetData(True, _blob.cx(), _blob.cy(), _blob.w())
@@ -54,19 +81,18 @@ class IntervalTicker:
 def transmit_data(data, fps):
     print(data.format() + " " + str(fps) + " - ")
 
-def send_image(img):
-    img.compress(quality=50)
-    print("Q",str(ubinascii.b2a_base64(to_send)))
+def barf_image(img):
+
+    print(img.compress(50))
+def transmit_image(img):
+    img.scale([0,0,img.width(),img.height()],0.5,0.5, copy_to_fb = True)
+    #img.compress(quality=50)
+    print("IMG_START")
+    barf_image(img)
 
 def highlight_found_target(img, blob):
     img.draw_rectangle( blob.rect(), color = (0, 0, 255), thickness = 3)
-    img.draw_string(
-        blob.cx(),
-        blob.cy(),
-        str(blob.pixels())
-        +" "+str(blob.elongation())
-        + " " + str(blob.convexity()))
-    #img.draw_cross(blob.cx(), blob.cy(), color = (255, 0, 0), size = 10, thickness = 1)
+    img.draw_cross(blob.cx(), blob.cy(), color = (255, 0, 0), size = 10, thickness = 1)
 
 
 clock = time.clock()
@@ -75,14 +101,13 @@ initialize()
 ROI = [0,0, sensor.width(), int(sensor.height()*2/3)]
 
 def valid_target(_blob):
-    return _blob.compactness() < 0.3
+    return _blob.compactness() < 0.6
 
 def score_blob(blob, max_area):
     return [AREA_COEF * blob.pixels() / max_area
-        + CONVEXITY_COEF * blob.convexity() +
-        LINEARITY_COEF * blob_elongation_score(blob.elongation())
+        + CONVEXITY_COEF * blob.convexity()
+        + LINEARITY_COEF * blob_elongation_score(blob.elongation())
         ][0]#Hack to break formula over many lines
-
 
 def get_best_blob(blobs):
     max_area = max([blob.pixels() for blob in blobs])
@@ -100,15 +125,23 @@ def get_target_data(img):
         target_blob = get_best_blob(blobs)
         highlight_found_target(img, target_blob)
         data = get_populated_target_data(blob)
+    else:
+        print
     return data
 
 send_ticker = IntervalTicker(FRAMES_PER_SEND)
+
+
+
 while(True):
+    timer = LoopTime()
     clock.tick()
-    img = sensor.snapshot().crop(ROI, copy_to_fb=True)
+    img = sensor.snapshot()#.crop(ROI)
     data = get_target_data(img)
 
     transmit_data(data, clock.fps())
 
     if SHOULD_SEND_IMAGES and send_ticker.tick():
-        send_image(img)
+        transmit_image(img)
+    timer.end()
+    #print(str(timer.get_time()))

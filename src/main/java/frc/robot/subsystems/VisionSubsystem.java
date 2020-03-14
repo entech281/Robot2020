@@ -7,7 +7,7 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.SerialPort;
 import frc.robot.pose.*;
-import frc.robot.utils.VisionDataProcessor;
+import frc.robot.vision.VisionDataProcessor;
 
 /**
  *
