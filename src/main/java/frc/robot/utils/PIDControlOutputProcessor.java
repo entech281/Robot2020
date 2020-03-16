@@ -19,4 +19,16 @@ public class PIDControlOutputProcessor {
         }
         return value;
     }
+    
+    public static double constrainWithMinBounds(double value, double maxThresh, double minThresh){
+        if(value > 0){
+                value = Math.min(value, maxThresh);
+                value = Math.max(value, minThresh);
+        }
+        if(value < 0){
+                value = Math.max(value, -maxThresh);
+                value = Math.min(value, -minThresh);
+        }
+        return value;
+    }
 }
