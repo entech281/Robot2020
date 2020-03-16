@@ -2,6 +2,7 @@ package frc.robot.pose;
 
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
+import frc.robot.vision.VisionData;
 import frc.robot.vision.VisionDataProcessor;
 
 public class RobotPose {

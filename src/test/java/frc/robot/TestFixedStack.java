@@ -5,7 +5,7 @@
  */
 package frc.robot;
 
-import frc.robot.pose.VisionData;
+import frc.robot.vision.VisionData;
 import frc.robot.utils.FixedStack;
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;

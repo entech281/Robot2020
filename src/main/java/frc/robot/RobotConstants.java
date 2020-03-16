@@ -3,10 +3,13 @@ package frc.robot;
 import com.revrobotics.CANPIDController;
 import frc.robot.controllers.SparkMaxSettings;
 import frc.robot.controllers.SparkMaxSettingsBuilder;
-import frc.robot.controllers.SparkSpeedController;
 import frc.robot.controllers.TalonSettings;
 import frc.robot.controllers.TalonSettingsBuilder;
-import frc.robot.pose.*;
+import frc.robot.pose.RobotPose;
+import frc.robot.pose.RobotPosition;
+import frc.robot.pose.ShooterConfiguration;
+import frc.robot.pose.TargetLocation;
+import frc.robot.vision.VisionData;
 
 public class RobotConstants {
 
@@ -131,7 +134,7 @@ public class RobotConstants {
         
     }
 
-    public interface ROBOT_DEFAULTS {
+    public interface DEFAULTS {
 
         public static final RobotPosition START_POSITION = new RobotPosition(0, 0, 0);
         public static final RobotPose START_POSE = new RobotPose(START_POSITION, VISION.DEFAULT_VISION_DATA);
@@ -141,6 +144,9 @@ public class RobotConstants {
             public static final VisionData DEFAULT_VISION_DATA = new VisionData(false, -1, -1, -1);
             public static final int FRAME_WIDTH = 160;
             public static final int FRAME_HEIGHT = 120;
+            public static final int STREAM_FPS = 50;
+            public static final int STREAM_PORT = 8080;
+
         }
     }
 
@@ -188,14 +194,6 @@ public class RobotConstants {
     }
 
     public interface AVAILABILITY {
-
-        public static final boolean climber = false;
-        public static final boolean colorSensor = false;
-        public static final boolean drive = true;
-        public static final boolean elevator = true;
-        public static final boolean intake = true;
-        public static final boolean shootMotorMounted = true;
-        public static final boolean hoodMotorMounted = true;
         public static final boolean PNEUMATICS_MOUNTED = true;
         public static final boolean BALL_SENSOR = true;
 

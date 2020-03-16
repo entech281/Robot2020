@@ -10,7 +10,6 @@ import frc.robot.commands.AdjustHoodBackwardCommand;
 import frc.robot.commands.AdjustRaiseHoodCommand;
 import frc.robot.commands.SnapToVisionTargetCommand;
 import frc.robot.commands.SnapToYawCommand;
-import frc.robot.pose.PoseSource;
 
 
 /**

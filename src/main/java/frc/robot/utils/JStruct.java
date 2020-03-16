@@ -327,6 +327,12 @@ public class JStruct {
                     throw new RuntimeException("Byte length mismatch");
                 var = unpackRaw_u32b(val);
                 break;
+            case 'b':
+            case 'B':
+                if (val.length!=1)
+                    throw new RuntimeException("Byte length mismatch");
+                var = val[0];
+                break;
 
             default:
                 // do nothing;
@@ -347,6 +353,8 @@ public class JStruct {
                 counter+=4;
             else if (x=='h' || x=='H')
                 counter+=2;
+            else if (x=='b' || x == 'B')
+                counter += 1;
         }
         return counter;
     }
@@ -368,6 +376,7 @@ public class JStruct {
             bxx = new long[fmt.length()];
         }
         char c;
+        byte[] bByte = new byte[1];
         byte[] bShort = new byte[2];
         byte[] bLong = new byte[4];
         ByteArrayInputStream bs = new ByteArrayInputStream(vals);
@@ -394,6 +403,9 @@ public class JStruct {
                     else if(c == 'i' || c =='I'){
                         int read = bs.read(bLong);
                         bxx[p] = unpack_single_data(c, bLong);
+                    }else if(c == 'b' || c == 'B'){
+                        int read = bs.read(bByte);
+                        bxx[p] = bByte[0];
                     }
                     p++;
                 }

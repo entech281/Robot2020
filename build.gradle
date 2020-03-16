@@ -78,8 +78,9 @@ dependencies {
     // https://mvnrepository.com/artifact/org.powermock/powermock-api-mockito2
     testCompile group: 'org.powermock', name: 'powermock-api-mockito2', version: '2.0.5'
 
-    // https://mvnrepository.com/artifact/org.python/jython
-    testCompile group: 'org.python', name: 'jython', version: '2.7.2rc1'
+    // https://mvnrepository.com/artifact/org.python/jython-standalone
+    testCompile group: 'org.python', name: 'jython-standalone', version: '2.7.1'
+
 
     testImplementation 'junit:junit:4.12'
 

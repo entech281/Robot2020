@@ -5,45 +5,51 @@
  */
 package frc.robot.subsystems;
 
-import edu.wpi.first.wpilibj.SerialPort;
-import frc.robot.pose.*;
-import frc.robot.vision.VisionDataProcessor;
+import edu.wpi.first.wpilibj.SerialPort.Port;
+import frc.robot.vision.VisionData;
+import frc.robot.vision.WpilibSerialProvider;
+import frc.robot.vision.ByteUpdatedCameraServer;
+import frc.robot.vision.SerialProvider;
+import frc.robot.vision.VisionCommManager;
+
+import frc.robot.RobotConstants.DEFAULTS.VISION;
 
 /**
  *
- * @author aryan
+ * @author aryan,plaba
  */
 public class VisionSubsystem extends BaseSubsystem {
 
     private static final int BAUD_RATE = 115200;
-    private SerialPort visionPort;
-
-    private VisionData visionData = VisionData.DEFAULT_VISION_DATA;
-    private VisionDataProcessor processor;
+    private static final int TIMEOUT = 1;
+    private static final Port PORT = Port.kUSB1;
+    private SerialProvider connection;
+    private VisionCommManager communication;
+    private ByteUpdatedCameraServer visionStream;
 
     private boolean connected = false;
 
     @Override
     public void initialize() {
         logger.log("initialized", true);
+        visionStream = new ByteUpdatedCameraServer(false);
         tryConnect();
-        processor = new VisionDataProcessor();
     }
 
     @Override
     public void periodic() {
         if(connected){
-            String reading = visionPort.readString();
-            logger.log("Input", reading);
-            processor.addInput(reading);
-            visionData = processor.getCurrentVisionData();
-            logger.log("Vertical offset", visionData.getVerticalOffset());
-            logger.driverinfo("Horizontal Offset", visionData.getLateralOffset());
+            communication.update();
+            visionStream.addFrame(communication.getLatestImage());
         }
     }
 
     public VisionData getVisionData() {
-        return visionData;
+        return communication.getLatestTargetData();
+    }
+
+    public byte[] getImageData(){
+        return communication.getLatestImage();
     }
 
     public boolean ensureConnected(){
@@ -55,16 +61,16 @@ public class VisionSubsystem extends BaseSubsystem {
     
     private void tryConnect(){
         if ( ! connected){
-            
-        }
-        try{
-            visionPort = new SerialPort(BAUD_RATE, SerialPort.Port.kUSB1);
-            visionPort.setTimeout(1);
-            logger.driverinfo("Vision connection initialization succeded", "SUCCESS");
-            connected = true;
-        } catch(Exception e){
-            logger.driverinfo("Vision connection initialization failed", "FAILED");
-        }
+            try{
+                connection = new WpilibSerialProvider(BAUD_RATE, TIMEOUT, PORT);
+                communication = new VisionCommManager(connection);
+                visionStream.initialize(VISION.FRAME_HEIGHT, VISION.FRAME_WIDTH, VISION.STREAM_FPS, VISION.STREAM_PORT);
+                logger.driverinfo("Vision connection initialization", "SUCCESS");
+                connected = true;
+            } catch(Exception e){
+                logger.driverinfo("Vision connection initialization", "FAILED");
+            }
+        }            
     }
 
 }

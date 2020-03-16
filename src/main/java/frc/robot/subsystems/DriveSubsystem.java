@@ -15,7 +15,6 @@ import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import frc.robot.pose.*;
 import frc.robot.utils.EncoderInchesConverter;
 import frc.robot.path.Position;
-import frc.robot.path.PositionCalculator;
 
 public class DriveSubsystem extends BaseSubsystem {
 
@@ -155,7 +154,6 @@ public class DriveSubsystem extends BaseSubsystem {
     
     public Position getCurrentPosition(){
         EncoderValues v = getEncoderValues();
-        //TODO: handle broken encoders
         return new Position ( encoderConverter.toInches(v.getLeftFront()),
                               encoderConverter.toInches(v.getRightFront()) );
     }
