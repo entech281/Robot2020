@@ -3,11 +3,12 @@ package frc.robot.pose;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import frc.robot.RobotConstants;
-import frc.robot.utils.VisionDataProcessor;
+import frc.robot.vision.VisionData;
+import frc.robot.vision.VisionDataProcessor;
 
 public class RobotPose {
 
-    private RobotPosition robotPosition = RobotConstants.ROBOT_DEFAULTS.START_POSITION;
+    private RobotPosition robotPosition = RobotConstants.DEFAULTS.START_POSITION;
     private VisionData visionData = VisionData.DEFAULT_VISION_DATA;
     private WheelColorValue wheelColor = WheelColorValue.BLUE;
     private TargetLocation targetLocation = new TargetLocation(0, 0);

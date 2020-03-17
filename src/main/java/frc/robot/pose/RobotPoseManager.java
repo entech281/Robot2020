@@ -1,6 +1,7 @@
 package frc.robot.pose;
 
 import frc.robot.RobotConstants;
+import frc.robot.vision.VisionData;
 
 public class RobotPoseManager {
 
@@ -10,7 +11,7 @@ public class RobotPoseManager {
     private VisionData vData = VisionData.DEFAULT_VISION_DATA;
     private WheelColorValue wColor;
 
-    private RobotPose pose = RobotConstants.ROBOT_DEFAULTS.START_POSE;
+    private RobotPose pose = RobotConstants.DEFAULTS.START_POSE;
     private boolean navXWorking = navXData.getValidity();
 
     public RobotPose getCurrentPose() {

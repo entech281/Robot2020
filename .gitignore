@@ -163,3 +163,5 @@ env/
 characterization-project/
 .vscode/
 *.json
+
+.*/

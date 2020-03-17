@@ -5,7 +5,7 @@
  */
 package frc.robot.utils;
 
-import frc.robot.pose.VisionData;
+import frc.robot.vision.VisionData;
 
 /**
  *

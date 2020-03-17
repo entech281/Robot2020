@@ -78,24 +78,8 @@ dependencies {
     // https://mvnrepository.com/artifact/org.powermock/powermock-api-mockito2
     testCompile group: 'org.powermock', name: 'powermock-api-mockito2', version: '2.0.5'
 
-
-    // https://mvnrepository.com/artifact/org.powermock/powermock-mockito-release-full
-    //testCompile group: 'org.powermock', name: 'powermock-module-junit4', version: '1.7.4'
-    
-    // https://mvnrepository.com/artifact/org.powermock/powermock-api-mockito
-    //testCompile group: 'org.powermock', name: 'powermock-api-mockito', version: '1.7.4'
-
-    // https://mvnrepository.com/artifact/org.powermock/powermock-core
-    //testCompile group: 'org.powermock', name: 'powermock-core', version: '1.7.4'
-    
-    // https://mvnrepository.com/artifact/org.powermock/powermock-reflect
-    //testCompile group: 'org.powermock', name: 'powermock-reflect', version: '1.7.4'
-    
-    // https://mvnrepository.com/artifact/net.bytebuddy/byte-buddy-dep
-    //testCompile group: 'net.bytebuddy', name: 'byte-buddy-dep', version: '1.10.8'
-
-    // https://mvnrepository.com/artifact/net.bytebuddy/byte-buddy-agent
-    //testCompile group: 'net.bytebuddy', name: 'byte-buddy-agent', version: '1.10.8'
+    // https://mvnrepository.com/artifact/org.python/jython-standalone
+    testCompile group: 'org.python', name: 'jython-standalone', version: '2.7.1'
 
 
     testImplementation 'junit:junit:4.12'
