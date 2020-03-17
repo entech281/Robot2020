@@ -27,7 +27,6 @@ public class StopDrivingCommand extends EntechCommandBase{
     
     @Override
     public void initialize() {
-        drive.setPositionMode();
     }
 
     

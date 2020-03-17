@@ -80,15 +80,15 @@ public class OperatorInterface {
 
         
         joystickManager.addButton(6)
-                .whenPressed(commandFactory.snapToYawCommand( 5, true))
+                .whenPressed(commandFactory.snapToYawCommand( 90, true))
                 .add();
         
         joystickManager.addButton(5)
-                .whenPressed(commandFactory.snapToYawCommand( -5, true))
+                .whenPressed(commandFactory.snapToYawCommand( -90, true))
                 .add();
 
         joystickManager.addButton(12)
-                .whenPressed(commandFactory.driveForwardSpeedMode(24))
+                .whenPressed(commandFactory.driveForwardSpeedMode(126, 1))
                 .add();
         
         joystickManager.addButton(9)

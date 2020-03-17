@@ -39,7 +39,6 @@ public class SnapToYawCommand extends EntechCommandBase{
     
     @Override
     public void initialize() {
-        drive.setSpeedMode();
         setpoint = desiredYaw;
         if(relative){
             setpoint = poseSource.getRobotPose().getRobotPosition().getTheta() + setpoint;
@@ -60,7 +59,7 @@ public class SnapToYawCommand extends EntechCommandBase{
         logger.log("Setpoint", controller.getSetpoint());
         logger.log("Offset", controller.getPositionError());
         logger.log("NAV", rPose.getRobotPosition().getTheta());
-        output = PIDControlOutputProcessor.constrainWithMinBounds(output, 0.8, 0.35);
+        output = PIDControlOutputProcessor.constrainWithMinBounds(output, 0.8, 0.35); //0.35
         drive.drive(0, output);
         drive.feedWatchDog();
 

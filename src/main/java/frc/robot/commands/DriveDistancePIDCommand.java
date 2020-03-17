@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj.controller.PIDController;
 import frc.robot.RobotConstants;
 import frc.robot.utils.EncoderInchesConverter;
 import frc.robot.utils.PIDControlOutputProcessor;
-
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  *
@@ -25,26 +25,35 @@ public class DriveDistancePIDCommand extends EntechCommandBase{
     private int count = 0;
     private EncoderInchesConverter encoderConverter = new EncoderInchesConverter(1 / RobotConstants.DIMENSIONS.MOTOR_REVOLUTIONS_PER_INCH);
 
+    private double maxSpeed = 0;
     public DriveDistancePIDCommand(DriveSubsystem drive, double distance){
+        this(drive, distance, 1);
+    }
+
+    public DriveDistancePIDCommand(DriveSubsystem drive, double distance, double maxSpeed){
         super(drive);
         this.drive = drive;
-        setpoint = encoderConverter.toCounts(distance);
+        setpoint = distance;
         this.controller = new PIDController(RobotConstants.PID.AUTO_STRAIGHT_SPEED.P,
             RobotConstants.PID.AUTO_STRAIGHT_SPEED.I,
             RobotConstants.PID.AUTO_STRAIGHT_SPEED.D);        
+        this.maxSpeed = maxSpeed;
     }
+
     
     @Override
     public void initialize() {
-        drive.setSpeedMode();
+        drive.switchToBrakeMode();
         drive.resetPosition();
         controller.setSetpoint(setpoint);
-        controller.setTolerance(encoderConverter.toCounts(1));
+        controller.setTolerance(1);
     }
     @Override
     public void execute() {
-        output = controller.calculate(drive.getDistanceTravelled());
-        output =  PIDControlOutputProcessor.constrainWithMinBounds(output, 0.5, 1);
+        output = controller.calculate(drive.getDistanceTravelled())/10;
+        SmartDashboard.putNumber("Output", output);
+        SmartDashboard.putNumber("Position", drive.getDistanceTravelled());
+        output =  PIDControlOutputProcessor.constrainWithMinBounds(output, maxSpeed, 0.3);
         drive.drive(output, 0);
         drive.feedWatchDog();
     }
@@ -52,12 +61,10 @@ public class DriveDistancePIDCommand extends EntechCommandBase{
     
     @Override
     public boolean isFinished() {
-        if(controller.atSetpoint()){
-            count += 1;
-        } else {
-            count = 0;
+         if(controller.atSetpoint()){
+            drive.drive(0, 0);
         }
-        return count > 3;
+        return controller.atSetpoint();
     }
     
 }

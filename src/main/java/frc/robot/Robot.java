@@ -67,7 +67,6 @@ public class Robot extends TimedRobot {
 
     @Override
     public void teleopInit() {
-        subsystemManager.getDriveSubsystem().setSpeedMode();
         subsystemManager.getNavXSubsystem().zeroYawMethod(false);
         if (autoCommand != null) {
             autoCommand.cancel();
@@ -79,7 +78,7 @@ public class Robot extends TimedRobot {
         }
 
         oi = new OperatorInterface(subsystemManager);
-        subsystemManager.getVisionSubsystem().ensureConnected();
+//        subsystemManager.getVisionSubsystem().ensureConnected();
         subsystemManager.getShooterSubsystem().initialize();
 
     }
@@ -91,9 +90,9 @@ public class Robot extends TimedRobot {
 
     @Override
     public void autonomousInit() {
-        subsystemManager.getVisionSubsystem().ensureConnected();
+//        subsystemManager.getVisionSubsystem().ensureConnected();
 
-        subsystemManager.getDriveSubsystem().setPositionMode();
+
 
         if(!subsystemManager.getHoodSubsystem().knowsHome()){
             commandFactory.hoodHomeCommand().schedule();
@@ -115,7 +114,6 @@ public class Robot extends TimedRobot {
 
     @Override
     public void disabledInit() {
-        subsystemManager.getDriveSubsystem().setSpeedMode();
     }
 
     @Override
