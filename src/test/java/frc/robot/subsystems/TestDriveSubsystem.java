@@ -18,7 +18,7 @@ public class TestDriveSubsystem {
         DriveSubsystem drive = Mockito.mock(DriveSubsystem.class);
  
         Command d = new RunWhenDisabledCommandDecorator ( 
-                new InstantCommand ( () -> drive.setSpeedMode())
+                new InstantCommand ( () -> drive.switchToCoastMode())
         );
 
         scheduler.schedule(d);
@@ -26,7 +26,7 @@ public class TestDriveSubsystem {
         for ( int i=0;i<5;i++){
              scheduler.run();
         }
-        verify(drive).setSpeedMode();
+        verify(drive).switchToCoastMode();
     }
    
 }

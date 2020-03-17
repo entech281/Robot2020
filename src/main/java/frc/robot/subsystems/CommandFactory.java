@@ -96,29 +96,27 @@ public class CommandFactory {
                         hoodStartingLinePreset(),
                         startShooter()
                 ),
-                fireCommand(),
+                fireCommand().withTimeout(1),
                 new WaitCommand(1.5),
                 new ParallelCommandGroup(
-                        driveForward(-60),
+                        driveForwardSpeedMode(-60, 1),
                         stopElevator(),
                         stopShooter()
                 ),
                 turnToDirection(90),
-                driveForward(55), //
+                driveForwardSpeedMode(65, 1), //
                 new ParallelCommandGroup(
                     intake3Balls(),
                     new SequentialCommandGroup(
                         turnToDirection(180).withTimeout(2),
                         new ParallelCommandGroup(
                                 startShooter(),
-                                driveForward(100) //
+                                driveForwardSpeedMode(100, 0.5), //
+                                hoodTrenchPreset().withTimeout(0.01)
                         )                
                     )
                 ),
-                new ParallelCommandGroup(
-                        raiseAndStopIntake(),
-                        hoodTrenchPreset()
-                ),
+                raiseAndStopIntake().withTimeout(0.01),
                 turnRight(160),
                 new ParallelCommandGroup(
                     fireCommand(),
@@ -144,7 +142,7 @@ public class CommandFactory {
         return new SequentialCommandGroup(
                 zeroYawOfNavX(false),
                 new ParallelCommandGroup(
-                        driveForward(126.0).withTimeout(2.5), 
+                        driveForwardSpeedMode(126.0, 0.75).withTimeout(5),
                         startShooter(),
                         hoodUpAgainstTargetPreset()
                 ),
@@ -162,6 +160,10 @@ public class CommandFactory {
     
     public Command driveForwardSpeedMode(double distance){
         return new DriveDistancePIDCommand(sm.getDriveSubsystem(), distance);
+    }
+
+    public Command driveForwardSpeedMode(double distance, double speed){
+        return new DriveDistancePIDCommand(sm.getDriveSubsystem(), distance, speed);
     }
 
     
