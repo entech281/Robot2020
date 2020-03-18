@@ -153,7 +153,7 @@ public class RobotConstants {
 
         public static final double ROBOT_WIDTH = 23.5;
         public static final double ROBOT_LENGTH = 25;
-        public static final double DRIVE_GEAR_RATIO = 10.7*(23.5/25.5);
+        public static final double DRIVE_GEAR_RATIO = 10.7 * (48/50.5); //(23.5/25.5)
         public static final double WHEEL_DIAMETER_INCHES = 6;
         public static final double MOTOR_REVOLUTIONS_PER_INCH = (Math.PI * WHEEL_DIAMETER_INCHES)
                 / DRIVE_GEAR_RATIO;
@@ -168,15 +168,15 @@ public class RobotConstants {
         }
         
         public interface AUTO_TURN{
-            public static final double P = 1e-2;
+            public static final double P = 2e-2; //1e-2
             public static final double I = 1e-7;
             public static final double D = 0;
             public static final double F = 0;
         }
 
         public interface AUTO_STRAIGHT_SPEED{
-            public static final double P = 1e-2;
-            public static final double I = 1e-7;
+            public static final double P = 0.25;
+            public static final double I = 0;
             public static final double D = 0;
             public static final double F = 0;
         }

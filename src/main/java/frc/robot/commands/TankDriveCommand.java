@@ -18,7 +18,7 @@ public class TankDriveCommand extends EntechCommandBase {
 
     @Override
     public void initialize(){
-        drive.setSpeedMode();
+        drive.switchToCoastMode();
     }
     
     @Override

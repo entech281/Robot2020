@@ -98,16 +98,18 @@ public class DriveSubsystem extends BaseSubsystem {
         frontRightPositionController = new SparkPositionController(frontRightSpark, smartMotionSettings, FRONT_RIGHT_POSITION_INVERSE);
         rearLeftPositionController = new SparkPositionController(rearLeftSpark, smartMotionSettings, REAR_LEFT_POSITION_INVERSE);
         rearRightPositionController = new SparkPositionController(rearRightSpark, smartMotionSettings, REAR_RIGHT_POSITION_INVERSE);
+        
+        setSpeedMode();
     }
 
-    public void setSpeedMode() {
+    private void setSpeedMode() {
         speedSettings.configureSparkMax(frontLeftSpark);
         speedSettings.configureSparkMax(frontRightSpark);
         speedSettings.configureSparkMax(rearLeftSpark);
         speedSettings.configureSparkMax(rearRightSpark);
     }
 
-    public void setPositionMode() {
+    private void setPositionMode() {
         frontRightPositionController.configure();
         rearLeftPositionController.configure();
         frontLeftPositionController.configure();
@@ -166,7 +168,7 @@ public class DriveSubsystem extends BaseSubsystem {
     
     public double getDistanceTravelled(){
         EncoderValues v = getEncoderValues();
-        return (v.getLeftFront() + v.getRightFront())/2.0;
+        return encoderConverter.toInches((v.getLeftFront() + v.getRightFront())/2.0);
     }
     
     public void driveToPosition(Position targetPosition){
@@ -186,6 +188,24 @@ public class DriveSubsystem extends BaseSubsystem {
         frontRightPositionController.setDesiredPosition(encoderRight);
         rearLeftPositionController.setDesiredPosition(encoderLeft);
         rearRightPositionController.setDesiredPosition(encoderRight);
+    }
+    
+    public void switchToBrakeMode(){
+        if(frontLeftSpark.getIdleMode() == CANSparkMax.IdleMode.kCoast){
+            frontLeftSpark.setIdleMode(CANSparkMax.IdleMode.kBrake);
+            frontRightSpark.setIdleMode(CANSparkMax.IdleMode.kBrake);            
+            rearLeftSpark.setIdleMode(CANSparkMax.IdleMode.kBrake);
+            rearRightSpark.setIdleMode(CANSparkMax.IdleMode.kBrake);
+        }
+    }
+    
+    public void switchToCoastMode(){
+        if(frontLeftSpark.getIdleMode() == CANSparkMax.IdleMode.kBrake){
+            frontLeftSpark.setIdleMode(CANSparkMax.IdleMode.kCoast);
+            frontRightSpark.setIdleMode(CANSparkMax.IdleMode.kCoast);            
+            rearLeftSpark.setIdleMode(CANSparkMax.IdleMode.kCoast);
+            rearRightSpark.setIdleMode(CANSparkMax.IdleMode.kCoast);
+        }        
     }
 
     @Override

@@ -21,7 +21,7 @@ public class TankDriveCommandTwoJoysticks extends EntechCommandBase {
 
     @Override
     public void initialize(){
-        drive.setSpeedMode();
+        drive.switchToCoastMode();
     }
     
     @Override

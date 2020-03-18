@@ -37,9 +37,9 @@ public class SubsystemManager implements PoseSource{
         return shooterSubsystem;
     }
     
-    public VisionSubsystem getVisionSubsystem(){
-        return visionSubsystem;
-    }
+//    public VisionSubsystem getVisionSubsystem(){
+//        return visionSubsystem;
+//    }
 
     public HoodSubsystem getHoodSubsystem() {
         return hoodSubsystem;
@@ -50,7 +50,7 @@ public class SubsystemManager implements PoseSource{
     private NavXSubsystem navXSubsystem;
     private ShooterSubsystem shooterSubsystem;
     private ClimbSubsystem climbSubsystem;
-    private VisionSubsystem visionSubsystem;
+//    private VisionSubsystem visionSubsystem;
     private HoodSubsystem hoodSubsystem;
 
     private final RobotPoseManager robotPoseManager = new RobotPoseManager();
@@ -66,14 +66,14 @@ public class SubsystemManager implements PoseSource{
         navXSubsystem = new NavXSubsystem();
         shooterSubsystem = new ShooterSubsystem();
         climbSubsystem = new ClimbSubsystem();
-        visionSubsystem = new VisionSubsystem();
+//        visionSubsystem = new VisionSubsystem();
         hoodSubsystem  = new HoodSubsystem();
         
         Arrays.asList(
             driveSubsystem, 
             intakeSubsystem, 
             navXSubsystem, 
-            visionSubsystem,
+//            visionSubsystem,
             shooterSubsystem,
             hoodSubsystem).forEach(subsystem -> subsystem.initialize());
  
@@ -102,7 +102,7 @@ public class SubsystemManager implements PoseSource{
     public void updatePoses() {
         robotPoseManager.updateEncoders(driveSubsystem.getEncoderValues());
         robotPoseManager.updateNavxAngle(navXSubsystem.updateNavXAngle());
-        robotPoseManager.updateVisionData(visionSubsystem.getVisionData());
+//        robotPoseManager.updateVisionData(visionSubsystem.getVisionData());
         robotPoseManager.update();
     }
 
