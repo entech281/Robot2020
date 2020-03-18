@@ -85,14 +85,14 @@ public class SubsystemManager implements PoseSource{
         navXSubsystem = new NavXSubsystem();
         shooterSubsystem = new ShooterSubsystem();
         climbSubsystem = new ClimbSubsystem();
-        visionSubsystem = new VisionSubsystem();
+//        visionSubsystem = new VisionSubsystem();
         hoodSubsystem  = new HoodSubsystem();
         
         Arrays.asList(
             driveSubsystem, 
             intakeSubsystem, 
             navXSubsystem, 
-            visionSubsystem,
+//            visionSubsystem,
             shooterSubsystem,
             hoodSubsystem).forEach(subsystem -> subsystem.initializeForTest());
  
