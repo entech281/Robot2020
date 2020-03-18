@@ -75,6 +75,12 @@ public class NavXSubsystem extends BaseSubsystem {
         if(inverted)
             enableOffset();
     }
+
+    @Override
+    public void initializeForTest() {
+        // TODO Auto-generated method stub
+
+    }
     
 
 }

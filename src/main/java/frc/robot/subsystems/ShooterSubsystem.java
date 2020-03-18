@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import frc.robot.controllers.spark.SparkSpeedController;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.ControlType;
@@ -79,5 +80,11 @@ public class ShooterSubsystem extends BaseSubsystem {
 
     public double getDesiredSpeed(){
         return shooterMotorClosedLoopController.getDesiredSpeed();
+    }
+
+    @Override
+    public void initializeForTest() {
+        // TODO Auto-generated method stub
+
     }
 }

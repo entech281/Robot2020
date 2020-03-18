@@ -1,10 +1,10 @@
 package frc.robot.subsystems;
 
-import frc.robot.controllers.SparkMaxSettings;
-import frc.robot.controllers.SparkMaxSettingsBuilder;
+import frc.robot.controllers.spark.SparkMaxSettings;
+import frc.robot.controllers.spark.SparkMaxSettingsBuilder;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import frc.robot.RobotConstants;
-import frc.robot.controllers.SparkPositionController;
+import frc.robot.controllers.spark.SparkPositionController;
 
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
@@ -186,6 +186,12 @@ public class DriveSubsystem extends BaseSubsystem {
         frontRightPositionController.setDesiredPosition(encoderRight);
         rearLeftPositionController.setDesiredPosition(encoderLeft);
         rearRightPositionController.setDesiredPosition(encoderRight);
+    }
+
+    @Override
+    public void initializeForTest() {
+        // TODO Auto-generated method stub
+
     }
 
 }

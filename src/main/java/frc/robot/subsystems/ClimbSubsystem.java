@@ -5,9 +5,9 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.Solenoid;
 import frc.robot.RobotConstants;
-import frc.robot.controllers.SparkMaxSettings;
-import frc.robot.controllers.SparkMaxSettingsBuilder;
-import frc.robot.controllers.SparkSpeedController;
+import frc.robot.controllers.spark.SparkMaxSettings;
+import frc.robot.controllers.spark.SparkMaxSettingsBuilder;
+import frc.robot.controllers.spark.SparkSpeedController;
 public class ClimbSubsystem extends BaseSubsystem {
 
     CANSparkMax winch;
@@ -38,6 +38,12 @@ public class ClimbSubsystem extends BaseSubsystem {
         attachHookSolenoid.set(false);
         engageWinchSolenoid.set(true);
         
+    }
+
+    @Override
+    public void initializeForTest() {
+        // TODO Auto-generated method stub
+
     }
 
 

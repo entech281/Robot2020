@@ -17,4 +17,10 @@ public class ColorSubsystem extends BaseSubsystem {
 //        throw new UnsupportedOperationException("Not Implemented Yet");
     }
 
+    @Override
+    public void initializeForTest() {
+        // TODO Auto-generated method stub
+
+    }
+
 }

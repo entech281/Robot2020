@@ -1,4 +1,4 @@
-package frc.robot.controllers;
+package frc.robot.controllers.spark;
 
 import com.revrobotics.CANPIDController;
 import com.revrobotics.ControlType;

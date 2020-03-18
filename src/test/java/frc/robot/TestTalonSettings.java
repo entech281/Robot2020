@@ -1,5 +1,7 @@
 package frc.robot;
 
+import frc.robot.controllers.talon.TalonSettings;
+import frc.robot.controllers.talon.TalonSettingsBuilder;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 

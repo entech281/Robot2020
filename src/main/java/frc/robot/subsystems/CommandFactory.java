@@ -48,7 +48,7 @@ public class CommandFactory {
         return new SequentialCommandGroup(
             new InstantCommand(() -> sm.getIntakeSubsystem().toggleIntakeArms()),
             new ParallelRaceGroup(
-                new PerpetualCommand(new InstantCommand(() -> sm.getIntakeSubsystem().updateSolenoidPosition())),
+                new PerpetualCommand(new InstantCommand(() -> sm.getIntakeSubsystem().ensureIntakeArmState())),
                 new WaitCommand(0.25)
                 )
             ).andThen(new PrintCommand("Toggling Arms"));

@@ -1,4 +1,4 @@
-package frc.robot.controllers;
+package frc.robot.controllers.talon;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;

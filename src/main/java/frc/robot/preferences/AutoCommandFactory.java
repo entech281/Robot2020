@@ -9,7 +9,7 @@ public class AutoCommandFactory{
     public AutoCommandFactory( CommandFactory commandFactory ){
         this.commandFactory = commandFactory; 
     }
-    public  Command getSelectedCommand(AutoOption selected){
+    public Command getSelectedCommand(AutoOption selected){
         switch(selected){
             case MiddleSixBall:
                 return commandFactory.middleSixBallAuto();
