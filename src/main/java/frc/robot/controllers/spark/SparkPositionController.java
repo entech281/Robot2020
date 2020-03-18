@@ -1,8 +1,9 @@
-package frc.robot.controllers;
+package frc.robot.controllers.spark;
 
 import com.revrobotics.CANError;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.ControlType;
+import frc.robot.controllers.PositionController;
 
 public class SparkPositionController extends BaseSparkController implements PositionController{
 

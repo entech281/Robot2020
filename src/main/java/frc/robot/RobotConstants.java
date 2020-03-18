@@ -1,10 +1,10 @@
 package frc.robot;
 
 import com.revrobotics.CANPIDController;
-import frc.robot.controllers.SparkMaxSettings;
-import frc.robot.controllers.SparkMaxSettingsBuilder;
-import frc.robot.controllers.TalonSettings;
-import frc.robot.controllers.TalonSettingsBuilder;
+import frc.robot.controllers.spark.SparkMaxSettings;
+import frc.robot.controllers.spark.SparkMaxSettingsBuilder;
+import frc.robot.controllers.talon.TalonSettings;
+import frc.robot.controllers.talon.TalonSettingsBuilder;
 import frc.robot.pose.RobotPose;
 import frc.robot.pose.RobotPosition;
 import frc.robot.pose.ShooterConfiguration;

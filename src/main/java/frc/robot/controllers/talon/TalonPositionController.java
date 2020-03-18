@@ -1,8 +1,10 @@
-package frc.robot.controllers;
+package frc.robot.controllers.talon;
 
+import frc.robot.controllers.talon.TalonSettings;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.controllers.PositionController;
 
 public class TalonPositionController extends BaseTalonController implements PositionController {
 

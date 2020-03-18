@@ -73,4 +73,10 @@ public class VisionSubsystem extends BaseSubsystem {
         }            
     }
 
+    @Override
+    public void initializeForTest() {
+        // TODO Auto-generated method stub
+
+    }
+
 }

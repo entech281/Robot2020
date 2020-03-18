@@ -28,5 +28,6 @@ public abstract class BaseSubsystem extends SubsystemBase {
 
     public abstract void initialize();
 
+    public abstract void initializeForTest();
 
 }

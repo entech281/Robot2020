@@ -1,7 +1,8 @@
-package frc.robot.controllers;
+package frc.robot.controllers.spark;
 
 import com.revrobotics.CANError;
 import com.revrobotics.CANSparkMax;
+import frc.robot.controllers.SpeedController;
 
 public class SparkSpeedController extends BaseSparkController implements SpeedController{
 

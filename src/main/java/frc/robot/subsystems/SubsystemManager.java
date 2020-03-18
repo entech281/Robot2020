@@ -78,6 +78,27 @@ public class SubsystemManager implements PoseSource{
             hoodSubsystem).forEach(subsystem -> subsystem.initialize());
  
     }
+
+    public void initAllTestMode() {
+        driveSubsystem = new DriveSubsystem();
+        intakeSubsystem = new IntakeSubsystem();
+        navXSubsystem = new NavXSubsystem();
+        shooterSubsystem = new ShooterSubsystem();
+        climbSubsystem = new ClimbSubsystem();
+//        visionSubsystem = new VisionSubsystem();
+        hoodSubsystem  = new HoodSubsystem();
+        
+        Arrays.asList(
+            driveSubsystem, 
+            intakeSubsystem, 
+            navXSubsystem, 
+//            visionSubsystem,
+            shooterSubsystem,
+            hoodSubsystem).forEach(subsystem -> subsystem.initializeForTest());
+ 
+    }
+
+
     public void updatePoses() {
         robotPoseManager.updateEncoders(driveSubsystem.getEncoderValues());
         robotPoseManager.updateNavxAngle(navXSubsystem.updateNavXAngle());

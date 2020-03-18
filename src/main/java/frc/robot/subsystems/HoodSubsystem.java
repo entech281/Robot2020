@@ -10,7 +10,7 @@ import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
 import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import frc.robot.RobotConstants;
-import frc.robot.controllers.TalonPositionController;
+import frc.robot.controllers.talon.TalonPositionController;
 import frc.robot.utils.ClampedDouble;
 
 /**
@@ -130,6 +130,12 @@ public class HoodSubsystem extends BaseSubsystem {
     private static class LimitSwitchState {
         public static int closed = 1;
         public static int open = 0;
+    }
+
+    @Override
+    public void initializeForTest() {
+        // TODO Auto-generated method stub
+
     }
 
 }

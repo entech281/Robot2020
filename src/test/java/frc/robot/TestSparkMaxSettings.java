@@ -1,5 +1,7 @@
 package frc.robot;
 
+import frc.robot.controllers.spark.SparkMaxSettings;
+import frc.robot.controllers.spark.SparkMaxSettingsBuilder;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 

@@ -1,7 +1,9 @@
 
-package frc.robot.controllers;
+package frc.robot.controllers.spark;
 
+import frc.robot.controllers.spark.SparkMaxSettings;
 import com.revrobotics.CANSparkMax;
+import frc.robot.controllers.BaseController;
 
 public abstract class BaseSparkController extends BaseController{
 

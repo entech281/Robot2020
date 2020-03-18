@@ -1,7 +1,9 @@
-package frc.robot.controllers;
+package frc.robot.controllers.talon;
 
+import frc.robot.controllers.talon.TalonSettings;
 import com.ctre.phoenix.ErrorCode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import frc.robot.controllers.BaseController;
 
 public abstract class BaseTalonController extends BaseController{
 
