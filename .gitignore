@@ -165,3 +165,4 @@ characterization-project/
 *.json
 
 .*/
+nbproject
