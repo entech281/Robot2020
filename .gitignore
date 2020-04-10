@@ -162,6 +162,7 @@ imgui.ini
 env/
 characterization-project/
 .vscode/
+nbproject/
 *.json
 
 .*/
