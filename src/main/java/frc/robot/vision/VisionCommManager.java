@@ -37,8 +37,6 @@ public class VisionCommManager{
             var frame = getFrame();
             switch(frame.type){
                 case 'D': latestTargetData = frame;
-                    logger.warn("Recieved new frame");
-                    logger.warn(new String(frame.payload));
                 break;
                 case 'I': latestImage = frame; break;
             }
