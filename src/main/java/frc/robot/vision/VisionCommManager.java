@@ -7,14 +7,19 @@ import frc.robot.utils.JStruct;
 
 public class VisionCommManager{
 
-    private int numConsecutiveBadData = 0;
-    private final int TOLERANCE_CONSECUTIVE_BAD_DATA = 20;
+    private static final int FRAME_SIZE = 5;
+    private static final int TOLERANCE_CONSECUTIVE_BAD_DATA = 20;
 
-    private DataLogger logger = DataLoggerFactory.getLoggerFactory().createDataLogger("Vision Communication");
-    private SerialProvider connection;
+    private int numConsecutiveBadData = 0;
+
+    private final DataLogger logger = DataLoggerFactory.getLoggerFactory().createDataLogger("Vision Communication");
+    private final SerialProvider connection;
     private DataFrame latestTargetData;
     private DataFrame latestImage;
-    private JStruct struct = new JStruct();
+    private DataFrame unfinishedFrame;
+    private boolean hasUnfinishedFrame;
+    
+    private final JStruct struct = new JStruct();
 
     private class DataFrame{
         public char type;
@@ -31,27 +36,17 @@ public class VisionCommManager{
     public VisionCommManager(SerialProvider sp){
         connection = sp;
     }
-
-    public void update(){
-        try{
-            var frame = getFrame();
-            switch(frame.type){
-                case 'D': latestTargetData = frame;
-                break;
-                case 'I': latestImage = frame; break;
+    
+    public void update() throws Exception{
+        while(canContinueReading()){
+            if(hasUnfinishedFrame){
+                fillUnfinishedFrame();
+                hasUnfinishedFrame = false;
+            } else{
+                readHeaders();
+                hasUnfinishedFrame = true;
             }
-        } catch(Exception e){
-            logger.warn(e.getMessage());
         }
-    }
-
-    private DataFrame getFrame() throws Exception {
-        long[] data = struct.unpack(">BI", connection.readBytes(5));
-        char type = (char) data[0];
-        int size = (int) data[1];
-        byte[] payload = connection.readBytes(size);
-
-        return new DataFrame(type,size,payload);
     }
 
     private VisionData parseVisionData(String data){
@@ -89,5 +84,57 @@ public class VisionCommManager{
 
     public boolean isGettingData(){
         return numConsecutiveBadData < TOLERANCE_CONSECUTIVE_BAD_DATA;
+    }
+    
+    private boolean canContinueReading() {
+        if(hasUnfinishedFrame){
+            return connection.bytesAvailable() >= unfinishedFrame.size;
+        } else{
+            return connection.bytesAvailable() >= FRAME_SIZE;
+        }
+    }
+    
+    private void fillUnfinishedFrame() {
+        byte[] payload = connection.readBytes(unfinishedFrame.size);
+        unfinishedFrame.payload = payload;
+        
+        switch(unfinishedFrame.type){
+            case 'D': latestTargetData = unfinishedFrame;
+            break;
+            case 'I': latestImage = unfinishedFrame; break;
+        }
+    }
+    
+    private void readHeaders() throws Exception {
+        long[] data = struct.unpack(">BI", connection.readBytes(FRAME_SIZE));
+        char type = (char) data[0];
+        int size = (int) data[1];
+        
+        unfinishedFrame = new DataFrame(type, size, null);
+    }
+    
+    @Deprecated
+    private DataFrame getFrame() throws Exception {
+        long[] data = struct.unpack(">BI", connection.readBytes(FRAME_SIZE));
+        char type = (char) data[0];
+        int size = (int) data[1];
+        byte[] payload = connection.readBytes(size);
+
+        return new DataFrame(type,size,payload);
+    }
+    
+    @Deprecated
+    private void processOneFrame(){
+        try{
+            
+            var frame = getFrame();
+            switch(frame.type){
+                case 'D': latestTargetData = frame;
+                break;
+                case 'I': latestImage = frame; break;
+            }
+        } catch(Exception e){
+            logger.warn(e.getMessage());
+        }
     }
 }
