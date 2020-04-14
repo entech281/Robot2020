@@ -13,7 +13,7 @@ import frc.robot.RobotConstants;
 
 public class TestPythonCommunication{
     @Test
-    public void TestPythonSendSingleVisionData(){
+    public void TestPythonSendSingleVisionData() throws Exception{
         try(PythonInterpreter pyInterp = new PythonInterpreter()) {
             
             ByteArrayOutputStream output = new ByteArrayOutputStream();
@@ -42,7 +42,7 @@ public class TestPythonCommunication{
     }
 
     @Test
-    public void TestPythonSendSingleImage(){
+    public void TestPythonSendSingleImage() throws Exception{
         try(PythonInterpreter pyInterp = new PythonInterpreter()) {
             
             ByteArrayOutputStream output = new ByteArrayOutputStream();
@@ -71,7 +71,7 @@ public class TestPythonCommunication{
     }
 
     @Test
-    public void TestPythonSendMultipleVisionData(){
+    public void TestPythonSendMultipleVisionData() throws Exception{
         try(PythonInterpreter pyInterp = new PythonInterpreter()) {
             
             ByteArrayOutputStream output = new ByteArrayOutputStream();
@@ -79,7 +79,6 @@ public class TestPythonCommunication{
             try{
                 pyInterp.exec("__name__ = '__test__'");
                 pyInterp.execfile("src/main/python/vision.py");
-                pyInterp.exec("communication.send_string(TargetData().format())");
                 pyInterp.exec("communication.send_string(TargetData(found = True, width = 5).format())");
                 pyInterp.exec("communication.send_string(TargetData().format())");
             }catch(Exception e){
@@ -91,24 +90,11 @@ public class TestPythonCommunication{
             testSerial.setBuffer(output.toByteArray());
             
             var conn = new VisionCommManager(testSerial);
+
             conn.update();
-            
-            VisionData expected = new VisionData(false,  -1, -1, -1);
+
+            VisionData expected = new VisionData(false, -1, -1, -1);
             VisionData actual = conn.getLatestTargetData();
-
-            UtilMethods.assertVisionDataEquals(expected, actual);
-
-            conn.update();
-
-            expected = new VisionData(true, RobotConstants.DEFAULTS.VISION.FRAME_WIDTH / 2 + 1, -1, 5);
-            actual = conn.getLatestTargetData();
-
-            UtilMethods.assertVisionDataEquals(expected, actual);
-
-            conn.update();
-
-            expected = new VisionData(false, -1, -1, -1);
-            actual = conn.getLatestTargetData();
 
             UtilMethods.assertVisionDataEquals(expected, actual);
 
@@ -116,7 +102,7 @@ public class TestPythonCommunication{
     }
 
     @Test
-    public void TestPythonSendMultipleImages(){
+    public void TestPythonSendMultipleImages() throws Exception{
         try(PythonInterpreter pyInterp = new PythonInterpreter()) {
             
             ByteArrayOutputStream output = new ByteArrayOutputStream();
@@ -124,7 +110,6 @@ public class TestPythonCommunication{
             try{
                 pyInterp.exec("__name__ = '__test__'");
                 pyInterp.execfile("src/main/python/vision.py");
-                pyInterp.exec("communication.send_image_bytes(b'1234')");
                 pyInterp.exec("communication.send_image_bytes(b'5678')");
                 pyInterp.exec("communication.send_image_bytes(b'1234')");
             }catch(Exception e){
@@ -137,23 +122,11 @@ public class TestPythonCommunication{
             
             var conn = new VisionCommManager(testSerial);
             conn.update();
+
+            conn.update();
             
             byte[] expected = "1234".getBytes();
             byte[] actual = conn.getLatestImage();
-
-            assertArrayEquals(expected, actual);
-
-            conn.update();
-            
-            expected = "5678".getBytes();
-            actual = conn.getLatestImage();
-
-            assertArrayEquals(expected, actual);
-
-            conn.update();
-            
-            expected = "1234".getBytes();
-            actual = conn.getLatestImage();
 
             assertArrayEquals(expected, actual);
 

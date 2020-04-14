@@ -37,10 +37,14 @@ public class VisionSubsystem extends BaseSubsystem {
     }
 
     @Override
-    public void periodic() {
+    public void periodic(){
         if(connected){
-            communication.update();
-            visionStream.addFrame(communication.getLatestImage());
+            try {
+                communication.update();
+                visionStream.addFrame(communication.getLatestImage());
+            } catch (Exception e) {
+                logger.warn(e.getMessage());
+            }
         }
     }
 

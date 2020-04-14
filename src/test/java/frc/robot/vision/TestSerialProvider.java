@@ -8,8 +8,6 @@ class TestSerialProvider implements SerialProvider {
         this.buffer = ByteBuffer.wrap(buffer);
     }
 
-    
-
     @Override
     public byte[] readAllBytes() {
         var ans = new byte[buffer.remaining()];
@@ -27,6 +25,11 @@ class TestSerialProvider implements SerialProvider {
     @Override
     public void write(byte[] data) {
         System.out.println(new String(data));
+    }
+
+    @Override
+    public int bytesAvailable() {
+        return buffer.remaining();
     }
 
 }

@@ -27,4 +27,9 @@ public class WpilibSerialProvider implements SerialProvider{
         connection.write(data, data.length);
     }
 
+    @Override
+    public int bytesAvailable() {
+        return connection.getBytesReceived();
+    }
+
 }

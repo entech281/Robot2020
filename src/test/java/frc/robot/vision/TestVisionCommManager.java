@@ -6,11 +6,11 @@ import static org.junit.Assert.assertEquals;
 import java.io.ByteArrayOutputStream;
 
 public class TestVisionCommManager{
-    private JStruct struct = new JStruct();
+    private final JStruct struct = new JStruct();
     @Test
     public void TestSingleImageReception() throws Exception {
         TestSerialProvider testConnection = new TestSerialProvider();
-        testConnection.setBuffer(struct.pack(">BIBBBB", (byte)'I',(int)4,(byte)1,(byte)2,(byte)3,(byte)4));
+        testConnection.setBuffer(struct.pack(">BIBBBB", (byte)'I', 4, 1, 2, 3, 4));
         VisionCommManager comm = new VisionCommManager(testConnection);
         comm.update();
         byte[] expected = new byte[]{1,2,3,4};
@@ -46,12 +46,13 @@ public class TestVisionCommManager{
 
     @Test
     public void TestMultipleVisionDataReception() throws Exception {
+        String firstMessage = "True 0 0 0";
         String message = "False -1 -1 -1";
         ByteArrayOutputStream b = new ByteArrayOutputStream();
-        b.write(struct.pack(">BI", (byte) 'D',message.getBytes().length));
+        b.write(struct.pack(">BI", (byte) 'D',firstMessage.getBytes().length));
         b.write(message.getBytes());
 
-        b.write(struct.pack(">BI", (byte) 'D',message.getBytes().length));
+        b.write(struct.pack(">BI", (byte) 'D',firstMessage.getBytes().length));
         b.write(message.getBytes());
 
         b.write(struct.pack(">BI", (byte) 'D',message.getBytes().length));
@@ -68,17 +69,6 @@ public class TestVisionCommManager{
 
         UtilMethods.assertVisionDataEquals(expected, actual);
 
-        comm.update();
-        expected = new VisionData(false, -1, -1, -1);
-        actual = comm.getLatestTargetData();
-
-        UtilMethods.assertVisionDataEquals(expected, actual);
-
-        comm.update();
-        expected = new VisionData(false, -1, -1, -1);
-        actual = comm.getLatestTargetData();
-
-        UtilMethods.assertVisionDataEquals(expected, actual);
     }
 }
 
