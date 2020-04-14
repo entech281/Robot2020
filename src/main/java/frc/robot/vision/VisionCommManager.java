@@ -44,7 +44,7 @@ public class VisionCommManager{
                 hasUnfinishedFrame = false;
             } else{
                 readHeaders();
-                hasUnfinishedFrame = true;
+                hasUnfinishedFrame = true; 
             }
         }
     }
