@@ -112,29 +112,4 @@ public class VisionCommManager{
         
         unfinishedFrame = new DataFrame(type, size, null);
     }
-    
-    @Deprecated
-    private DataFrame getFrame() throws Exception {
-        long[] data = struct.unpack(">BI", connection.readBytes(FRAME_SIZE));
-        char type = (char) data[0];
-        int size = (int) data[1];
-        byte[] payload = connection.readBytes(size);
-
-        return new DataFrame(type,size,payload);
-    }
-    
-    @Deprecated
-    private void processOneFrame(){
-        try{
-            
-            var frame = getFrame();
-            switch(frame.type){
-                case 'D': latestTargetData = frame;
-                break;
-                case 'I': latestImage = frame; break;
-            }
-        } catch(Exception e){
-            logger.warn(e.getMessage());
-        }
-    }
 }
