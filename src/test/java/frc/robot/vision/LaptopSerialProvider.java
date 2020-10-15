@@ -6,7 +6,8 @@ public class LaptopSerialProvider implements SerialProvider {
     private SerialPort port;
 
     public LaptopSerialProvider(String portDescriptor){
-        this.port = SerialPort.getCommPort​(portDescriptor);
+        port = SerialPort.getCommPort​(portDescriptor);
+        port.openPort();
     }
 
     @Override
