@@ -18,6 +18,13 @@ import frc.robot.path.Position;
 
 public class DriveSubsystem extends BaseSubsystem {
 
+    private boolean loggingJoystick = false;
+    private boolean replayingJoystick = false;
+    private static final String logFilename = "Joystick.log";
+    private FileWriter logFileWriter = null;
+    private static final String replayReader = "Replay.log";
+    private BufferedReader replayReader = null;
+
     private CANSparkMax frontLeftSpark;
     private CANSparkMax frontRightSpark;
     private CANSparkMax rearLeftSpark;
@@ -39,7 +46,7 @@ public class DriveSubsystem extends BaseSubsystem {
 
     private EncoderInchesConverter encoderConverter = new EncoderInchesConverter(1 / RobotConstants.DIMENSIONS.MOTOR_REVOLUTIONS_PER_INCH);
 
-    
+
     public static final boolean FRONT_RIGHT_POSITION_INVERSE = true;
     public static final boolean FRONT_LEFT_POSITION_INVERSE = false;
     public static final boolean REAR_RIGHT_POSITION_INVERSE = true;
@@ -75,10 +82,10 @@ public class DriveSubsystem extends BaseSubsystem {
         frontLeftPositionController.resetPosition();
         frontRightPositionController.resetPosition();
         rearLeftPositionController.resetPosition();
-        rearRightPositionController.resetPosition();        
+        rearRightPositionController.resetPosition();
     }
 
-    
+
     @Override
     public void initialize() {
         frontLeftSpark = new CANSparkMax(RobotConstants.CAN.FRONT_LEFT_MOTOR, MotorType.kBrushless);
@@ -98,8 +105,10 @@ public class DriveSubsystem extends BaseSubsystem {
         frontRightPositionController = new SparkPositionController(frontRightSpark, smartMotionSettings, FRONT_RIGHT_POSITION_INVERSE);
         rearLeftPositionController = new SparkPositionController(rearLeftSpark, smartMotionSettings, REAR_LEFT_POSITION_INVERSE);
         rearRightPositionController = new SparkPositionController(rearRightSpark, smartMotionSettings, REAR_RIGHT_POSITION_INVERSE);
-        
+
         setSpeedMode();
+        loggingJoystick = false;
+        replayingJoystick = false;
     }
 
     private void setSpeedMode() {
@@ -115,7 +124,7 @@ public class DriveSubsystem extends BaseSubsystem {
         frontLeftPositionController.configure();
         rearRightPositionController.configure();
     }
-    
+
     public EncoderValues getEncoderValues() {
         return new EncoderValues(frontLeftPositionController.getActualPosition(),
                 rearLeftPositionController.getActualPosition(),
@@ -126,7 +135,7 @@ public class DriveSubsystem extends BaseSubsystem {
     public void stopDriving(){
         robotDrive.tankDrive(0, 0);
     }
-    
+
     public void feedWatchDog(){
         robotDrive.feedWatchdog();
     }
@@ -147,7 +156,7 @@ public class DriveSubsystem extends BaseSubsystem {
         logger.log("Stick Faults", frontLeftSpark.getStickyFaults());
         logger.log("Last error", frontLeftSpark.getLastError());
     }
-    
+
     public void doubleTankDrive(double forwardLeft, double forwardRight ){
         robotDrive.tankDrive(forwardLeft, forwardRight);
     }
@@ -156,56 +165,104 @@ public class DriveSubsystem extends BaseSubsystem {
         robotDrive.curvatureDrive(-forward, rotation, fastTurn);
     }
     public void drive(double forward, double rotation) {
+        if (replayingJoystick) {
+            // TODO: read joystick input from file, if end of file, close and reset replay flag
+            try {
+                String line = null;
+                String[] numbers = null;
+                if ((line = replayReader.readLine()) != null) {
+                    numbers = line.split("\\d\\s+");
+                    forward = Float.valueOf(numbers[0].trim());
+                    rotation = Float.valueOf(numbers[1].trim());
+                } else {
+                    replayReader.close();
+                    replayingJoystick = false;
+                }
+            } catch (IOExeption e) {
+                System.err.println("Exception in drive():" + e.toString());
+            }
+        }
+        // if logging turned on, write file
+        if (loggingJoystick) {
+            logFileWriter.write(forward.toString()+" "+rotation.toString()+"\n");
+        }
         robotDrive.arcadeDrive(forward, rotation);
-        
+
     }
-    
+
     public Position getCurrentPosition(){
         EncoderValues v = getEncoderValues();
         return new Position ( encoderConverter.toInches(v.getLeftFront()),
                               encoderConverter.toInches(v.getRightFront()) );
     }
-    
+
     public double getDistanceTravelled(){
         EncoderValues v = getEncoderValues();
         return encoderConverter.toInches((v.getLeftFront() + v.getRightFront())/2.0);
     }
-    
+
     public void driveToPosition(Position targetPosition){
         setPositionMode();
         double encoderLeft = encoderConverter.toCounts(targetPosition.getLeftInches());
         double encoderRight = encoderConverter.toCounts(targetPosition.getRightInches());
 
         logger.log("Left Desired", encoderLeft);
-        logger.log("Right Desired", encoderRight);    
-        
+        logger.log("Right Desired", encoderRight);
+
         frontRightPositionController.resetPosition();
         frontLeftPositionController.resetPosition();
         rearRightPositionController.resetPosition();
         rearLeftPositionController.resetPosition();
-        
+
         frontLeftPositionController.setDesiredPosition(encoderLeft);
         frontRightPositionController.setDesiredPosition(encoderRight);
         rearLeftPositionController.setDesiredPosition(encoderLeft);
         rearRightPositionController.setDesiredPosition(encoderRight);
     }
-    
+
     public void switchToBrakeMode(){
         if(frontLeftSpark.getIdleMode() == CANSparkMax.IdleMode.kCoast){
             frontLeftSpark.setIdleMode(CANSparkMax.IdleMode.kBrake);
-            frontRightSpark.setIdleMode(CANSparkMax.IdleMode.kBrake);            
+            frontRightSpark.setIdleMode(CANSparkMax.IdleMode.kBrake);
             rearLeftSpark.setIdleMode(CANSparkMax.IdleMode.kBrake);
             rearRightSpark.setIdleMode(CANSparkMax.IdleMode.kBrake);
         }
     }
-    
+
     public void switchToCoastMode(){
         if(frontLeftSpark.getIdleMode() == CANSparkMax.IdleMode.kBrake){
             frontLeftSpark.setIdleMode(CANSparkMax.IdleMode.kCoast);
-            frontRightSpark.setIdleMode(CANSparkMax.IdleMode.kCoast);            
+            frontRightSpark.setIdleMode(CANSparkMax.IdleMode.kCoast);
             rearLeftSpark.setIdleMode(CANSparkMax.IdleMode.kCoast);
             rearRightSpark.setIdleMode(CANSparkMax.IdleMode.kCoast);
-        }        
+        }
     }
 
+    public void startJoystickLogging() {
+        // open logging file and set logging flag
+        if (!loggingJoystick) {
+            try {
+                logFileWriter = new FileWriter(logFilename);
+                loggingJoystick = true;
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+    public void endJoystickLogging() {
+        // close logging file and reset logging flag
+        if (loggingJoystick) {
+            logFileWriter.close();
+            loggingJoystick = false;
+        }
+    }
+    public void startJoystickReplay() {
+        // TODO: open replay file
+        if (!replayingJoystick) {
+            replayReader = new BufferedReader(new InputStreamReader(new FileInputStream(new File("<FULL_FILE_PATH>"))));
+            replayingJoystick = true;
+        } catch (IOException e) {
+            System.err.println("Exception in startJoystickReplay():" + e.toString());
+        }
+    }
 }
