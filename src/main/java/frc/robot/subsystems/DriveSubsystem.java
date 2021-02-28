@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import frc.robot.controllers.SparkMaxSettings;
 import frc.robot.controllers.SparkMaxSettingsBuilder;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.RobotState;
 import frc.robot.RobotConstants;
 import frc.robot.controllers.SparkPositionController;
 
@@ -20,9 +21,9 @@ public class DriveSubsystem extends BaseSubsystem {
 
     private boolean loggingJoystick = false;
     private boolean replayingJoystick = false;
-    private static final String logFilename = "Joystick.log";
+    private static final String logFilename = "/home/lvuserJoystick.log";
     private FileWriter logFileWriter = null;
-    private static final String replayReader = "Replay.log";
+    private static final String replayReader = "/home/lvuser/Replay.log";
     private BufferedReader replayReader = null;
 
     private CANSparkMax frontLeftSpark;
@@ -133,6 +134,10 @@ public class DriveSubsystem extends BaseSubsystem {
     }
 
     public void stopDriving(){
+        if (replayingJoystick) {
+            replayReader.close();
+            replayingJoystick = false;
+        }
         robotDrive.tankDrive(0, 0);
     }
 
@@ -141,6 +146,10 @@ public class DriveSubsystem extends BaseSubsystem {
     }
     @Override
     public void periodic() {
+        if (RobotState.isDisabled() && replayingJoystick) {
+            replayReader.close();
+            replayingJoystick = false;
+        }
         logger.log("Front Left Encoder Ticks", frontLeftEncoder.getPosition());
         logger.log("Front Right Encoder Ticks", frontRightEncoder.getPosition());
         logger.log("Rear Left Encoder Ticks", rearLeftEncoder.getPosition());
