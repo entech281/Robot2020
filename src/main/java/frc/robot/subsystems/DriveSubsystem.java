@@ -17,13 +17,16 @@ import frc.robot.pose.*;
 import frc.robot.utils.EncoderInchesConverter;
 import frc.robot.path.Position;
 
+import java.io.*;
+import java.io.IOException;
+
 public class DriveSubsystem extends BaseSubsystem {
 
     private boolean loggingJoystick = false;
     private boolean replayingJoystick = false;
     private static final String logFilename = "/home/lvuserJoystick.log";
     private FileWriter logFileWriter = null;
-    private static final String replayReader = "/home/lvuser/Replay.log";
+    private static final String replayReaderFile = "/home/lvuser/Replay.log";
     private BufferedReader replayReader = null;
 
     private CANSparkMax frontLeftSpark;
@@ -135,8 +138,12 @@ public class DriveSubsystem extends BaseSubsystem {
 
     public void stopDriving(){
         if (replayingJoystick) {
-            replayReader.close();
-            replayingJoystick = false;
+            try{
+                replayReader.close();
+                replayingJoystick = false;    
+            } catch(IOException e){
+                System.err.println(e.toString());
+            }
         }
         robotDrive.tankDrive(0, 0);
     }
@@ -147,8 +154,12 @@ public class DriveSubsystem extends BaseSubsystem {
     @Override
     public void periodic() {
         if (RobotState.isDisabled() && replayingJoystick) {
-            replayReader.close();
-            replayingJoystick = false;
+            try{
+                replayReader.close();
+                replayingJoystick = false;
+            } catch(IOException e){
+                System.err.println(e.toString());
+            }
         }
         logger.log("Front Left Encoder Ticks", frontLeftEncoder.getPosition());
         logger.log("Front Right Encoder Ticks", frontRightEncoder.getPosition());
@@ -184,16 +195,24 @@ public class DriveSubsystem extends BaseSubsystem {
                     forward = Float.valueOf(numbers[0].trim());
                     rotation = Float.valueOf(numbers[1].trim());
                 } else {
-                    replayReader.close();
-                    replayingJoystick = false;
+                    try{
+                        replayReader.close();
+                        replayingJoystick = false;
+                    } catch(IOException e){
+                        System.err.println(e.toString());
+                    }
                 }
-            } catch (IOExeption e) {
+            } catch (IOException e) {
                 System.err.println("Exception in drive():" + e.toString());
             }
         }
         // if logging turned on, write file
         if (loggingJoystick) {
-            logFileWriter.write(forward.toString()+" "+rotation.toString()+"\n");
+            try{
+            logFileWriter.write(Double.toString(forward)+" "+Double.toString(rotation)+"\n");
+            } catch(IOException e){
+                System.err.println(e.toString());
+            }
         }
         robotDrive.arcadeDrive(forward, rotation);
 
@@ -261,17 +280,24 @@ public class DriveSubsystem extends BaseSubsystem {
     public void endJoystickLogging() {
         // close logging file and reset logging flag
         if (loggingJoystick) {
+            try{            
             logFileWriter.close();
             loggingJoystick = false;
+            } catch(IOException e){
+                System.err.println(e.toString());
+            }
         }
     }
     public void startJoystickReplay() {
         // TODO: open replay file
         if (!replayingJoystick) {
-            replayReader = new BufferedReader(new InputStreamReader(new FileInputStream(new File("<FULL_FILE_PATH>"))));
-            replayingJoystick = true;
-        } catch (IOException e) {
-            System.err.println("Exception in startJoystickReplay():" + e.toString());
-        }
+            try{
+                replayReader = new BufferedReader(new InputStreamReader(new FileInputStream(new File("<FULL_FILE_PATH>"))));
+                replayingJoystick = true;    
+            }
+            catch (IOException e) {
+                System.err.println("Exception in startJoystickReplay():" + e.toString());
+            }
+        } 
     }
 }
