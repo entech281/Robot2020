@@ -24,7 +24,7 @@ public class DriveSubsystem extends BaseSubsystem {
 
     private boolean loggingJoystick = false;
     private boolean replayingJoystick = false;
-    private static final String logFilename = "/home/lvuserJoystick.log";
+    private static final String logFilename = "/home/lvuser/Joystick.log";
     private FileWriter logFileWriter = null;
     private static final String replayReaderFile = "/home/lvuser/Replay.log";
     private BufferedReader replayReader = null;
@@ -113,6 +113,8 @@ public class DriveSubsystem extends BaseSubsystem {
         setSpeedMode();
         loggingJoystick = false;
         replayingJoystick = false;
+
+        switchToBrakeMode();
     }
 
     private void setSpeedMode() {
@@ -175,6 +177,8 @@ public class DriveSubsystem extends BaseSubsystem {
         logger.log("Faults", frontLeftSpark.getFaults());
         logger.log("Stick Faults", frontLeftSpark.getStickyFaults());
         logger.log("Last error", frontLeftSpark.getLastError());
+        logger.log("LOGGING THE JOYSTICK", loggingJoystick);
+        logger.log("REPLAYING JOYSTICK", replayingJoystick);
     }
 
     public void doubleTankDrive(double forwardLeft, double forwardRight ){
@@ -182,6 +186,36 @@ public class DriveSubsystem extends BaseSubsystem {
     }
 
     public void curveDrive(double forward, double rotation, boolean fastTurn){
+        if (replayingJoystick) {
+            // TODO: read joystick input from file, if end of file, close and reset replay flag
+            try {
+                String line = null;
+                String[] numbers = null;
+                if ((line = replayReader.readLine()) != null) {
+                    numbers = line.split("\\d\\s+");
+                    forward = Float.valueOf(numbers[0].trim());
+                    rotation = Float.valueOf(numbers[1].trim());
+                } else {
+                    try{
+                        replayReader.close();
+                        replayingJoystick = false;
+                    } catch(IOException e){
+                        System.err.println(e.toString());
+                    }
+                }
+            } catch (IOException e) {
+                System.err.println("Exception in drive():" + e.toString());
+            }
+        }
+        // if logging turned on, write file
+        if (loggingJoystick) {
+            try{
+            logFileWriter.write(Double.toString(forward)+" "+Double.toString(rotation)+"\n");
+            } catch(IOException e){
+                System.err.println(e.toString());
+            }
+        }
+
         robotDrive.curvatureDrive(-forward, rotation, fastTurn);
     }
     public void drive(double forward, double rotation) {
@@ -292,7 +326,7 @@ public class DriveSubsystem extends BaseSubsystem {
         // TODO: open replay file
         if (!replayingJoystick) {
             try{
-                replayReader = new BufferedReader(new InputStreamReader(new FileInputStream(new File("<FULL_FILE_PATH>"))));
+                replayReader = new BufferedReader(new InputStreamReader(new FileInputStream(new File(replayReaderFile))));
                 replayingJoystick = true;    
             }
             catch (IOException e) {

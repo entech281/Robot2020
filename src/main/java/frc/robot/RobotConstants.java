@@ -115,16 +115,16 @@ public class RobotConstants {
     }
     
     public interface BUTTONS {
-        public static final int TURN_SHOOTER_ON = 8;
+        public static final int TURN_SHOOTER_ON = 1;
         public static final int ENABLE_AUTO_HOOD = 9;
-        public static final int FIRE = 11;
+        public static final int FIRE = 1;
         public static final int DRIVER_SHOOT = 1;
         public static final int DEPLOY_INTAKE = 13;
         public static final int HOOD_FORWARD_ADJUST = 3;
         public static final int HOOD_BACKWARD_ADJUST = 5;
         public static final int SELECT_PRESET_1 = 10;
-        public static final int SELECT_PRESET_2 = 7;
-        public static final int OUTAKE = 7;
+        public static final int SELECT_PRESET_2 = 1;
+        public static final int OUTAKE = 1;
         public static final int TOGGLE_INTAKE=12;
         public static final int NUDGE_YAW_RIGHT = 14;
         public static final int NUDGE_YAW_LEFT = 15;
